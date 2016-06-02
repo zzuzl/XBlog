@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
@@ -35,7 +37,7 @@
         <!-- 扫描model包使用别名 -->
         <property name="typeAliasesPackage" value="com.zzu.xblog.model"/>
         <!-- 扫描sql配置文件mapper所需的xml文件 -->
-        <!--<property name="mapperLocations" value="classpath:mapper/*.xml"/>-->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
     </bean>
 
     <!-- 4.配置扫描Dao接口包，动态实现Dao接口，注入到spring容器中 -->
@@ -62,36 +64,33 @@
     <!-- 邮件发送方配置bean -->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="smtp.163.com"/>
-        <!-- mail account -->
         <property name="username" value="m15617536860@163.com"/>
-        <!--使用的是授权码登录-->
         <property name="password" value="didiaozuoren31"/>
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.smtp.auth">true</prop>
             </props>
         </property>
+        <property name="defaultEncoding" value="utf-8"/>
     </bean>
-    <!-- 邮件发送模板 -->
-    <bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage">
-        <property name="from" value="m15617536860@163.com"/>
+
+    <!-- velocityEngine模板引擎配置 -->
+    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <value>
+                resource.loader=class
+                class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+            </value>
+        </property>
     </bean>
-    <!-- 配置发送模板bean-->
-    <bean id="freeMarkerConfigurer"
-          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-        <!-- 模板路径位置(多路径) -->
-        <property name="templateLoaderPaths">
-            <list>
-                <value>/WEB-INF/tpl/</value>
-            </list>
-        </property>
-        <property name="freemarkerSettings">
-            <props>
-                <!-- 模板更新延时 -->
-                <prop key="template_update_delay">1800</prop>
-                <prop key="default_encoding">UTF-8</prop>
-                <prop key="locale">zh_CN</prop>
-            </props>
-        </property>
+
+    <!-- 配置redis模板 -->
+    <bean id="jedisConnFactory"
+          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="usePool" value="true"/>
+    </bean>
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnFactory"/>
     </bean>
 </beans>

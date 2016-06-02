@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 工具类
@@ -128,13 +130,33 @@ public class Utils {
 		return MD5(input, randomString(DEFAULT_LENGTH));
 	}
 
+	/**
+	 * 检查email合法性
+	 *
+	 * @param email
+	 * @return
+	 */
+	public static boolean validEmail(String email) {
+		boolean result = !isEmpty(email);
+		if (result) {
+			Pattern pattern = Pattern.compile("[a-zA-Z0-9_-]+@[a-zA-Z0-9]+\\.[a-z]+(\\.[a-z]+)?");
+			Matcher matcher = pattern.matcher(email);
+			if (!matcher.find()) {
+				result = false;
+			}
+		}
+		return result;
+	}
+
 	public static void main(String[] args) {
 		/*for(int i=0;i<10;i++) {
 			System.out.println(randomString(10));
 		}*/
-		String random = randomString();
+		/*String random = randomString();
 		System.out.println(random);
 		String str = MD5("123456", random);
-		System.out.println(str + "  " + str.length());
+		System.out.println(str + "  " + str.length());*/
+
+		System.out.println(validEmail("672399171@qq.com"));
 	}
 }

@@ -5,5 +5,6 @@
 </head>
 <body>
 欢迎来到XBlog!
+${success},${msg}
 </body>
 </html>

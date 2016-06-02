@@ -22,6 +22,14 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <!-- 配置拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/user/register"/>
+            <bean class="com.zzu.xblog.interceptor.UserParameterInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
     <!-- 处理静态资源 -->
     <mvc:default-servlet-handler />
 </beans>

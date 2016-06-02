@@ -4,6 +4,11 @@ package com.zzu.xblog.model;
  * Created by Administrator on 2016/6/1.
  */
 
+import com.mysql.jdbc.Util;
+import com.zzu.xblog.common.Common;
+import com.zzu.xblog.util.Utils;
+import net.sf.json.JSONObject;
+
 import java.util.Date;
 
 /**
@@ -23,6 +28,30 @@ public class User {
 	private String interest;
 	private String sex;
 
+	private static final int MAX_EMAIL_LENGTH = 45;
+	private static final int MIN_PWD_LENGTH = 6;
+	private static final int MAX_PWD_LENGTH = 30;
+	private static final int MIN_NICKNAME_LENGTH = 1;
+	private static final int MAX_NICKNAME_LENGTH = 20;
+
+	public JSONObject valid(String password) {
+		JSONObject result = new JSONObject();
+		result.put(Common.SUCCESS, false);
+		if (!Utils.validEmail(email) || email.length() > MAX_EMAIL_LENGTH) {
+			result.put(Common.MSG, "email不合法");
+		} else if (Utils.isEmpty(password) || password.length() < MIN_PWD_LENGTH ||
+				password.length() > MAX_PWD_LENGTH) {
+			result.put(Common.MSG, "密码长度不合法");
+		} else if (Utils.isEmpty(nickname) || nickname.length() < MIN_NICKNAME_LENGTH ||
+				nickname.length() > MAX_NICKNAME_LENGTH) {
+			result.put(Common.MSG, "昵称长度不合法");
+		} else {
+			result.put(Common.SUCCESS, true);
+		}
+
+		return result;
+	}
+
 	@Override
 	public String toString() {
 		return "User{" +
@@ -39,6 +68,13 @@ public class User {
 				", interest='" + interest + '\'' +
 				", sex='" + sex + '\'' +
 				'}';
+	}
+
+	public void setPwd(String password) {
+		String salt = Utils.randomString();
+		String hash = Utils.MD5(password, salt);
+		setHash(hash);
+		setSalt(salt);
 	}
 
 	public int getUserId() {

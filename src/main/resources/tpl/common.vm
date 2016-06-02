@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<h3>你好，请在30分钟内点击以下链接完成操作！</h3>
+
+<div>
+    <a href="${url}" target="_blank">点我完成操作</a>
+</div>
+</body>
+</html>
