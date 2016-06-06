@@ -32,11 +32,10 @@ INSERT INTO t_user(email,hash,salt,nickname,motto) VALUES
 
 /* 创建关注表 */
 CREATE TABLE t_attention(
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'id',
   `from` INT NOT NULL COMMENT '关注者id',
   `to` INT NOT NULL COMMENT '被关注者id',
   `create_time` DATETIME NOT NULL DEFAULT now() COMMENT '创建时间',
-  PRIMARY KEY (id),
+  PRIMARY KEY (`from`,`to`),
   KEY create_time_index(create_time),
   FOREIGN KEY(`from`) REFERENCES t_user(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY(`to`) REFERENCES t_user(user_id) ON UPDATE CASCADE ON DELETE CASCADE
@@ -110,13 +109,29 @@ CREATE TABLE t_comment (
   `p_id` INT NOT NULL COMMENT '父亲id',
   PRIMARY KEY (comment_id),
   KEY post_time_index(post_time),
-  FOREIGN KEY (article_id) REFERENCES t_article(article_id) ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (p_id) REFERENCES t_comment(comment_id) ON UPDATE CASCADE ON DELETE CASCADE
-);
+  FOREIGN KEY (article_id) REFERENCES t_article(article_id) ON UPDATE CASCADE ON DELETE CASCADE
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COMMENT '评论表';
 
 /* 插入测试数据 */
 INSERT INTO t_comment(content, article_id, p_id) VALUES
   ('文章写得很不错',1,0),
   ('岂止不错，简直逆天!',1,1);
+
+/* 创建点赞表 */
+CREATE TABLE t_like(
+  `user_id` INT NOT NULL COMMENT '用户id',
+  `article_id` INT NOT NULL COMMENT '文章id',
+  `create_time` DATETIME NOT NULL DEFAULT now() COMMENT '创建时间',
+  PRIMARY KEY (user_id,article_id),
+  KEY create_time_index(create_time),
+  FOREIGN KEY (user_id) REFERENCES t_user(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (article_id) REFERENCES t_article(article_id) ON UPDATE CASCADE ON DELETE CASCADE
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COMMENT '点赞表';
 
 

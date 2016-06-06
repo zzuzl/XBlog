@@ -4,6 +4,10 @@ package com.zzu.xblog.model;
  * Created by Administrator on 2016/6/1.
  */
 
+import com.zzu.xblog.common.Common;
+import com.zzu.xblog.util.Utils;
+import net.sf.json.JSONObject;
+
 import java.util.Date;
 
 /**
@@ -37,6 +41,28 @@ public class Article {
 				", user=" + user +
 				", tag='" + tag + '\'' +
 				'}';
+	}
+
+	private static final int MAX_TITLE_LENGTH = 25;
+	private static final int MAX_DESC_LENGTH = 50;
+	private static final int MAX_CONTENT_LENGTH = 20000;
+
+	public JSONObject valid() {
+		JSONObject result = new JSONObject();
+		result.put(Common.SUCCESS, false);
+
+		if (category == null || category.getCateId() <= 0) {
+			result.put(Common.MSG, "文章分类错误");
+		} else if (Utils.isEmpty(title) || title.length() > MAX_TITLE_LENGTH) {
+			result.put(Common.MSG, "标题长度不合法，1-25");
+		} else if (Utils.isEmpty(description) || description.length() > MAX_DESC_LENGTH) {
+			result.put(Common.MSG, "文章描述长度不合法，1-50");
+		} else if (Utils.isEmpty(content) || content.length() > MAX_CONTENT_LENGTH) {
+			result.put(Common.MSG, "文章内容长度不合法，20000字以内");
+		} else {
+			result.put(Common.SUCCESS, true);
+		}
+		return result;
 	}
 
 	public int getArticleId() {

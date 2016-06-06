@@ -12,8 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class PageController {
 
-	@RequestMapping(value = "/",method = RequestMethod.GET)
-	public String index(HttpServletRequest request) {
-		return "index";
-	}
+    /* 主页 */
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String index(HttpServletRequest request) {
+        return "index";
+    }
+
+    /* 文件上传测试 */
+    @RequestMapping(value = "/file", method = RequestMethod.GET)
+    public String file() {
+        return "file";
+    }
 }

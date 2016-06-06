@@ -1,0 +1,17 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzu.xblog.dao.CommentDao">
+    <select id="listArticleComments" resultType="Comment">
+        select c.comment_id,c.content,c.post_time,c.p_id,
+            a.article_id as "article.articleId"
+        from t_comment c,t_article a
+        where c.article_id=a.article_id and c.article_id=#{id}
+    </select>
+
+    <insert id="insertComment">
+        insert into t_comment(content,article_id,p_id) values
+            (#{content},#{article.articleId},#{pId})
+    </insert>
+
+</mapper>

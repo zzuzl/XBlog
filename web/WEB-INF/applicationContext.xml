@@ -58,7 +58,7 @@
     <!-- 配置文件上传 -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!-- one of the properties available; the maximum file size in bytes -->
-        <property name="maxUploadSize" value="100000"/>
+        <property name="maxUploadSize" value="1048576"/>
     </bean>
 
     <!-- 邮件发送方配置bean -->
@@ -93,4 +93,7 @@
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
         <property name="connectionFactory" ref="jedisConnFactory"/>
     </bean>
+
+    <!-- 配置annotation版的aop，基于@AspectJ -->
+    <aop:aspectj-autoproxy/>
 </beans>

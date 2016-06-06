@@ -1,11 +1,15 @@
 package com.zzu.xblog.service;
 
+import com.zzu.xblog.model.Article;
 import com.zzu.xblog.model.User;
+import com.zzu.xblog.util.Utils;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Commit;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.annotation.Resource;
@@ -17,7 +21,7 @@ import java.util.Map;
 /**
  * 邮件发送service
  */
-@Service
+@Component
 public class MailService {
 	@Resource
 	private JavaMailSender mailSender;
@@ -33,7 +37,7 @@ public class MailService {
 	 * @param hash
 	 */
 	public void sendResetPwdEmail(final String email, HttpServletRequest request, int userId, String hash) {
-		String rootPath = getRootPath(request);
+		String rootPath = Utils.getRootPath(request);
 		rootPath += "/verify/resetPwd?id=" + userId + "&hash=" + hash;
 
 		Map<String, Object> model = new HashMap<String, Object>();
@@ -48,12 +52,29 @@ public class MailService {
 	 * @param request
 	 */
 	public void sendRegisterEmail(final String salt, User user, HttpServletRequest request) {
-		String rootPath = getRootPath(request);
+		String rootPath = Utils.getRootPath(request);
 		rootPath += "/verify/register?salt=" + salt;
 
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("url", rootPath);
 		sendEmail(user.getEmail(), "tpl/common.vm", "注册激活", model);
+	}
+
+	/**
+	 * 给粉丝发邮件
+	 * @param email
+	 * @param article
+	 * @param request
+     */
+	public void sendEmailToFans(final String email, Article article, HttpServletRequest request) {
+		String rootPath = Utils.getRootPath(request);
+		rootPath += "/article/" + article.getArticleId();
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("url", rootPath);
+		model.put("nickname", article.getUser().getNickname());
+		model.put("title", article.getTitle());
+		sendEmail(email, "tpl/fans.vm", "关注动态", model);
 	}
 
 	/**
@@ -76,18 +97,5 @@ public class MailService {
 			}
 		};
 		this.mailSender.send(preparator);
-	}
-
-	/**
-	 * 获取项目根路径
-	 * @param request
-	 * @return
-	 */
-	private String getRootPath(HttpServletRequest request) {
-		String serverName = request.getServerName();
-		int port = request.getServerPort();
-		String contextPath = request.getContextPath();
-
-		return "http://" + serverName + ":" + port + contextPath;
 	}
 }

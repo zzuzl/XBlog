@@ -2,10 +2,12 @@ package com.zzu.xblog.util;
 
 import org.springframework.util.DigestUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -148,6 +150,27 @@ public class Utils {
 		return result;
 	}
 
+	/**
+	 * 获取项目根路径
+	 * @param request
+	 * @return
+	 */
+	public static String getRootPath(HttpServletRequest request) {
+		String serverName = request.getServerName();
+		int port = request.getServerPort();
+		String contextPath = request.getContextPath();
+
+		return "http://" + serverName + ":" + port + contextPath;
+	}
+
+	/**
+	 * 返回uuid
+	 * @return
+     */
+	public static String uuid() {
+		return UUID.randomUUID().toString();
+	}
+
 	public static void main(String[] args) {
 		/*for(int i=0;i<10;i++) {
 			System.out.println(randomString(10));
@@ -157,6 +180,7 @@ public class Utils {
 		String str = MD5("123456", random);
 		System.out.println(str + "  " + str.length());*/
 
-		System.out.println(validEmail("672399171@qq.com"));
+		//System.out.println(validEmail("672399171@qq.com"));
+		System.out.println(uuid());
 	}
 }

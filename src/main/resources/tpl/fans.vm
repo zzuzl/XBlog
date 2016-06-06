@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<h3>你好，你关注的用户：${nickname} 刚刚发表了一篇博客<a href="${url}" target="_blank">《${title}》</a>,快来看看吧！</h3>
+</body>
+</html>

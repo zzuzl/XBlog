@@ -7,19 +7,25 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
- * 提交用户注册时，过滤注册信息
+ * 拦截器,过滤用户身份信息
  */
 public class UserParameterInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		/*System.out.println("preHandle");
-		response.setHeader("Content-Type","application/json;charset=UTF-8");
-		JSONObject result = new JSONObject();
-		result.put(Common.SUCCESS, true);
-		result.put(Common.MSG, "邮箱已存在");
-		response.getWriter().print(result);*/
+
+		HttpSession session = request.getSession();
+		if(session.getAttribute(Common.USER) == null) {
+			response.setHeader("Content-Type","application/json;charset=UTF-8");
+			JSONObject result = new JSONObject();
+			result.put(Common.SUCCESS, false);
+			result.put(Common.MSG, "用户身份未认证或已过期");
+			response.getWriter().print(result);
+			return false;
+		}*/
 
 		return true;
 	}

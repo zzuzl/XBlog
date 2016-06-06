@@ -5,9 +5,11 @@ package com.zzu.xblog.web;
  */
 
 import com.zzu.xblog.service.CaptchaService;
+import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -34,5 +36,18 @@ public class CaptchaController {
 	@RequestMapping(value = "/generate", method = RequestMethod.GET)
 	public void generateCaptcha(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		captchaService.captcha(req, res);
+	}
+
+	/**
+	 * 获取验证码
+	 * @param req
+	 * @return
+     */
+	@RequestMapping(value = "/getKey", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject searchUserByEmail(HttpServletRequest req) {
+		JSONObject object = new JSONObject();
+		object.put("key", captchaService.getGeneratedKey(req));
+		return object;
 	}
 }

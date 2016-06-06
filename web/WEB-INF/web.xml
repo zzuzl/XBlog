@@ -29,6 +29,25 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+    <!-- 转换put和delete请求，使支持resuful，浏览器默认不支持put，delete -->
+    <filter>
+        <filter-name>httpMethodFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>httpMethodFilter</filter-name>
+        <servlet-name>dispatcher</servlet-name>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>putMethodFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>putMethodFilter</filter-name>
+        <servlet-name>dispatcher</servlet-name>
+    </filter-mapping>
+
     <!-- spring统一配置编码为utf-8 -->
     <filter>
         <filter-name>encodingFilter</filter-name>
@@ -44,6 +63,6 @@
     </filter>
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 </web-app>

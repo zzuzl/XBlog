@@ -4,66 +4,98 @@ package com.zzu.xblog.model;
  * Created by Administrator on 2016/6/1.
  */
 
+import com.zzu.xblog.common.Common;
+import com.zzu.xblog.util.Utils;
+import net.sf.json.JSONObject;
+
 import java.util.Date;
 
 /**
  * 评论实体类
  */
 public class Comment {
-	private int commentId;
-	private String content;
-	private Date postTime;
-	private Article article;
-	private Comment parent;
+    private int commentId;
+    private String content;
+    private Date postTime;
+    private Article article;
+    private Comment parent;
+    private int pId;
 
-	@Override
-	public String toString() {
-		return "Comment{" +
-				"commentId=" + commentId +
-				", content='" + content + '\'' +
-				", postTime=" + postTime +
-				", article=" + article +
-				", parent=" + parent +
-				'}';
-	}
+    private static final int MAX_CONTENT_LENGTH = 300;
 
-	public int getCommentId() {
-		return commentId;
-	}
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "commentId=" + commentId +
+                ", content='" + content + '\'' +
+                ", postTime=" + postTime +
+                ", article=" + article +
+                ", parent=" + parent +
+                ", pId=" + pId +
+                '}';
+    }
 
-	public void setCommentId(int commentId) {
-		this.commentId = commentId;
-	}
+    public int getpId() {
+        return pId;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public void setpId(int pId) {
+        this.pId = pId;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public JSONObject valid() {
+        JSONObject result = new JSONObject();
+        result.put(Common.SUCCESS, false);
 
-	public Date getPostTime() {
-		return postTime;
-	}
+        if (Utils.isEmpty(content) || content.length() > MAX_CONTENT_LENGTH) {
+            result.put(Common.MSG, "内容长度为1-300");
+        } else if (article == null || article.getArticleId() < 1) {
+            result.put(Common.MSG, "错误：未选择文章");
+        } else if (pId < 0) {
+            result.put(Common.MSG, "错误：回复错误");
+        } else {
+            result.put(Common.SUCCESS, true);
+        }
+        return result;
+    }
 
-	public void setPostTime(Date postTime) {
-		this.postTime = postTime;
-	}
+    public int getCommentId() {
+        return commentId;
+    }
 
-	public Article getArticle() {
-		return article;
-	}
+    public void setCommentId(int commentId) {
+        this.commentId = commentId;
+    }
 
-	public void setArticle(Article article) {
-		this.article = article;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public Comment getParent() {
-		return parent;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public void setParent(Comment parent) {
-		this.parent = parent;
-	}
+    public Date getPostTime() {
+        return postTime;
+    }
+
+    public void setPostTime(Date postTime) {
+        this.postTime = postTime;
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
+    }
+
+    public Comment getParent() {
+        return parent;
+    }
+
+    public void setParent(Comment parent) {
+        this.parent = parent;
+    }
 }

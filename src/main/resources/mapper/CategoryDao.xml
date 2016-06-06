@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzu.xblog.dao.CategoryDao">
+    <select id="listCategory" resultType="Category">
+        SELECT c.cate_id,c.title,p.cate_id as "parent.cate_id",p.title as "parent.title"
+        from t_category p,t_category c
+        where p.cate_id=c.p_id
+    </select>
+
+    <select id="getChildrenCategory" resultType="Category">
+        SELECT c.cate_id,c.title,p.cate_id as "parent.cate_id",p.title as "parent.title"
+        from t_category p,t_category c
+        where p.cate_id=c.p_id and c.p_id=#{id}
+    </select>
+
+    <select id="detail" resultType="Category">
+        SELECT c.cate_id,c.title,p.cate_id as "parent.cate_id",p.title as "parent.title"
+        from t_category p,t_category c
+        where p.cate_id=c.p_id and c.cate_id=#{id}
+    </select>
+</mapper>

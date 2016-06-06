@@ -37,11 +37,21 @@ public class User {
 	public JSONObject valid(String password) {
 		JSONObject result = new JSONObject();
 		result.put(Common.SUCCESS, false);
-		if (!Utils.validEmail(email) || email.length() > MAX_EMAIL_LENGTH) {
-			result.put(Common.MSG, "email不合法");
-		} else if (Utils.isEmpty(password) || password.length() < MIN_PWD_LENGTH ||
+		if (Utils.isEmpty(password) || password.length() < MIN_PWD_LENGTH ||
 				password.length() > MAX_PWD_LENGTH) {
 			result.put(Common.MSG, "密码长度不合法");
+		} else {
+			result = valid();
+		}
+
+		return result;
+	}
+
+	public JSONObject valid() {
+		JSONObject result = new JSONObject();
+		result.put(Common.SUCCESS, false);
+		if (!Utils.validEmail(email) || email.length() > MAX_EMAIL_LENGTH) {
+			result.put(Common.MSG, "email不合法");
 		} else if (Utils.isEmpty(nickname) || nickname.length() < MIN_NICKNAME_LENGTH ||
 				nickname.length() > MAX_NICKNAME_LENGTH) {
 			result.put(Common.MSG, "昵称长度不合法");

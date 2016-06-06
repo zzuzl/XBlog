@@ -1,0 +1,54 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzu.xblog.dao.ArticleDao">
+    <select id="listArticle" resultType="Article">
+        select a.article_id,a.title,a.description,a.post_time,a.view_count,a.comment_count,a.like_count,a.tag,
+            u.nickname as "user.nickname",u.user_id as "user.user_id",u.photo_src as "user.photo_src"
+        from t_article a,t_user u
+        where a.user_id=u.user_id
+            <if test="userId &gt; 0">
+                and u.user_id=#{userId}
+            </if>
+        order by post_time desc
+        limit #{start},#{count}
+    </select>
+
+    <select id="detail" resultType="Article">
+        select a.article_id,a.title,a.description,a.content,a.post_time,a.view_count,a.comment_count,a.like_count,a.tag,
+            u.nickname as "user.nickname",u.user_id as "user.user_id",u.photo_src as "user.photo_src",
+            c.title as "category.title",c.cate_id as "category.cate_id"
+        from t_article a,t_user u,t_category c
+        where a.user_id=u.user_id and a.cate_id=c.cate_id
+    </select>
+
+    <insert id="insertArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="articleId">
+        insert into t_article(cate_id,title,description,content,user_id,tag) values
+            (#{category.cateId},#{title},#{description},#{content},#{user.userId},#{tag})
+    </insert>
+
+    <update id="updateCommentCount">
+        update t_article set `comment_count`=comment_count+#{count}
+        where article_id=#{articleId}
+    </update>
+
+    <update id="updateArticle">
+        update t_article set cate_id=#{category.cateId},title=#{title},description=#{sescription},content=#{content},tag=#{tag}
+        where article_id=#{articleId}
+    </update>
+
+    <insert id="insertLike">
+        insert into t_like(user_id,article_id) values
+            (#{userId},#{articleId})
+    </insert>
+
+    <update id="updateLikeCount">
+        update t_article set `like_count`=like_count+#{count}
+        where article_id=#{articleId}
+    </update>
+
+    <update id="updateViewCount">
+        update t_article set `view_count`=view_count+#{count}
+        where article_id=#{articleId}
+    </update>
+</mapper>

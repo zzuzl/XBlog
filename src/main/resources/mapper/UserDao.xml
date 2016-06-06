@@ -11,7 +11,7 @@
     </select>
 
     <insert id="addUser" useGeneratedKeys="true" keyProperty="userId">
-        insert IGNORE into t_user(email,`hash`,salt,nickname,motto,interest) VALUES
+        insert ignore into t_user(email,`hash`,salt,nickname,motto,interest) VALUES
             (#{email},#{hash},#{salt},#{nickname},#{motto},#{interest});
     </insert>
 
@@ -24,4 +24,54 @@
         from t_user
         where user_id=#{id}
     </select>
+
+    <update id="changePhoto">
+        UPDATE t_user set photo_src=#{photoSrc} where user_id=#{userId}
+    </update>
+
+    <select id="getAllFans" resultType="Attention">
+        select a.id,a.create_time,
+            t.user_id as "to.userId",t.email as "to.email",t.nickname as "to.nickname",t.photo_src as "to.photoSrc"
+        from t_attention a,t_user f,t_user t
+        where a.from=f.user_id and a.to=t.user_id and t.user_id=#{userId}
+        order by a.create_time desc
+    </select>
+
+    <select id="getAllAttentions" resultType="Attention">
+        select a.id,a.create_time,
+        f.user_id as "from.userId",f.email as "from.email",f.nickname as "from.nickname",f.photo_src as "from.photoSrc"
+        from t_attention a,t_user f,t_user t
+        where a.from=f.user_id and a.to=t.user_id and f.user_id=#{userId}
+        order by a.create_time desc
+    </select>
+
+    <insert id="insertAttention">
+        insert ignore into t_attention(`from`,`to`) values
+            (#{from},#{to})
+    </insert>
+
+    <delete id="deleteAttention">
+        delete from t_attention where `from`=#{from} and `to`=#{to}
+    </delete>
+
+    <update id="updateUser">
+        update t_user set nickname=#{nickname},motto=#{motto},interest=#{interest},sex=#{sex}
+        where user_id=#{userId}
+    </update>
+
+    <update id="updateAttentionCount">
+        update t_user set attention_count=attention_count+#{count}
+        where user_id=#{userId}
+    </update>
+
+    <update id="updateFansCount">
+        update t_user set fans_count=fans_count+#{count}
+        where user_id=#{userId}
+    </update>
+
+    <update id="resetCounts">
+        update t_user set fans_count=(select count(*) from t_attention where `to`=#{userId}),
+            attention_count=(select count(*) from t_attention where `from`=#{userId})
+        where user_id=#{userId}
+    </update>
 </mapper>
