@@ -15,6 +15,9 @@ import javax.servlet.http.HttpSession;
 public class UserParameterInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		System.out.println(request.getHeaderNames());
+		System.out.println(request.getQueryString());
+
 		/*System.out.println("preHandle");
 
 		HttpSession session = request.getSession();

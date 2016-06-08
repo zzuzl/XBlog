@@ -28,6 +28,10 @@
             <mvc:mapping path="/user/register"/>
             <bean class="com.zzu.xblog.interceptor.UserParameterInterceptor" />
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/*"/>
+            <bean class="com.zzu.xblog.interceptor.RequestInterceptor" />
+        </mvc:interceptor>
     </mvc:interceptors>
 
     <!-- 处理静态资源 -->

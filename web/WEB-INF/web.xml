@@ -63,6 +63,16 @@
     </filter>
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/</url-pattern>
+    </filter-mapping>
+
+    <!-- 过滤post,put请求，application/json 转化为x-www-form-urlencoded -->
+    <filter>
+        <filter-name>requestFilter</filter-name>
+        <filter-class>com.zzu.xblog.filter.RequestFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>requestFilter</filter-name>
+        <url-pattern>/</url-pattern>
     </filter-mapping>
 </web-app>

@@ -1,0 +1,138 @@
+@charset "UTF-8";
+
+/* list-item */
+.list-item {
+    width: 100%;
+    min-height: 100px;
+    border-bottom: 1px dotted #ccc;
+}
+
+.list-item h4 {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.list-item .head-photo {
+    width: 50px;
+    height: 100%;
+    margin-right: 5px;
+}
+
+.list-item img {
+    width: 50px;
+    height: 50px;
+    border: 1px dotted #cccccc;
+    margin-top: 10px;
+}
+
+.list-item .list-body-content {
+    color: black;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.list-item .lightblue {
+    color: lightblue;
+}
+
+.list-item .lightblue:hover {
+    color: red;
+}
+
+.pagination-div {
+    text-align: center;
+}
+
+#pagination {
+    text-align: center;
+}
+
+.photo-div {
+    margin-top: 10px;
+}
+
+.photo-div img {
+    border-radius: 16px;
+}
+
+s {
+    position: absolute;
+    height: 0;
+    width: 0;
+    margin-top: -5px;
+    margin-left: 8px;
+    border-color: transparent transparent #ffffff transparent;
+    border-style: dashed dashed solid dashed;
+    border-width: 8px;
+    z-index: 2;
+    display: none;
+}
+
+.user-div {
+    position: absolute;
+    margin-top: 9px;
+    right: 50px;
+    z-index: 1;
+    width: 300px;
+    height: 190px;
+    background: white;
+    border-radius: 2px;
+    border: 1px solid #cccccc;
+    box-shadow: 0 2px 10px rgba(0,0,0,.2);
+    display: none;
+}
+
+.user-div .top-div {
+    margin: 20px;
+    height: 100px;
+}
+
+.user-div .top-div img {
+    border-radius: 50px;
+    display: inline-block;
+}
+
+.user-div .top-div .user-info {
+    display: inline-block;
+}
+
+.user-div .bottom-div {
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    border-top: 1px solid #cccccc;
+    background: #f5f5f5;
+    height: 50px;
+    line-height: 50px;
+    vertical-align: middle;
+}
+
+.button {
+    display: block;
+    width: 100px;
+    height: 30px;
+    margin-top: 10px;
+    border: 1px solid #cccccc;
+    color: black;
+    text-align: center;
+    font-size: 15px;
+    line-height: 30px;
+    background: #f8f8f8;
+    cursor: pointer;
+}
+
+#blog-btn {
+    float: left;
+}
+
+#quit-btn {
+    float: right;
+}
+
+.unClicked {
+    color: #8c8c8c;
+}
+
+.clicked {
+    color: #0f0f0f;
+}

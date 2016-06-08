@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+* {
+    font-family: "微软雅黑";
+    text-decoration: none;
+}
+
+.panel-group {
+    margin-bottom: 5px;
+}
+
+.panel-footer {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+a:hover {
+    text-decoration: dashed;
+}

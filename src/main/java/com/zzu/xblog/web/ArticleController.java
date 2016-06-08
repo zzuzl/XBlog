@@ -82,4 +82,14 @@ public class ArticleController {
         System.out.println(keyword);
         return articleService.searchArticle(keyword);
     }
+
+    /* 点赞 */
+    @RequestMapping(value = "/like", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject addLike(@RequestBody Integer userId, @RequestBody Integer articleId) {
+        JSONObject result = new JSONObject();
+        result.put(Common.SUCCESS, true);
+        System.out.println(userId + "---" + articleId);
+        return result;
+    }
 }

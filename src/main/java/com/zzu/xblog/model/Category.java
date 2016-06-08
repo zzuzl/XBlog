@@ -4,6 +4,9 @@ package com.zzu.xblog.model;
  * Created by Administrator on 2016/6/1.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 分类实体类
  */
@@ -11,14 +14,17 @@ public class Category {
 	private int cateId;
 	private String title;
 	private Category parent;
+	private List<Category> children;
 
-	@Override
-	public String toString() {
-		return "Category{" +
-				"cateId=" + cateId +
-				", title='" + title + '\'' +
-				", parent=" + parent +
-				'}';
+	public List<Category> getChildren() {
+		if(children == null) {
+			children = new ArrayList<>();
+		}
+		return children;
+	}
+
+	public void setChildren(List<Category> children) {
+		this.children = children;
 	}
 
 	public int getCateId() {
