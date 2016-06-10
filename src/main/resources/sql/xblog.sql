@@ -18,6 +18,7 @@ CREATE TABLE t_user(
   `motto` VARCHAR(255) COMMENT '个性签名',
   `interest` VARCHAR(255) COMMENT '兴趣',
   `sex` VARCHAR(5) NOT NULL DEFAULT '男' COMMENT '性别',
+  `url` VARCHAR(50) NOT NULL COMMENT '博客地址',
   PRIMARY KEY (user_id),
   key reg_time_index(reg_time)
 )
@@ -26,9 +27,9 @@ CREATE TABLE t_user(
   COMMENT '用户表';
 
 /* 插入测试数据 */
-INSERT INTO t_user(email,hash,salt,nickname,motto) VALUES
-  ('672399171@qq.com','a8uoze10adc3949ba59abbe56e057f20f883e','a8uoz','who am i','我是谁'),
-  ('675046577@qq.com','a8uoze10adc3949ba59abbe56e057f20f883e','a8uoz','who are you','你是谁');
+INSERT INTO t_user(email,hash,salt,nickname,motto,url) VALUES
+  ('672399171@qq.com','a8uoze10adc3949ba59abbe56e057f20f883e','a8uoz','who am i','我是谁','rcg6u4891a9a9a0628b7cb82d62328ecdf5fb'),
+  ('675046577@qq.com','a8uoze10adc3949ba59abbe56e057f20f883e','a8uoz','who are you','你是谁','3hpxk4891a9a9a0628b7cb82d62328ecdf5fb');
 
 /* 创建关注表 */
 CREATE TABLE t_attention(

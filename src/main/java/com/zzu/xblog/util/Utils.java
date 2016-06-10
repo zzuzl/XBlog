@@ -181,6 +181,7 @@ public class Utils {
 		System.out.println(str + "  " + str.length());*/
 
 		//System.out.println(validEmail("672399171@qq.com"));
-		System.out.println(uuid());
+		//System.out.println(uuid());
+		System.out.println(MD5("672399171@qq.com"));
 	}
 }

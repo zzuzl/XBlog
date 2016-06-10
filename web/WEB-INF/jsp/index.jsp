@@ -3,10 +3,10 @@
 <head>
     <title>XBlog</title>
     <%@include file="common/head.jsp" %>
-    <link rel="stylesheet" href="${root}/resource/jquery_pagination-master/src/pagination.css">
     <link rel="stylesheet" href="${root}/resource/css/index.css">
     <script src="${root}/resource/bower_components/bootstrap/js/collapse.js"></script>
     <script src="${root}/resource/angular-1.4.8/angular.min.js"></script>
+    <script src="${root}/resource/js/app.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -25,27 +25,27 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">主页</a></li>
                 <li><a href="#">精华</a></li>
-                <li><a href="#">关于</a></li>
+                <li><a href="${root}/about">关于</a></li>
             </ul>
 
             <div class="navbar-right">
                 <c:choose>
-                    <c:when test="${sessionScope.user == null}">
+                    <c:when test="${sessionScope.user != null}">
                         <div class="photo-div">
-                            <img src="${root}/resource/images/photo.jpg" width="32" height="32" id="photo_img">
+                            <img src="${root}/${sessionScope.user.photoSrc}" width="32" height="32" id="photo_img">
                             <s></s>
                         </div>
                         <div class="user-div">
                             <div class="top-div">
                                 <img src="${root}/resource/images/photo.jpg" width="100" height="100"/>
                                 <div class="user-info">
-                                    <h5>我的昵称</h5>
-                                    <h6>672399171@qq.com</h6>
+                                    <h5>${sessionScope.user.nickname}</h5>
+                                    <h6>${sessionScope.user.email}</h6>
                                 </div>
                             </div>
                             <div class="bottom-div">
                                 <div id="blog-btn" class="button">设置</div>
-                                <div id="quit-btn" class="button">退出</div>
+                                <div id="quit-btn" class="button" onclick="quit()">退出</div>
                             </div>
                         </div>
                     </c:when>
@@ -62,7 +62,7 @@
     <div class="jumbotron" style="margin-top: 60px">
         <h1>欢迎来到XBlog!</h1>
         <p></p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+        <p><a class="btn btn-primary btn-lg" href="${root}/about.html" role="button">Learn more</a></p>
     </div>
 
     <div class="row">
@@ -79,7 +79,8 @@
                             </a>
                             <ul class="nav collapse" id="second-level-${i.index}">
                                 <c:forEach items="${item.children}" var="child">
-                                    <li><a href="#">${child.title}</a></li>
+                                    <li>
+                                        <a href="javascript:void(0)" ng-click="vm.load(1,${child.cateId})">${child.title}</a></li>
                                 </c:forEach>
                             </ul>
                         </li>
@@ -89,18 +90,18 @@
         </div>
         <div class="col-md-9">
             <div class="list-item row" ng-repeat="item in vm.data">
-                <div class="col-md-1">
-                    <a href="#" target="_blank">
-                        <img src="${root}/{{item.user.photo_src}}" alt="暂无"/>
+                <div class="col-xs-1 head-photo">
+                    <a href="${root}/{{item.user.url}}" target="_blank" class="thumbnail">
+                        <img src="${root}/{{item.user.photoSrc}}" alt="暂无"/>
                     </a>
                 </div>
-                <div class="col-md-11">
+                <div class="col-xs-11">
                     <h4>
                         <a href="${root}/article/{{item.articleId}}" data-ng-bind="item.title"></a>
                     </h4>
                     <p class="list-body-content" data-ng-bind="item.description"></p>
                     <div class="list-foot">
-                        <a href="#" class="lightblue" data-ng-bind="item.user.nickname"></a>
+                        <a href="${root}/{{item.user.url}}" class="lightblue" data-ng-bind="item.user.nickname"></a>
                         发表于：<span data-ng-bind="item.postTime | dateFormat"></span>
                         <span class="comment">
                             <i class="fa fa-comments unClicked" aria-hidden="true"></i>
@@ -118,17 +119,22 @@
                 </div>
             </div>
 
+            <div class="alert alert-danger" ng-if="vm.pager.totalItem<=0">
+                暂无数据
+            </div>
+
             <!-- 分页 -->
-            <!--<div id="pagination"></div>-->
-            <nav class="pagination-div">
+            <nav class="pagination-div" ng-if="vm.pager.totalItem>0">
                 <ul class="pagination">
-                    <li><a href="#" aria-label="Previous">&laquo;</a></li>
-                    <li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li><a href="#" aria-label="Next">&raquo;</a></li>
+                    <li ng-class="{disabled:vm.pager.currentPage<=1}">
+                        <a href="#" aria-label="Previous">&laquo;</a>
+                    </li>
+                    <li ng-repeat="i in vm.pager.pageArray" ng-class="{active:{{i==vm.pager.currentPage}}}">
+                        <a href="#">{{i}}</a>
+                    </li>
+                    <li ng-class="{disabled:vm.pager.currentPage>=vm.pager.totalPage}">
+                        <a href="#" aria-label="Next">&raquo;</a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -181,6 +187,12 @@
         $(".user-div").hide();
     });
 
+    /* 退出 */
+    function quit() {
+        $.post('${root}/user/logout', function (data) {
+
+        }, 'JSON')
+    }
 
     /**
      * 主页
@@ -188,26 +200,43 @@
     (function () {
         'use strict';
 
-        angular.module('app', [])
+        angular.module('app')
                 .controller('IndexCtrl', IndexCtrl);
 
         IndexCtrl.$inject = ['$http'];
 
         function IndexCtrl($http) {
             var vm = this;
-            vm.currentPage = 1;
+            vm.pager = {
+                currentPage: 1
+            };
             vm.currentClass = 'unClicked';
 
             // 加载文章数据
-            vm.load = function (page) {
-                vm.currentPage = page || vm.currentPage;
-                $http.get("${root}/article/" + vm.currentPage)
+            vm.load = function (page, cate) {
+                vm.cate = cate;
+                vm.pager.currentPage = page || vm.pager.currentPage;
+                var url = "${root}/article/page/" + vm.pager.currentPage;
+                if (cate === undefined) {
+                    cate = 0;
+                }
+                url += '?cate=' + cate;
+
+                $http.get(url)
                         .then(function (res) {
-                            vm.data = res.data;
-                            if (!angular.isArray(vm.data)) {
-                                vm.data = [];
-                                vm.data.push(res.data);
+                            vm.data = res.data.itemList;
+                            vm.pager = {
+                                totalItem: res.data.totalItem,
+                                totalPage: res.data.totalPage,
+                                currentPage: res.data.currentPage,
+                                pageArray: []
+                            };
+
+                            for (var i = 0; i < vm.pager.totalPage; i++) {
+                                vm.pager.pageArray.push(i + 1);
                             }
+
+                            console.log(vm.data);
                             window.scrollTop = 0;
                         });
             };
@@ -227,8 +256,8 @@
             // 更新点赞到服务器
             vm.syncLike = function (item, success, error) {
                 $http.post('${root}/article/like', {
-                    userId: item.user.userId,
-                    articleId: item.articleId
+                    "userId": item.user.userId,
+                    "articleId": item.articleId
                 }).then(function (res) {
                     if (res.data.success) {
                         success();
@@ -239,7 +268,7 @@
             };
 
             // 初始化加载第一页
-            vm.load();
+            vm.load(1,0);
         }
     })();
 </script>

@@ -30,6 +30,14 @@ public interface UserDao {
     User searchUserByEmail(String email);
 
     /**
+     * 根据url查找用户，找不到返回null
+     *
+     * @param url
+     * @return
+     */
+    User searchUserByUrl(String url);
+
+    /**
      * 修改用户hash
      *
      * @param email

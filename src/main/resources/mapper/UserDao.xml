@@ -5,14 +5,20 @@
     <!-- 为dao接口方法提供sql语句配置 -->
 
     <select id="searchUserByEmail" resultType="User">
-        select user_id,email,`hash`,salt,nickname,reg_time,fans_count,attention_count,photo_src,motto,interest,sex
+        select user_id,email,`hash`,salt,nickname,reg_time,fans_count,attention_count,photo_src,motto,interest,sex,url
         from t_user
         where email=#{email}
     </select>
 
+    <select id="searchUserByUrl" resultType="User">
+        select user_id,email,nickname,reg_time,fans_count,attention_count,photo_src,motto,interest,sex
+        from t_user
+        where url=#{url}
+    </select>
+
     <insert id="addUser" useGeneratedKeys="true" keyProperty="userId">
-        insert ignore into t_user(email,`hash`,salt,nickname,motto,interest) VALUES
-            (#{email},#{hash},#{salt},#{nickname},#{motto},#{interest});
+        insert ignore into t_user(email,`hash`,salt,nickname,motto,interest,url) VALUES
+            (#{email},#{hash},#{salt},#{nickname},#{motto},#{interest},#{url});
     </insert>
 
     <update id="changePwd">
@@ -20,7 +26,7 @@
     </update>
 
     <select id="getUserById" resultType="User">
-        select user_id,email,nickname,reg_time,fans_count,attention_count,photo_src,motto,interest,sex
+        select user_id,email,nickname,reg_time,fans_count,attention_count,photo_src,motto,interest,sex,url
         from t_user
         where user_id=#{id}
     </select>

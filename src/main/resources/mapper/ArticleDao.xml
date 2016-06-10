@@ -4,19 +4,29 @@
 <mapper namespace="com.zzu.xblog.dao.ArticleDao">
     <select id="listArticle" resultType="Article">
         select a.article_id,a.title,a.description,a.post_time,a.view_count,a.comment_count,a.like_count,a.tag,
-            u.nickname as "user.nickname",u.user_id as "user.user_id",u.photo_src as "user.photo_src"
+        u.nickname as "user.nickname",u.user_id as "user.user_id",u.photo_src as "user.photo_src",u.url as "user.url"
         from t_article a,t_user u
         where a.user_id=u.user_id
-            <if test="userId &gt; 0">
-                and u.user_id=#{userId}
-            </if>
+        <if test="userId &gt; 0">
+            and u.user_id=#{userId}
+        </if>
+        <if test="cate &gt; 0">
+            and a.cate_id=#{cate}
+        </if>
         order by post_time desc
         limit #{start},#{count}
     </select>
 
+    <select id="getArticleCount" resultType="int">
+        select count(*) as num from t_article
+        <if test="cate &gt; 0">
+            where cate_id=#{cate}
+        </if>
+    </select>
+
     <select id="detail" resultType="Article">
         select a.article_id,a.title,a.description,a.content,a.post_time,a.view_count,a.comment_count,a.like_count,a.tag,
-            u.nickname as "user.nickname",u.user_id as "user.user_id",u.photo_src as "user.photo_src",
+            u.nickname as "user.nickname",u.user_id as "user.user_id",u.photo_src as "user.photo_src",u.url as "user.url",
             c.title as "category.title",c.cate_id as "category.cate_id"
         from t_article a,t_user u,t_category c
         where a.user_id=u.user_id and a.cate_id=c.cate_id
@@ -38,7 +48,7 @@
     </update>
 
     <insert id="insertLike">
-        insert into t_like(user_id,article_id) values
+        insert ignore into t_like(user_id,article_id) values
             (#{userId},#{articleId})
     </insert>
 

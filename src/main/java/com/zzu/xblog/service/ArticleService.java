@@ -10,10 +10,12 @@ import com.zzu.xblog.dao.LuceneDao;
 import com.zzu.xblog.dao.UserDao;
 import com.zzu.xblog.exception.DataException;
 import com.zzu.xblog.model.Article;
+import com.zzu.xblog.model.Pager;
 import com.zzu.xblog.model.User;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -37,7 +39,7 @@ public class ArticleService {
      * @param count
      * @return
      */
-    public List<Article> listArticle(int page, int count) {
+    public Pager<Article> listArticle(int page, int count, int cate) {
         if (count < 1) {
             count = Common.DEFAULT_ITEM_COUNT;
         }
@@ -45,7 +47,11 @@ public class ArticleService {
             page = 1;
         }
         int start = (page - 1) * count;
-        return articleDao.listArticle(start, count, 0);
+        List<Article> articles = articleDao.listArticle(start, count, 0, cate);
+        Pager<Article> pager = new Pager<Article>(articleDao.getArticleCount(cate), page);
+        pager.setItemList(articles);
+
+        return pager;
     }
 
     /**
@@ -67,7 +73,7 @@ public class ArticleService {
      * @param article
      * @return
      */
-    public JSONObject insertArticle(Article article, HttpServletRequest request) {
+    public JSONObject insertArticle(Article article) {
         JSONObject result = article.valid();
 
         if (result.getBoolean(Common.SUCCESS)) {
@@ -78,8 +84,6 @@ public class ArticleService {
                 } else {
                     User user = userDao.getUserById(article.getUser().getUserId());
                     article.setUser(user);
-                    result.put(Common.DATA, article);
-                    result.put(Common.REQUEST, request);
                 }
             } else {
                 result.put(Common.SUCCESS, false);
@@ -115,7 +119,7 @@ public class ArticleService {
      * @param userId
      * @return
      */
-    public List<Article> listArticle(int page, int count, int userId) {
+    public List<Article> listMyArticle(int page, int count, int userId) {
         if (userId < 1) {
             return null;
         }
@@ -126,7 +130,7 @@ public class ArticleService {
             page = 1;
         }
         int start = (page - 1) * count;
-        return articleDao.listArticle(start, count, userId);
+        return articleDao.listArticle(start, count, userId, -1);
     }
 
     /**
@@ -148,8 +152,7 @@ public class ArticleService {
                     articleDao.updateLikeCount(articleId, 1) > 0) {
                 result.put(Common.SUCCESS, true);
             } else {
-                result.put(Common.MSG, "数据操作错误");
-                throw new DataException();
+                result.put(Common.MSG, "您已赞过");
             }
         }
         return result;
@@ -157,6 +160,7 @@ public class ArticleService {
 
     /**
      * 查询文章
+     *
      * @param keyword
      * @return
      */

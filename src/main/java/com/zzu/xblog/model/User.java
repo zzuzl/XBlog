@@ -27,6 +27,7 @@ public class User {
 	private String motto;
 	private String interest;
 	private String sex;
+	private String url;
 
 	private static final int MAX_EMAIL_LENGTH = 45;
 	private static final int MIN_PWD_LENGTH = 6;
@@ -77,6 +78,7 @@ public class User {
 				", motto='" + motto + '\'' +
 				", interest='" + interest + '\'' +
 				", sex='" + sex + '\'' +
+				", url='" + url + '\'' +
 				'}';
 	}
 
@@ -85,6 +87,14 @@ public class User {
 		String hash = Utils.MD5(password, salt);
 		setHash(hash);
 		setSalt(salt);
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public int getUserId() {

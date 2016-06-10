@@ -1,6 +1,7 @@
 package com.zzu.xblog.service;
 
 import com.zzu.xblog.common.Common;
+import com.zzu.xblog.model.UploadType;
 import com.zzu.xblog.util.Utils;
 import net.coobird.thumbnailator.Thumbnails;
 import net.sf.json.JSONObject;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * 文件相关service
@@ -32,6 +34,38 @@ public class FileService {
             return result;
         }
         return uploadFileCore(file, request, "images");
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param file
+     * @param uploadType
+     * @param request
+     * @return
+     */
+    public JSONObject uploadFiles(MultipartFile file, UploadType uploadType, HttpServletRequest request) {
+        String fileName = file.getOriginalFilename();
+        String fileFormat = fileName.substring(fileName.lastIndexOf(".") + 1);
+        JSONObject result = new JSONObject();
+        result.put("error", 1);
+
+        if (file.getSize() > uploadType.getMaxSize()) {
+            result.put("message", "文件过大：不超过" + uploadType.getMaxSize() / 1000 + "KB");
+            return result;
+        } else if (Arrays.binarySearch(uploadType.getFormats(), fileFormat) <= 0) {
+            result.put("message", "文件格式错误，支持的格式：" + Arrays.toString(uploadType.getFormats()));
+        } else {
+            result = uploadFileCore(file, request, uploadType.getFolder());
+            if (result.getBoolean(Common.SUCCESS)) {
+                result.put("error", 0);
+                result.put("url", result.getString(Common.FILENAME));
+            } else {
+                result.put("message", result.getString(Common.MSG));
+            }
+        }
+
+        return result;
     }
 
     /**

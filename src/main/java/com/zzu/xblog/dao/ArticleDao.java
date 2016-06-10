@@ -19,7 +19,10 @@ public interface ArticleDao {
      * @param count
      * @return
      */
-    List<Article> listArticle(@Param("start") int start, @Param("count") int count, @Param("userId") int userId);
+    List<Article> listArticle(@Param("start") int start,
+                              @Param("count") int count,
+                              @Param("userId") int userId,
+                              @Param("cate") int cate);
 
     /**
      * 获取一篇文章详细信息
@@ -78,4 +81,10 @@ public interface ArticleDao {
      * @return
      */
     int updateViewCount(@Param("articleId") int articleId, @Param("count") int count);
+
+    /**
+     * 文章数量
+     * @return
+     */
+    int getArticleCount(@Param("cate") int cate);
 }

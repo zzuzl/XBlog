@@ -9,6 +9,7 @@ import com.zzu.xblog.util.Utils;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -59,6 +60,16 @@ public class UserService {
     }
 
     /**
+     * 根据url查找用户，找不到返回null
+     *
+     * @param url
+     * @return
+     */
+    public User searchUserByUrl(String url) {
+        return userDao.searchUserByUrl(url);
+    }
+
+    /**
      * 用户注册，返回插入用户的数量，主键自动存于userId
      *
      * @param user
@@ -73,6 +84,7 @@ public class UserService {
 
         if (searchUserByEmail(user.getEmail()) == null) {
             user.setPwd(password);
+            user.setUrl(Utils.MD5(user.getEmail()));
             return userDao.addUser(user);
         } else {
             return 0;

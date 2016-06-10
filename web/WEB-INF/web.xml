@@ -66,13 +66,16 @@
         <url-pattern>/</url-pattern>
     </filter-mapping>
 
-    <!-- 过滤post,put请求，application/json 转化为x-www-form-urlencoded -->
-    <filter>
-        <filter-name>requestFilter</filter-name>
-        <filter-class>com.zzu.xblog.filter.RequestFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>requestFilter</filter-name>
-        <url-pattern>/</url-pattern>
-    </filter-mapping>
+    <!-- log4j日志 -->
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>project</param-value>
+    </context-param>
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:log4j.properties</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
 </web-app>

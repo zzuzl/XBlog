@@ -1,6 +1,7 @@
 package com.zzu.xblog.web;
 
 import com.zzu.xblog.common.Common;
+import com.zzu.xblog.model.UploadType;
 import com.zzu.xblog.service.FileService;
 import com.zzu.xblog.service.UserService;
 import net.sf.json.JSONObject;
@@ -15,6 +16,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+
+import static com.zzu.xblog.model.UploadType.*;
 
 /**
  * 文件相关的controller
@@ -39,6 +42,39 @@ public class FileController {
             result.put(Common.SUCCESS, false);
             result.put(Common.MSG, "文件不能为空");
         }
+        return result;
+    }
+
+    /* 发表文章文件上传controller */
+    @RequestMapping(value = "/uploadInArticle", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject uploadInArticle(@RequestParam("imgFile") MultipartFile imgFile,
+                                      @RequestParam("dir") final String dir,
+                                      HttpServletRequest request) throws IOException {
+        UploadType uploadType = null;
+        if (dir.equals(FILE.getType())) {
+            uploadType = FILE;
+        } else if (dir.equals(FLASH.getType())) {
+            uploadType = FLASH;
+        } else if (dir.equals(MEDIA.getType())) {
+            uploadType = MEDIA;
+        } else if (dir.equals(IMAGE.getType())) {
+            uploadType = IMAGE;
+        }
+        JSONObject result = new JSONObject();
+
+        if (imgFile.isEmpty()) {
+            result.put("error", 1);
+            result.put("message", "请选择文件");
+        } else {
+            if (uploadType != null) {
+                result = fileService.uploadFiles(imgFile, uploadType, request);
+            } else {
+                result.put("error", 1);
+                result.put("message", "文件类型错误");
+            }
+        }
+
         return result;
     }
 

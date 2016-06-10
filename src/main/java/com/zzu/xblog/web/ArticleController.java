@@ -2,9 +2,13 @@ package com.zzu.xblog.web;
 
 import com.zzu.xblog.common.Common;
 import com.zzu.xblog.model.Article;
+import com.zzu.xblog.model.Attention;
+import com.zzu.xblog.model.Pager;
 import com.zzu.xblog.model.User;
 import com.zzu.xblog.service.ArticleService;
+import com.zzu.xblog.service.MailService;
 import com.zzu.xblog.service.RedisService;
+import com.zzu.xblog.service.UserService;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -27,12 +31,16 @@ public class ArticleController {
     private ArticleService articleService;
     @Resource
     private RedisService redisService;
+    @Resource
+    private UserService userService;
+    @Resource
+    private MailService mailService;
 
     /* 获取第n页的文章，默认每页15篇 */
     @RequestMapping(value = "/page/{page}", method = RequestMethod.GET)
     @ResponseBody
-    public List<Article> listArticle(@PathVariable("page") Integer page) {
-        return articleService.listArticle(page, Common.DEFAULT_ITEM_COUNT);
+    public Pager<Article> listArticle(@PathVariable("page") Integer page, Integer cate) {
+        return articleService.listArticle(page, Common.DEFAULT_ITEM_COUNT, cate);
     }
 
     /* 获取文章详细信息 */
@@ -56,7 +64,24 @@ public class ArticleController {
     @ResponseBody
     public JSONObject postArticle(@Valid @ModelAttribute("article") Article article,
                                   BindingResult bindingResult, HttpServletRequest request) {
-        return articleService.insertArticle(article, request);
+        JSONObject result = articleService.insertArticle(article);
+
+        // todo
+        if (result.getBoolean(Common.SUCCESS)) {
+            List<Attention> fansList = userService.getAllFans(article.getUser().getUserId());
+            for (Attention attention : fansList) {
+                mailService.sendEmailToFans(attention.getFrom().getEmail(), article, request);
+            }
+        }
+
+        return result;
+    }
+
+    /* 文章点赞 */
+    @RequestMapping(value = "/like", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject postArticle(@RequestParam("articleId") Integer articleId, @RequestParam("userId") Integer userId) {
+        return articleService.insertLike(userId, articleId);
     }
 
     /* 修改文章 */
@@ -71,8 +96,8 @@ public class ArticleController {
     /* 获取某个用户的第n页文章，默认每页15篇 */
     @RequestMapping(value = "/page/{page}/user/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public List<Article> listArticle(@PathVariable("page") Integer page, @PathVariable("id") Integer id) {
-        return articleService.listArticle(page, Common.DEFAULT_ITEM_COUNT, id);
+    public List<Article> listMyArticle(@PathVariable("page") Integer page, @PathVariable("id") Integer id) {
+        return articleService.listMyArticle(page, Common.DEFAULT_ITEM_COUNT, id);
     }
 
     /* 全局搜索文章 */
@@ -81,15 +106,5 @@ public class ArticleController {
     public List<Article> searchArticle(String keyword) {
         System.out.println(keyword);
         return articleService.searchArticle(keyword);
-    }
-
-    /* 点赞 */
-    @RequestMapping(value = "/like", method = RequestMethod.POST)
-    @ResponseBody
-    public JSONObject addLike(@RequestBody Integer userId, @RequestBody Integer articleId) {
-        JSONObject result = new JSONObject();
-        result.put(Common.SUCCESS, true);
-        System.out.println(userId + "---" + articleId);
-        return result;
     }
 }
