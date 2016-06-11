@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * redis存储service
  */
-@Component
+@Service
 public class RedisService {
     @Resource
     private RedisTemplate<Object, Object> redisTemplate;

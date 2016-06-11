@@ -9,6 +9,18 @@
     <script src="${root}/resource/js/moment-with-locales.js"></script>
 </head>
 <body>
+<div class="header" style="background: url('${root}/resource/images/body_bg.png')">
+    <div class="blog-title" style="background: url('${root}/resource/images/title-yellow.png')">
+        <h1><a href="${root}/${requestScope.user.url}">${requestScope.user.nickname}</a></h1>
+        <h4>追求知识，不怕露怯；完善知识，不怕受挫；运用知识，不怕重复。</h4>
+    </div>
+    <div id="navigator">
+        <ul class="navList">
+            <li><a href="${root}/">XBlog</a></li>
+            <li><a href="${root}/${requestScope.user.url}">首页</a></li>
+        </ul>
+    </div>
+</div>
 <div class="container" style="margin-top: 60px">
     <div class="row">
         <div class="col-xs-9">

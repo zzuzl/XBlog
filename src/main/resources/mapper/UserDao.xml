@@ -11,7 +11,7 @@
     </select>
 
     <select id="searchUserByUrl" resultType="User">
-        select user_id,email,nickname,reg_time,fans_count,attention_count,photo_src,motto,interest,sex
+        select user_id,email,nickname,reg_time,fans_count,attention_count,photo_src,motto,interest,sex,url
         from t_user
         where url=#{url}
     </select>

@@ -12,7 +12,21 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context-3.2.xsd">
     <!-- 注解扫描 -->
-    <context:component-scan base-package="com.zzu.xblog"/>
+    <!--
+        Spring MVC 和 Spring 整合的时候，SpringMVC的dispatcher-servlet.xml文件中配置扫描包，
+        不要包含 service的注解，Spring的applicationContext.xml文件中配置扫描包时，
+        不要包含controller的注解，如下所示：
+        Spring MVC启动时的配置文件，包含组件扫描、url映射以及设置freemarker参数，
+        让spring不扫描带有@Service注解的类。为什么要这样设置？因为springmvc.xml
+        与applicationContext.xml不是同时加载，如果不进行这样的设置，那么，
+        spring就会将所有带@Service注解的类都扫描到容器中，等到加载applicationContext.xml的时候，
+        会因为容器已经存在Service类，使得cglib将不对Service进行代理，
+        直接导致的结果就是在applicationContext 中的事务配置不起作用，发生异常时，
+        无法对数据进行回滚。以上就是原因所在。
+    -->
+    <context:component-scan base-package="com.zzu.xblog">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
     <mvc:annotation-driven/>
 
     <!-- 视图解析器 -->
@@ -26,14 +40,14 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/user/register"/>
-            <bean class="com.zzu.xblog.interceptor.UserParameterInterceptor" />
+            <bean class="com.zzu.xblog.interceptor.UserParameterInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/*"/>
-            <bean class="com.zzu.xblog.interceptor.RequestInterceptor" />
+            <bean class="com.zzu.xblog.interceptor.RequestInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
     <!-- 处理静态资源 -->
-    <mvc:default-servlet-handler />
+    <mvc:default-servlet-handler/>
 </beans>

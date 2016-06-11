@@ -80,7 +80,10 @@
                             <ul class="nav collapse" id="second-level-${i.index}">
                                 <c:forEach items="${item.children}" var="child">
                                     <li>
-                                        <a href="javascript:void(0)" ng-click="vm.load(1,${child.cateId})">${child.title}</a></li>
+                                        <a href="javascript:void(0)" ng-click="vm.load({page:1,cate:${child.cateId}})">
+                                                ${child.title}
+                                        </a>
+                                    </li>
                                 </c:forEach>
                             </ul>
                         </li>
@@ -92,7 +95,8 @@
             <div class="list-item row" ng-repeat="item in vm.data">
                 <div class="col-xs-1 head-photo">
                     <a href="${root}/{{item.user.url}}" target="_blank" class="thumbnail">
-                        <img src="${root}/{{item.user.photoSrc}}" alt="暂无"/>
+                        <img src="${root}/{{item.user.photoSrc}}" alt="暂无"
+                             onerror="this.src='${root}/resource/images/default-head-photo.png'"/>
                     </a>
                 </div>
                 <div class="col-xs-11">
@@ -119,24 +123,13 @@
                 </div>
             </div>
 
-            <div class="alert alert-danger" ng-if="vm.pager.totalItem<=0">
+            <div class="alert alert-danger" ng-show="vm.total<=0">
                 暂无数据
             </div>
 
-            <!-- 分页 -->
-            <nav class="pagination-div" ng-if="vm.pager.totalItem>0">
-                <ul class="pagination">
-                    <li ng-class="{disabled:vm.pager.currentPage<=1}">
-                        <a href="#" aria-label="Previous">&laquo;</a>
-                    </li>
-                    <li ng-repeat="i in vm.pager.pageArray" ng-class="{active:{{i==vm.pager.currentPage}}}">
-                        <a href="#">{{i}}</a>
-                    </li>
-                    <li ng-class="{disabled:vm.pager.currentPage>=vm.pager.totalPage}">
-                        <a href="#" aria-label="Next">&raquo;</a>
-                    </li>
-                </ul>
-            </nav>
+            <%-- 分页 --%>
+            <xl-page pageSize="15" n="5" method="load" cla="pagination-sm"
+                     data="itemList" totalItem="totalItem" totalPage="totalPage"></xl-page>
         </div>
     </div>
 </div>
@@ -207,38 +200,28 @@
 
         function IndexCtrl($http) {
             var vm = this;
-            vm.pager = {
-                currentPage: 1
-            };
             vm.currentClass = 'unClicked';
 
             // 加载文章数据
-            vm.load = function (page, cate) {
-                vm.cate = cate;
-                vm.pager.currentPage = page || vm.pager.currentPage;
-                var url = "${root}/article/page/" + vm.pager.currentPage;
-                if (cate === undefined) {
-                    cate = 0;
+            vm.load = function (params, callback) {
+                console.log(params);
+                var url = "${root}/article/page/" + params.page;
+                if (params.cate === undefined) {
+                    vm.cate = 0;
+                } else {
+                    vm.cate = params.cate;
                 }
-                url += '?cate=' + cate;
+                url += '?cate=' + vm.cate;
 
-                $http.get(url)
-                        .then(function (res) {
-                            vm.data = res.data.itemList;
-                            vm.pager = {
-                                totalItem: res.data.totalItem,
-                                totalPage: res.data.totalPage,
-                                currentPage: res.data.currentPage,
-                                pageArray: []
-                            };
-
-                            for (var i = 0; i < vm.pager.totalPage; i++) {
-                                vm.pager.pageArray.push(i + 1);
-                            }
-
-                            console.log(vm.data);
-                            window.scrollTop = 0;
-                        });
+                $http.get(url).then(function (res) {
+                    if (callback) {
+                        callback(res.data);
+                    } else {
+                        vm.data = res.data.itemList;
+                        vm.total = res.data.totalItem;
+                    }
+                    window.scrollTop = 0;
+                });
             };
 
             // 点赞
@@ -266,12 +249,10 @@
                     }
                 });
             };
-
-            // 初始化加载第一页
-            vm.load(1,0);
         }
     })();
 </script>
 <script src="${root}/resource/js/filters.js"></script>
+<script src="${root}/resource/js/page.js"></script>
 </body>
 </html>

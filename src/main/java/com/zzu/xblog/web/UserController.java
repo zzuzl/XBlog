@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Date;
@@ -48,6 +49,17 @@ public class UserController {
             result.put(Common.MSG, "用户名或密码错误");
         }
         return result;
+    }
+
+    /* 查询Email是否已经注册,返回200 表示可以注册，返回411表示不可以注册 */
+    @RequestMapping(value = "/exists", method = RequestMethod.POST)
+    public void exists(@RequestParam(value = "email", required = true) String email,
+                       HttpServletResponse response) {
+        if(userService.searchUserByEmail(email) == null) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_LENGTH_REQUIRED);
+        }
     }
 
     /* 根据email查询用户 */

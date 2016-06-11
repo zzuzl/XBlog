@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 邮件发送service
  */
-@Component
+@Service
 public class MailService {
 	@Resource
 	private JavaMailSender mailSender;

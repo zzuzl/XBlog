@@ -15,7 +15,9 @@
 
     <!-- 注解驱动,扫描包 -->
     <context:annotation-config/>
-    <context:component-scan base-package="com.zzu.xblog"/>
+    <context:component-scan base-package="com.zzu.xblog">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
 
     <!-- 整合mybatis -->
     <!-- 1.配置数据库连接参数 -->
@@ -94,6 +96,6 @@
         <property name="connectionFactory" ref="jedisConnFactory"/>
     </bean>
 
-    <!-- 配置annotation版的aop，基于@AspectJ -->
-    <aop:aspectj-autoproxy/>
+    <!-- 通知spring使用cglib而不是jdk的来生成代理方法 AOP可以拦截到Controller -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 </beans>

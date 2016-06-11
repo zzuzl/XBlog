@@ -8,6 +8,7 @@ import com.zzu.xblog.model.User;
 import com.zzu.xblog.util.Utils;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -16,7 +17,7 @@ import java.util.List;
 /**
  * 用户相关service
  */
-@Component
+@Service
 public class UserService {
     @Resource
     private UserDao userDao;
