@@ -1,7 +1,9 @@
 package com.zzu.xblog.web;
 
 import com.zzu.xblog.common.Common;
+import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.model.UploadType;
+import com.zzu.xblog.model.User;
 import com.zzu.xblog.service.FileService;
 import com.zzu.xblog.service.UserService;
 import net.sf.json.JSONObject;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 
@@ -81,13 +84,23 @@ public class FileController {
     /* 文件裁剪与缩放,并设置头像 */
     @RequestMapping(value = "/changePhoto", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject changePhoto(@RequestParam("filename") String filename, HttpServletRequest request,
-                                  Double x, Double y, Double width, Double height) {
-        JSONObject result = fileService.cropper(filename, x, y, width, height, request);
-        if (result.getBoolean(Common.SUCCESS)) {
-            int userId = 1;
-            result = userService.changePhoto(filename, userId);
+    public Result changePhoto(@RequestParam("filename") String filename, HttpServletRequest request,
+                              Double x, Double y, Double width, Double height) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute(Common.USER);
+        Result result = fileService.cropper(filename, x, y, width, height, request);
+        if (user != null) {
+            if (result.isSuccess()) {
+                result = userService.changePhoto(filename, user.getUserId());
+                if (result.isSuccess()) {
+                    request.getSession().setAttribute(Common.USER, user.getUserId());
+                }
+            }
+        } else {
+            result.setSuccess(false);
+            result.setMsg("用户未登录");
         }
+
         return result;
     }
 }

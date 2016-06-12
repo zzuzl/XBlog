@@ -1,0 +1,31 @@
+@charset "UTF-8";
+.user-info-2 {
+    width: 100%;
+    height: 80px;
+    border: 1px solid #2b542c;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.user-info-2 img {
+    width: 60px;
+    height: 60px;
+    margin: 10px;
+    float: left;
+}
+
+.user-detail {
+    padding-top: 10px;
+    display: inline-block;
+    width: 120px;
+}
+
+.title-label {
+    font-size: 20px;
+    margin: 10px;
+}
+
+#sex, #nickname {
+    width: 300px;
+}

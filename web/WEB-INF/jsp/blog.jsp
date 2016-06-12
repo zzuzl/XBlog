@@ -5,19 +5,17 @@
     <title>${requestScope.user.nickname}的博客</title>
     <%@include file="common/head.jsp" %>
     <link rel="stylesheet" href="${root}/resource/css/blog.css">
-    <script src="${root}/resource/js/moment.js"></script>
-    <script src="${root}/resource/js/moment-with-locales.js"></script>
 </head>
 <body>
 <div class="header" style="background: url('${root}/resource/images/body_bg.png')">
     <div class="blog-title" style="background: url('${root}/resource/images/title-yellow.png')">
         <h1><a href="${root}/${requestScope.user.url}">${requestScope.user.nickname}</a></h1>
-        <h4>追求知识，不怕露怯；完善知识，不怕受挫；运用知识，不怕重复。</h4>
+        <h4>${requestScope.user.motto}</h4>
     </div>
     <div id="navigator">
         <ul class="navList">
             <li><a href="${root}/">XBlog</a></li>
-            <li><a href="${root}/${requestScope.user.url}">首页</a></li>
+            <li><a style="background: white;color: #2aabd2;" href="${root}/${requestScope.user.url}">首页</a></li>
         </ul>
     </div>
 </div>
@@ -33,13 +31,13 @@
                             </div>
                         </div>
                         <div class="col-xs-9 title">
-                            <a href="#">${item.title}</a>
+                            <a href="${root}/p/${item.articleId}">${item.title}</a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 content">
                             <p>${item.description}</p>
-                            <a href="#">查看全文</a>
+                            <a href="${root}/p/${item.articleId}">查看全文</a>
                         </div>
                     </div>
                     <div class="row">
@@ -69,15 +67,9 @@
     </div>
 </div>
 
-<div class="panel-footer">
-    <div>
-        <a href="#">关于XBlog</a>
-        <a href="#">联系我们</a>©20016-2026
-        <a href="#">XBlog</a>保留所有权利
-        <a href="#" target="_blank">豫ICP备09004260号</a>
-    </div>
-</div>
-
+<%@include file="common/footer.jsp" %>
+<script src="${root}/resource/js/moment.js"></script>
+<script src="${root}/resource/js/moment-with-locales.js"></script>
 <script type="application/javascript">
     $(function () {
         moment.locale('zh-CN');

@@ -107,19 +107,21 @@ CREATE TABLE t_comment (
   `content` TEXT NOT NULL COMMENT '内容',
   `post_time` DATETIME NOT NULL DEFAULT now() COMMENT '发表时间',
   `article_id` INT NOT NULL COMMENT '文章id',
+  `user_id` INT NOT NULL COMMENT '用户id',
   `p_id` INT NOT NULL COMMENT '父亲id',
   PRIMARY KEY (comment_id),
   KEY post_time_index(post_time),
-  FOREIGN KEY (article_id) REFERENCES t_article(article_id) ON UPDATE CASCADE ON DELETE CASCADE
+  FOREIGN KEY (article_id) REFERENCES t_article(article_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES t_user(user_id) ON UPDATE CASCADE ON DELETE CASCADE
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COMMENT '评论表';
 
 /* 插入测试数据 */
-INSERT INTO t_comment(content, article_id, p_id) VALUES
-  ('文章写得很不错',1,0),
-  ('岂止不错，简直逆天!',1,1);
+INSERT INTO t_comment(content, article_id, p_id,user_id) VALUES
+  ('文章写得很不错',1,0,1),
+  ('岂止不错，简直逆天!',1,1,1);
 
 /* 创建点赞表 */
 CREATE TABLE t_like(

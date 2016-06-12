@@ -5,6 +5,7 @@ package com.zzu.xblog.model;
  */
 
 import com.zzu.xblog.common.Common;
+import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.util.Utils;
 import net.sf.json.JSONObject;
 
@@ -19,6 +20,7 @@ public class Comment {
     private Date postTime;
     private Article article;
     private Comment parent;
+    private User user;
     private int pId;
 
     private static final int MAX_CONTENT_LENGTH = 300;
@@ -31,6 +33,7 @@ public class Comment {
                 ", postTime=" + postTime +
                 ", article=" + article +
                 ", parent=" + parent +
+                ", user=" + user +
                 ", pId=" + pId +
                 '}';
     }
@@ -43,20 +46,27 @@ public class Comment {
         this.pId = pId;
     }
 
-    public JSONObject valid() {
-        JSONObject result = new JSONObject();
-        result.put(Common.SUCCESS, false);
+    public Result valid() {
+        Result result = new Result();
 
         if (Utils.isEmpty(content) || content.length() > MAX_CONTENT_LENGTH) {
-            result.put(Common.MSG, "内容长度为1-300");
+            result.setMsg("内容长度为1-300");
         } else if (article == null || article.getArticleId() < 1) {
-            result.put(Common.MSG, "错误：未选择文章");
+            result.setMsg("错误：未选择文章");
         } else if (pId < 0) {
-            result.put(Common.MSG, "错误：回复错误");
+            result.setMsg("错误：回复错误");
         } else {
-            result.put(Common.SUCCESS, true);
+            result.setSuccess(true);
         }
         return result;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public int getCommentId() {

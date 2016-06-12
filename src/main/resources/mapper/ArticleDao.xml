@@ -25,40 +25,62 @@
     </select>
 
     <select id="detail" resultType="Article">
-        select a.article_id,a.title,a.description,a.content,a.post_time,a.view_count,a.comment_count,a.like_count,a.tag,
-            u.nickname as "user.nickname",u.user_id as "user.user_id",u.photo_src as "user.photo_src",u.url as "user.url",
-            c.title as "category.title",c.cate_id as "category.cate_id"
-        from t_article a,t_user u,t_category c
-        where a.user_id=u.user_id and a.cate_id=c.cate_id
+        SELECT
+            a.article_id,
+            a.title,
+            a.description,
+            a.content,
+            a.post_time,
+            a.view_count,
+            a.comment_count,
+            a.like_count,
+            a.tag,
+            u.nickname        AS "user.nickname",
+            u.user_id         AS "user.user_id",
+            u.photo_src       AS "user.photo_src",
+            u.url             AS "user.url",
+            u.motto           AS "user.motto",
+            u.reg_time        AS "user.regTime",
+            u.fans_count      AS "user.fansCount",
+            u.attention_count AS "user.attentionCount",
+            c.title           AS "category.title",
+            c.cate_id         AS "category.cate_id"
+        FROM t_article a, t_user u, t_category c
+        WHERE a.user_id = u.user_id AND a.cate_id = c.cate_id
     </select>
 
     <insert id="insertArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="articleId">
-        insert into t_article(cate_id,title,description,content,user_id,tag) values
-            (#{category.cateId},#{title},#{description},#{content},#{user.userId},#{tag})
+        INSERT INTO t_article (cate_id, title, description, content, user_id, tag) VALUES
+            (#{category.cateId}, #{title}, #{description}, #{content}, #{user.userId}, #{tag})
     </insert>
 
     <update id="updateCommentCount">
-        update t_article set `comment_count`=comment_count+#{count}
-        where article_id=#{articleId}
+        UPDATE t_article
+        SET `comment_count` = comment_count + #{count}
+        WHERE article_id = #{articleId}
     </update>
 
     <update id="updateArticle">
-        update t_article set cate_id=#{category.cateId},title=#{title},description=#{sescription},content=#{content},tag=#{tag}
-        where article_id=#{articleId}
+        UPDATE t_article
+        SET cate_id = #{category.cateId}, title = #{title}, description = #{sescription}, content = #{content},
+            tag     = #{tag}
+        WHERE article_id = #{articleId}
     </update>
 
     <insert id="insertLike">
-        insert ignore into t_like(user_id,article_id) values
-            (#{userId},#{articleId})
+        INSERT IGNORE INTO t_like (user_id, article_id) VALUES
+            (#{userId}, #{articleId})
     </insert>
 
     <update id="updateLikeCount">
-        update t_article set `like_count`=like_count+#{count}
-        where article_id=#{articleId}
+        UPDATE t_article
+        SET `like_count` = like_count + #{count}
+        WHERE article_id = #{articleId}
     </update>
 
     <update id="updateViewCount">
-        update t_article set `view_count`=view_count+#{count}
-        where article_id=#{articleId}
+        UPDATE t_article
+        SET `view_count` = view_count + #{count}
+        WHERE article_id = #{articleId}
     </update>
 </mapper>

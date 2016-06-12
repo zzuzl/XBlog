@@ -3,6 +3,7 @@ package com.zzu.xblog.service;
 import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dao.ArticleDao;
 import com.zzu.xblog.dao.CommentDao;
+import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.exception.DataException;
 import com.zzu.xblog.model.Comment;
 import net.sf.json.JSONObject;
@@ -31,7 +32,21 @@ public class CommentService {
         if (id < 1) {
             return null;
         }
-        return commentDao.listArticleComments(id);
+
+        List<Comment> comments = commentDao.listArticleComments(id);
+
+        for (Comment comment : comments) {
+            if (comment.getpId() > 0) {
+                for (Comment temp : comments) {
+                    if (comment.getpId() == temp.getCommentId()) {
+                        comment.setParent(temp);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return comments;
     }
 
     /**
@@ -41,20 +56,20 @@ public class CommentService {
      * @return
      */
     @Transactional
-    public JSONObject insertComment(Comment comment) {
-        JSONObject result = comment.valid();
-        if (result.getBoolean(Common.SUCCESS)) {
+    public Result insertComment(Comment comment) {
+        Result result = comment.valid();
+        if (result.isSuccess()) {
             if (commentDao.insertComment(comment) > 0 &&
                     articleDao.updateCommentCount(comment.getArticle().getArticleId(), 1) > 0) {
-                result.put(Common.MSG, "发表成功!");
+                result.setMsg("发表成功!");
             } else {
-                result.put(Common.SUCCESS, false);
-                result.put(Common.MSG, "发表失败!");
+                result.setSuccess(false);
+                result.setMsg("发表失败!");
                 throw new DataException();
             }
         } else {
-            result.put(Common.SUCCESS, false);
-            result.put(Common.MSG, "发表失败!");
+            result.setSuccess(false);
+            result.setMsg("发表失败!");
         }
 
         return result;

@@ -16,6 +16,8 @@ public class Common {
 	public static final String REQUEST = "request";
 	public static final String ARTICLE_ARRAY = "articleArray";
 
+	public static final String PAGE_404 = "common/404";
+
 	public static final String OPERATE_RESET_PWD = "resetpwd";
 
 	public static final int DEFAULT_ITEM_COUNT = 15;

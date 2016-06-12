@@ -116,6 +116,10 @@ s {
     float: left;
 }
 
+#blog-btn:hover {
+    text-decoration: none;
+}
+
 #quit-btn {
     float: right;
 }

@@ -1,5 +1,6 @@
 package com.zzu.xblog.web;
 
+import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.model.Comment;
 import com.zzu.xblog.service.CommentService;
 import net.sf.json.JSONObject;
@@ -20,17 +21,16 @@ public class CommentController {
     private CommentService commentService;
 
     /* 查询文章对应评论 */
-    @RequestMapping(value = "/article/{articleId}", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/article/{articleId}", method = RequestMethod.GET)
     @ResponseBody
     public List<Comment> list(@PathVariable("articleId") Integer articleId) {
         return commentService.listArticleComments(articleId);
-    }
+    }*/
 
     /* 发表评论 */
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject postComment(@Valid @ModelAttribute("comment") Comment comment, BindingResult bindingResult) {
-        System.out.println(comment);
+    public Result postComment(@Valid @ModelAttribute("comment") Comment comment, BindingResult bindingResult) {
         return commentService.insertComment(comment);
     }
 }

@@ -2,6 +2,7 @@ package com.zzu.xblog.service;
 
 import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dao.UserDao;
+import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.exception.DataException;
 import com.zzu.xblog.model.Attention;
 import com.zzu.xblog.model.User;
@@ -122,17 +123,16 @@ public class UserService {
      * @param userId
      * @return
      */
-    public JSONObject changePhoto(String photoSrc, int userId) {
-        JSONObject result = new JSONObject();
-        result.put(Common.SUCCESS, false);
+    public Result changePhoto(String photoSrc, int userId) {
+        Result result = new Result();
 
         if (userId < 1) {
-            result.put(Common.MSG, "用户身份错误");
+            result.setMsg("用户身份错误");
         } else {
             if (userDao.changePhoto(photoSrc, userId) > 0) {
-                result.put(Common.SUCCESS, true);
+                result.setSuccess(true);
             } else {
-                result.put(Common.MSG, "数据操作错误");
+                result.setMsg("数据操作错误");
             }
         }
         return result;
@@ -172,19 +172,18 @@ public class UserService {
      * @return
      */
     @Transactional
-    public JSONObject insertAttention(int from, int to) {
-        JSONObject result = new JSONObject();
-        result.put(Common.SUCCESS, false);
+    public Result insertAttention(int from, int to) {
+        Result result = new Result();
 
         if (from < 1 || to < 1) {
-            result.put(Common.MSG, "用户验证失败");
+            result.setMsg("用户验证失败");
         } else {
             if (userDao.insertAttention(from, to) > 0 &&
                     userDao.updateAttentionCount(from, 1) > 0 &&
                     userDao.updateFansCount(to, 1) > 0) {
-                result.put(Common.SUCCESS, true);
+                result.setSuccess(true);
             } else {
-                result.put(Common.MSG, "数据操作失败");
+                result.setMsg("数据操作失败");
                 throw new DataException();
             }
         }
@@ -200,19 +199,18 @@ public class UserService {
      * @return
      */
     @Transactional
-    public JSONObject deleteAttention(int from, int to) {
-        JSONObject result = new JSONObject();
-        result.put(Common.SUCCESS, false);
+    public Result deleteAttention(int from, int to) {
+        Result result = new Result();
 
         if (from < 1 || to < 1) {
-            result.put(Common.MSG, "用户验证失败");
+            result.setMsg("用户验证失败");
         } else {
             if (userDao.deleteAttention(from, to) > 0 &&
                     userDao.updateAttentionCount(from, -1) > 0 &&
                     userDao.updateFansCount(to, -1) > 0) {
-                result.put(Common.SUCCESS, true);
+                result.setSuccess(true);
             } else {
-                result.put(Common.MSG, "数据操作失败");
+                result.setMsg("数据操作失败");
                 throw new DataException();
             }
         }
@@ -226,12 +224,12 @@ public class UserService {
      * @param user
      * @return
      */
-    public JSONObject updateUser(User user) {
-        JSONObject result = user.valid();
-        if (result.getBoolean(Common.SUCCESS)) {
+    public Result updateUser(User user) {
+        Result result = user.valid();
+        if (result.isSuccess()) {
             if (userDao.updateUser(user) < 1) {
-                result.put(Common.SUCCESS, false);
-                result.put(Common.MSG, "数据操作错误");
+                result.setSuccess(false);
+                result.setMsg("数据操作错误");
             }
         }
         return result;

@@ -1,6 +1,7 @@
 package com.zzu.xblog.service;
 
 import com.zzu.xblog.common.Common;
+import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.model.UploadType;
 import com.zzu.xblog.util.Utils;
 import net.coobird.thumbnailator.Thumbnails;
@@ -27,12 +28,19 @@ public class FileService {
      * @return
      */
     public JSONObject uploadPhoto(MultipartFile file, HttpServletRequest request) {
+        JSONObject result = new JSONObject();
+        result.put(Common.SUCCESS, false);
         if (file.getSize() > 1024 * 1024) {
-            JSONObject result = new JSONObject();
-            result.put(Common.SUCCESS, false);
             result.put(Common.MSG, "文件过大：不超过1MB");
             return result;
         }
+        String fileName = file.getOriginalFilename();
+        String fileFormat = fileName.substring(fileName.lastIndexOf(".") + 1);
+        if (Arrays.binarySearch(UploadType.IMAGE.getFormats(), fileFormat) == -1) {
+            result.put(Common.MSG, "文件格式错误");
+            return result;
+        }
+
         return uploadFileCore(file, request, "images");
     }
 
@@ -53,7 +61,7 @@ public class FileService {
         if (file.getSize() > uploadType.getMaxSize()) {
             result.put("message", "文件过大：不超过" + uploadType.getMaxSize() / 1000 + "KB");
             return result;
-        } else if (Arrays.binarySearch(uploadType.getFormats(), fileFormat) <= 0) {
+        } else if (Arrays.binarySearch(uploadType.getFormats(), fileFormat) == -1) {
             result.put("message", "文件格式错误，支持的格式：" + Arrays.toString(uploadType.getFormats()));
         } else {
             result = uploadFileCore(file, request, uploadType.getFolder());
@@ -78,9 +86,9 @@ public class FileService {
      * @param height
      * @return
      */
-    public JSONObject cropper(String fileName, double x, double y, double width, double height, HttpServletRequest request) {
-        JSONObject result = new JSONObject();
-        result.put(Common.SUCCESS, true);
+    public Result cropper(String fileName, double x, double y, double width, double height, HttpServletRequest request) {
+        Result result = new Result();
+        result.setSuccess(true);
 
         fileName = request.getSession().getServletContext().getRealPath("/") + fileName;
         try {
@@ -90,8 +98,8 @@ public class FileService {
                     .toFile(new File(fileName));
         } catch (IOException e) {
             e.printStackTrace();
-            result.put(Common.SUCCESS, false);
-            result.put(Common.MSG, "内部错误");
+            result.setSuccess(false);
+            result.setMsg("内部错误");
         }
 
         return result;

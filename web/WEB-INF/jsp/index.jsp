@@ -9,60 +9,13 @@
     <script src="${root}/resource/js/app.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="${root}/">XBlog</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">主页</a></li>
-                <li><a href="#">精华</a></li>
-                <li><a href="${root}/about">关于</a></li>
-            </ul>
+<%@include file="common/title.jsp" %>
 
-            <div class="navbar-right">
-                <c:choose>
-                    <c:when test="${sessionScope.user != null}">
-                        <div class="photo-div">
-                            <img src="${root}/${sessionScope.user.photoSrc}" width="32" height="32" id="photo_img">
-                            <s></s>
-                        </div>
-                        <div class="user-div">
-                            <div class="top-div">
-                                <img src="${root}/resource/images/photo.jpg" width="100" height="100"/>
-                                <div class="user-info">
-                                    <h5>${sessionScope.user.nickname}</h5>
-                                    <h6>${sessionScope.user.email}</h6>
-                                </div>
-                            </div>
-                            <div class="bottom-div">
-                                <div id="blog-btn" class="button">设置</div>
-                                <div id="quit-btn" class="button" onclick="quit()">退出</div>
-                            </div>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <button type="button" class="btn btn-default navbar-btn">登录</button>
-                        <a href="#">注册</a>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </div>
-    </div>
-</nav>
 <div class="container" ng-controller="IndexCtrl as vm">
     <div class="jumbotron" style="margin-top: 60px">
         <h1>欢迎来到XBlog!</h1>
         <p></p>
-        <p><a class="btn btn-primary btn-lg" href="${root}/about.html" role="button">Learn more</a></p>
+        <p><a class="btn btn-primary btn-lg" href="${root}/about" role="button">Learn more</a></p>
     </div>
 
     <div class="row">
@@ -101,7 +54,7 @@
                 </div>
                 <div class="col-xs-11">
                     <h4>
-                        <a href="${root}/article/{{item.articleId}}" data-ng-bind="item.title"></a>
+                        <a href="${root}/p/{{item.articleId}}" target="_blank" data-ng-bind="item.title"></a>
                     </h4>
                     <p class="list-body-content" data-ng-bind="item.description"></p>
                     <div class="list-foot">
@@ -109,11 +62,11 @@
                         发表于：<span data-ng-bind="item.postTime | dateFormat"></span>
                         <span class="comment">
                             <i class="fa fa-comments unClicked" aria-hidden="true"></i>
-                            <a href="#">评论({{item.commentCount}})</a>
+                            <a href="${root}/p/{{item.articleId}}#comment" target="_blank">评论({{item.commentCount}})</a>
                         </span>
                         <span class="view">
                             <i class="fa fa-eye unClicked" aria-hidden="true"></i>
-                            <a href="#">浏览({{item.viewCount}})</a>
+                            <a href="javascript:void(0)">浏览({{item.viewCount}})</a>
                         </span>
                         <span class="zan">
                             <i class="fa fa-thumbs-up" ng-class="vm.currentClass" aria-hidden="true"></i>
@@ -123,7 +76,7 @@
                 </div>
             </div>
 
-            <div class="alert alert-danger" ng-show="vm.total<=0">
+            <div class="alert alert-danger" ng-show="vm.total<=0 && vm.init">
                 暂无数据
             </div>
 
@@ -134,14 +87,7 @@
     </div>
 </div>
 
-<div class="panel-footer">
-    <div>
-        <a href="#">关于XBlog</a>
-        <a href="#">联系我们</a>©20016-2026
-        <a href="#">XBlog</a>保留所有权利
-        <a href="#" target="_blank">豫ICP备09004260号</a>
-    </div>
-</div>
+<%@include file="common/footer.jsp" %>
 
 <script type="application/javascript">
 
@@ -162,30 +108,10 @@
             var target = $this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, ''); //strip for ie7
             $(target).collapse('toggle');
         });
+
+        // 选中主页
+        $('#index-li').addClass('active');
     });
-
-    /* 头像个人信息切换 */
-    $("#photo_img").click(function (event) {
-        event.stopPropagation();
-        $("s").toggle();
-        $(".user-div").toggle();
-    });
-
-    $("s,.user-div").click(function (event) {
-        event.stopPropagation();
-    });
-
-    $(document).click(function () {
-        $("s").hide();
-        $(".user-div").hide();
-    });
-
-    /* 退出 */
-    function quit() {
-        $.post('${root}/user/logout', function (data) {
-
-        }, 'JSON')
-    }
 
     /**
      * 主页
@@ -201,6 +127,7 @@
         function IndexCtrl($http) {
             var vm = this;
             vm.currentClass = 'unClicked';
+            vm.init = false;
 
             // 加载文章数据
             vm.load = function (params, callback) {
@@ -216,6 +143,9 @@
                 $http.get(url).then(function (res) {
                     if (callback) {
                         callback(res.data);
+                        if(!vm.init) {
+                            vm.init = true;
+                        }
                     } else {
                         vm.data = res.data.itemList;
                         vm.total = res.data.totalItem;
@@ -238,16 +168,21 @@
 
             // 更新点赞到服务器
             vm.syncLike = function (item, success, error) {
-                $http.post('${root}/article/like', {
-                    "userId": item.user.userId,
-                    "articleId": item.articleId
-                }).then(function (res) {
-                    if (res.data.success) {
-                        success();
-                    } else {
-                        error(res.data.msg);
-                    }
-                });
+                if ('${sessionScope.user.userId}') {
+                    $http.post('${root}/article/like', {
+                        "userId": '${sessionScope.user.userId}',
+                        "articleId": item.articleId
+                    }).then(function (res) {
+                        if (res.data.success) {
+                            success();
+                        } else {
+                            error(res.data.msg);
+                        }
+                    });
+                } else {
+                    alert('登录后可评论和赞');
+                    window.location = '${root}/login';
+                }
             };
         }
     })();

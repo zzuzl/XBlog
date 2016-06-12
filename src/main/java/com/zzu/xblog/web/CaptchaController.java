@@ -39,13 +39,13 @@ public class CaptchaController {
     /**
      * 验证验证码是否正确,如果正确返回200，否则返回411
      *
-     * @param key
+     * @param captcha
      * @return
      */
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
-    public void searchUserByEmail(@RequestParam("key") String key,
+    public void verifyCaptcha(@RequestParam("captcha") String captcha,
                                   HttpServletResponse response, HttpServletRequest req) {
-        if (captchaService.getGeneratedKey(req).equalsIgnoreCase(key)) {
+        if (captchaService.getGeneratedKey(req).equalsIgnoreCase(captcha)) {
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setStatus(HttpServletResponse.SC_LENGTH_REQUIRED);

@@ -1,19 +1,17 @@
 package com.zzu.xblog.web;
 
 import com.zzu.xblog.common.Common;
+import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.model.Article;
 import com.zzu.xblog.model.Attention;
 import com.zzu.xblog.model.Pager;
-import com.zzu.xblog.model.User;
 import com.zzu.xblog.service.ArticleService;
 import com.zzu.xblog.service.MailService;
 import com.zzu.xblog.service.RedisService;
 import com.zzu.xblog.service.UserService;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -62,12 +60,12 @@ public class ArticleController {
     /* 发表文章 */
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject postArticle(@Valid @ModelAttribute("article") Article article,
-                                  BindingResult bindingResult, HttpServletRequest request) {
-        JSONObject result = articleService.insertArticle(article);
+    public Result postArticle(@Valid @ModelAttribute("article") Article article,
+                              BindingResult bindingResult, HttpServletRequest request) {
+        Result result = articleService.insertArticle(article);
 
         // todo
-        if (result.getBoolean(Common.SUCCESS)) {
+        if (result.isSuccess()) {
             List<Attention> fansList = userService.getAllFans(article.getUser().getUserId());
             for (Attention attention : fansList) {
                 mailService.sendEmailToFans(attention.getFrom().getEmail(), article, request);
@@ -80,14 +78,14 @@ public class ArticleController {
     /* 文章点赞 */
     @RequestMapping(value = "/like", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject postArticle(@RequestParam("articleId") Integer articleId, @RequestParam("userId") Integer userId) {
+    public Result postArticle(@RequestParam("articleId") Integer articleId, @RequestParam("userId") Integer userId) {
         return articleService.insertLike(userId, articleId);
     }
 
     /* 修改文章 */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseBody
-    public JSONObject updateArticle(@Valid @ModelAttribute("article") Article article,
+    public Result updateArticle(@Valid @ModelAttribute("article") Article article,
                                     BindingResult bindingResult, @PathVariable("id") Integer id) {
         article.setArticleId(id);
         return articleService.updateArticle(article);

@@ -8,6 +8,7 @@ import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dao.ArticleDao;
 import com.zzu.xblog.dao.LuceneDao;
 import com.zzu.xblog.dao.UserDao;
+import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.exception.DataException;
 import com.zzu.xblog.model.Article;
 import com.zzu.xblog.model.Pager;
@@ -73,21 +74,21 @@ public class ArticleService {
      * @param article
      * @return
      */
-    public JSONObject insertArticle(Article article) {
-        JSONObject result = article.valid();
+    public Result insertArticle(Article article) {
+        Result result = article.valid();
 
-        if (result.getBoolean(Common.SUCCESS)) {
+        if (result.isSuccess()) {
             if (article.getUser() != null) {
                 if (articleDao.insertArticle(article) < 1) {
-                    result.put(Common.SUCCESS, false);
-                    result.put(Common.MSG, "发表失败!");
+                    result.setSuccess(false);
+                    result.setMsg("发表失败!");
                 } else {
                     User user = userDao.getUserById(article.getUser().getUserId());
                     article.setUser(user);
                 }
             } else {
-                result.put(Common.SUCCESS, false);
-                result.put(Common.MSG, "发表失败，用户不存在!");
+                result.setSuccess(false);
+                result.setMsg("发表失败，用户不存在!");
             }
         }
 
@@ -100,12 +101,12 @@ public class ArticleService {
      * @param article
      * @return
      */
-    public JSONObject updateArticle(Article article) {
-        JSONObject result = article.valid();
-        if (result.getBoolean(Common.SUCCESS)) {
+    public Result updateArticle(Article article) {
+        Result result = article.valid();
+        if (result.isSuccess()) {
             if (articleDao.updateArticle(article) < 1) {
-                result.put(Common.SUCCESS, false);
-                result.put(Common.MSG, "数据操作错误");
+                result.setSuccess(false);
+                result.setMsg("数据操作错误");
             }
         }
         return result;
@@ -141,18 +142,17 @@ public class ArticleService {
      * @return
      */
     @Transactional
-    public JSONObject insertLike(int userId, int articleId) {
-        JSONObject result = new JSONObject();
-        result.put(Common.SUCCESS, false);
+    public Result insertLike(int userId, int articleId) {
+        Result result = new Result();
 
         if (userId < 1 || articleId < 1) {
-            result.put(Common.MSG, "用户未登录或文章出错");
+            result.setMsg("用户未登录或文章出错");
         } else {
             if (articleDao.insertLike(userId, articleId) > 0 &&
                     articleDao.updateLikeCount(articleId, 1) > 0) {
-                result.put(Common.SUCCESS, true);
+                result.setSuccess(true);
             } else {
-                result.put(Common.MSG, "您已赞过");
+                result.setMsg("您已赞过");
             }
         }
         return result;
