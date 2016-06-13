@@ -80,11 +80,11 @@
                         <div class="form-group">
                             <div class="col-xs-6">
                                 <span>忘记密码</span>
-                                <a href="#">找回密码</a>
+                                <a href="${root}/findPwd" target="_blank">找回密码</a>
                             </div>
                             <div class="col-xs-6 link">
                                 <span>没有账号?</span>
-                                <a href="#">注册</a>
+                                <a href="${root}/register" target="_blank">注册</a>
                             </div>
                         </div>
                     </form>

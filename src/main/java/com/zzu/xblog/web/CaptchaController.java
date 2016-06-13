@@ -42,7 +42,7 @@ public class CaptchaController {
      * @param captcha
      * @return
      */
-    @RequestMapping(value = "/verify", method = RequestMethod.POST)
+    @RequestMapping(value = "/verify", method = RequestMethod.GET)
     public void verifyCaptcha(@RequestParam("captcha") String captcha,
                                   HttpServletResponse response, HttpServletRequest req) {
         if (captchaService.getGeneratedKey(req).equalsIgnoreCase(captcha)) {

@@ -5,6 +5,8 @@
 
 <div>
     <a href="${url}" target="_blank">点我完成操作</a>
+    <p>如果无法不能点击访问，请复制链接到浏览器地址栏手动访问。</p>
+    <p>${url}</p>
 </div>
 </body>
 </html>

@@ -96,7 +96,12 @@
                     dataType: 'JSON',
                     type: 'PUT',
                     success: function (data) {
-                        console.log(data);
+                        if(data.success) {
+                            alert("修改成功");
+                            window.location.reload();
+                        } else {
+                            alert(data.msg);
+                        }
                     }
                 });
             }

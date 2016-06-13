@@ -93,13 +93,13 @@ public class UserService {
     /**
      * 修改密码
      *
-     * @param email
+     * @param userId
      * @param newPassword
      */
-    public void changePwd(String email, String newPassword) {
+    public void changePwd(int userId, String newPassword) {
         String salt = Utils.randomString();
         String hash = Utils.MD5(newPassword, salt);
-        userDao.changePwd(email, salt, hash);
+        userDao.changePwd(userId, salt, hash);
     }
 
     /**

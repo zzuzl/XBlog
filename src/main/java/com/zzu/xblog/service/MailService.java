@@ -34,12 +34,11 @@ public class MailService {
      *
      * @param email
      * @param request
-     * @param userId
      * @param hash
      */
-    public void sendResetPwdEmail(final String email, HttpServletRequest request, int userId, String hash) {
+    public void sendResetPwdEmail(final String email, HttpServletRequest request, String hash) {
         String rootPath = Utils.getRootPath(request);
-        rootPath += "/verify/resetPwd?id=" + userId + "&hash=" + hash;
+        rootPath += "/verify/resetPwd?hash=" + hash;
 
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("url", rootPath);
@@ -49,13 +48,13 @@ public class MailService {
     /**
      * 发送注册激活邮件
      *
-     * @param salt
+     * @param hash
      * @param user
      * @param request
      */
-    public void sendRegisterEmail(final String salt, User user, HttpServletRequest request) {
+    public void sendRegisterEmail(final String hash, User user, HttpServletRequest request) {
         String rootPath = Utils.getRootPath(request);
-        rootPath += "/verify/register?salt=" + salt;
+        rootPath += "/verify/register?hash=" + hash;
 
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("url", rootPath);
@@ -72,7 +71,7 @@ public class MailService {
     public void sendEmailToFans(final String email, Map<String, Object> model, HttpServletRequest request) {
         String rootPath = Utils.getRootPath(request);
         rootPath += "/article/" + model.get("articleId");
-        model.put("url",rootPath);
+        model.put("url", rootPath);
 
         sendEmail(email, "tpl/fans.vm", "关注动态", model);
     }

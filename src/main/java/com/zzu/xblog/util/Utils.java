@@ -171,6 +171,16 @@ public class Utils {
 		return UUID.randomUUID().toString();
 	}
 
+	/**
+	 * 获取时间差（单位：minute）
+	 *
+	 * @param time
+	 * @return
+	 */
+	public static long getGapMinute(long time) {
+		return (System.currentTimeMillis() - time) / (1000 * 60);
+	}
+
 	public static void main(String[] args) {
 		/*for(int i=0;i<10;i++) {
 			System.out.println(randomString(10));

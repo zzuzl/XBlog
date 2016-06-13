@@ -2,19 +2,16 @@ package com.zzu.xblog.web;
 
 import com.zzu.xblog.common.Common;
 import com.zzu.xblog.model.*;
-import com.zzu.xblog.service.ArticleService;
-import com.zzu.xblog.service.CategoryService;
-import com.zzu.xblog.service.CommentService;
-import com.zzu.xblog.service.UserService;
+import com.zzu.xblog.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +27,8 @@ public class PageController {
     private UserService userService;
     @Resource
     private CommentService commentService;
+    @Resource
+    private RedisService redisService;
 
     /* 主页 */
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -57,6 +56,18 @@ public class PageController {
         return "zc";
     }
 
+    /* 注册结果提示 */
+    @RequestMapping(value = "/check", method = RequestMethod.GET)
+    public String check() {
+        return "check";
+    }
+
+    /* 找回密码 */
+    @RequestMapping(value = "/findPwd", method = RequestMethod.GET)
+    public String findPwd() {
+        return "findPwd";
+    }
+
     /* 用户个人信息 */
     @RequestMapping(value = "/setting/userInfo", method = RequestMethod.GET)
     public String blog(HttpSession session) {
@@ -73,6 +84,12 @@ public class PageController {
         List<Category> list = categoryService.listCategory();
         model.addAttribute("list", list);
         return "setting/editArticle";
+    }
+
+    /* 修改密码 */
+    @RequestMapping(value = "/setting/changePwd", method = RequestMethod.GET)
+    public String changePwd() {
+        return "setting/changePwd";
     }
 
     /* 修改头像 */
@@ -140,6 +157,19 @@ public class PageController {
         } else {
             return Common.PAGE_404;
         }
+
+        // 记录浏览量
+        List<Integer> array = (List<Integer>) session.getAttribute(Common.ARTICLE_ARRAY);
+        if (array == null) {
+            array = new ArrayList<Integer>();
+        }
+        if (!array.contains(id)) {
+            array.add(id);
+            redisService.updateViewCount(id);
+        }
+        session.setAttribute(Common.ARTICLE_ARRAY, array);
+
+
         return "articleDetail";
     }
 

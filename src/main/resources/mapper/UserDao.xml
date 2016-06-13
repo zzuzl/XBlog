@@ -48,7 +48,7 @@
     <update id="changePwd">
         UPDATE t_user
         SET salt = #{salt}, `hash` = #{hash}
-        WHERE email = #{email}
+        WHERE user_id = #{userId}
     </update>
 
     <select id="getUserById" resultType="User">

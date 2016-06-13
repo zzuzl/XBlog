@@ -4,21 +4,7 @@
     <title>注册页面</title>
     <%@include file="common/head.jsp" %>
     <script src="${root}/resource/js/validator.min.js"></script>
-
     <style type="text/css">
-        #hd_nav {
-            float: left;
-        }
-
-        #login_area {
-            float: right;
-        }
-
-        #hd {
-            height: 20px;
-            background: #000000;
-        }
-
         .form-control {
             width: 400px;
         }
@@ -27,24 +13,28 @@
             padding-top: 30px;
         }
 
-        #button1.btn {
+        #button1 {
             font-size: 23px;
             margin-top: 30px;
         }
 
-        #captcha.form-control {
-            width: 200px;
-            margin-bottom: 20px;
+        #captcha {
+            width: 150px;
+            float: left;
+            margin-right: 15px;
         }
 
         #image {
-            width: 140px;
-            height: 30px;
+            height: 34px;
         }
 
         #divv {
             margin-top: 10px;
             margin-left: 10px;
+        }
+
+        #error {
+            display: none;
         }
     </style>
 </head>
@@ -55,53 +45,51 @@
         <h1 id="zc1"></h1>
     </div>
 
-    <div id="page">
+    <div class="well" id="page">
         <form data-toggle="validator" role="form" id="form1">
             <div class="form-horizontal">
                 <div class="form-group" id="div2">
-                    <label for="inputEmail3" class="col-sm-2 control-label">邮 箱</label>
+                    <label for="email" class="col-sm-2 control-label">邮 箱</label>
                     <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputEmail3" name="email"
+                        <input type="email" class="form-control" id="email" name="email"
                                placeholder="Email" required data-remote="${root}/user/exists">
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
-            </div>
-
-            <div class="form-horizontal">
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">昵称</label>
+                    <label for="nickname" class="col-sm-2 control-label">昵称</label>
                     <div class="col-sm-10">
-                        <input type="text" name="nickname" id="nickname" class="form-control" placeholder="username">
+                        <input type="text" name="nickname" id="nickname" class="form-control" placeholder="昵称" required>
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">密码</label>
+                    <label for="password" class="col-sm-2 control-label">密码</label>
                     <div class="col-sm-10">
-                        <input type="password" data-minlength="6" class="form-control" id="inputPassword3"
-                               placeholder="Password" required>
+                        <input type="password" data-minlength="6" class="form-control" id="password"
+                               placeholder="密码" data-minlength-error="密码至少6位" required>
                         <div class="help-block with-errors"></div>
                     </div>
 
                 </div>
                 <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">确认密码</label>
+                    <label for="password2" class="col-sm-2 control-label">确认密码</label>
                     <div class="col-sm-10">
-                        <input type="password" class="form-control" id="inputPassword4" data-match="#inputPassword3"
-                               data-match-error="密码不匹配" placeholder="Password" required>
+                        <input type="password" class="form-control" id="password2" data-match="#password"
+                               data-match-error="密码不匹配" placeholder="确认密码" required>
                         <div class="help-block with-errors"></div>
                     </div>
+
                 </div>
                 <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">验证码</label>
-                    <div class="col-sm-10" id="float">
-                        <input type="text" data-minlength="4" class="form-control" id="captcha"
-                               required>
-                        <div class="help-block with-errors"></div>
+                    <label for="captcha" class="col-sm-2 control-label">验证码</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="captcha" data-remote="${root}/captcha/verify"
+                               id="captcha" required data-remote-error="验证码错误">
                         <img src="${root}/captcha/generate" id="image">
                         <a href="javascript:void(0)" onclick="obj.updateCaptcha()">换一张</a>
+                        <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -109,6 +97,7 @@
                         <button type="submit" class="btn btn-default" id="button1">注册</button>
                     </div>
                 </div>
+                <p class="bg-danger" id="error"></p>
             </div>
         </form>
     </div>
@@ -132,45 +121,39 @@
                 remote: 'email已被注册'
             }
         }).on('submit', function (e) {
-            console.log(e);
             if (e.isDefaultPrevented()) {
                 // handle the invalid form...
             } else {
-                $("#login-btn").attr('disabled', 'disabled');
-                $("#login-btn").text("注册中");
+                $("#button1").attr('disabled', 'disabled');
+                $("#button1").text("注册中");
                 obj.register();
             }
             return false;
         });
-
     });
     var obj = {
         url: "${root}/user/register",
         register: function () {
             $.post(this.url, {
                 nickname: $("#nickname").val(),
-                email: $("#inputEmail3").val(),
-                password: $("#inputPassword3").val(),
+                email: $("#email").val(),
+                password: $("#password").val(),
                 captcha: $("#captcha").val()
             }, this.success, "JSON");
         },
         success: function (data) {
-            console.log(data);
             if (data.success) {
                 window.location = "${root}/check";
             } else {
-                $("#error2").text(data.msg);
-                $("#error2").show();
+                $("#error").text(data.msg);
+                $("#error").show();
                 $("#button1").removeAttr('disabled');
                 $("#button1").text("注册");
-                $("#con").hide();
-                $("#hidden").show();
             }
         },
         updateCaptcha: function () {
             $('#image').attr('src', '${root}/captcha/generate?t=' + new Date());
         }
     }
-
 </script>
 </html>

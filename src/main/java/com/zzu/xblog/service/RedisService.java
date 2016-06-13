@@ -4,6 +4,7 @@ package com.zzu.xblog.service;
  * Created by Administrator on 2016/6/2.
  */
 
+import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dao.ArticleDao;
 import com.zzu.xblog.model.User;
 import net.sf.json.JSONObject;
@@ -33,15 +34,15 @@ public class RedisService {
      * @param id
      */
     public void updateViewCount(int id) {
-        Object obj = redisTemplate.boundHashOps("viewCount").get(id);
+        Object temp = redisTemplate.boundHashOps("viewCount").get(id + "");
         int num = 0;
-        if (obj != null) {
-            num = (Integer) obj;
+        if (temp != null) {
+            num = (int) temp;
         }
 
         System.out.println(id + "----" + num);
 
-        redisTemplate.boundHashOps("viewCount").put(id, num + 1);
+        redisTemplate.boundHashOps("viewCount").put(id + "", num + 1);
         long gap = (System.currentTimeMillis() - lastTime) / 1000;
         lastTime = System.currentTimeMillis();
 
@@ -56,9 +57,9 @@ public class RedisService {
     private void backupData() {
         Map<Object, Object> map = redisTemplate.boundHashOps("viewCount").entries();
         for (Map.Entry<Object, Object> entry : map.entrySet()) {
-            int articleId = (Integer) entry.getKey();
-            int count = (Integer) entry.getValue();
-            if (count > 3) {
+            int articleId = Integer.parseInt((String) entry.getKey());
+            int count = (int) entry.getValue();
+            if (count > 0) {
                 articleDao.updateViewCount(articleId, count);
                 redisTemplate.boundHashOps("viewCount").put(entry.getKey(), 0);
             }
@@ -68,19 +69,16 @@ public class RedisService {
     /**
      * 存储验证码
      *
-     * @param userId
      * @param email
-     * @param salt
      * @param hash
      */
-    public void addLink(int userId, String email, String salt, String hash) {
+    public void addLink(String email, String hash) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("email", email);
         model.put("time", System.currentTimeMillis());
-        model.put("salt", salt);
         model.put("hash", hash);
 
-        redisTemplate.boundListOps(userId).leftPush(model);
+        redisTemplate.boundHashOps(Common.OPERATE_RESET_PWD).put(hash, model);
     }
 
     /**
@@ -88,31 +86,51 @@ public class RedisService {
      *
      * @param user
      */
-    public void addUser(String salt, User user, String password) {
+    public void addUser(String hash, User user, String password) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("time", System.currentTimeMillis());
         model.put("password", password);
         model.put("user", user);
-        redisTemplate.boundListOps(salt).leftPush(model);
+
+        model.put("user", user);
+        model.put("password", password);
+        redisTemplate.boundHashOps(Common.REGISTER).put(hash, model);
     }
 
     /**
      * 返回user
      *
-     * @param salt
+     * @param hash
      * @return
      */
-    public Map<String, Object> getUserModel(String salt) {
-        return (Map<String, Object>) redisTemplate.boundListOps(salt).leftPop();
+    public Map<String, Object> getUserModel(String hash) {
+        return (Map<String, Object>) redisTemplate.boundHashOps(Common.REGISTER).get(hash);
+    }
+
+    /**
+     * 删除user model
+     * @param hash
+     */
+    public void deleteUserModel(String hash) {
+        redisTemplate.boundHashOps(Common.REGISTER).delete(hash);
     }
 
     /**
      * 根据id获取验证码
      *
-     * @param userId
+     * @param hash
      * @return
      */
-    public Map<String, Object> getLink(int userId) {
-        return (Map<String, Object>) redisTemplate.boundListOps(userId).leftPop();
+    public Map<String, Object> getLink(String hash) {
+        return (Map<String, Object>) redisTemplate.boundHashOps(Common.OPERATE_RESET_PWD).get(hash);
+    }
+
+    /**
+     * 删除验证码
+     *
+     * @param hash
+     */
+    public void deleteLink(String hash) {
+        redisTemplate.boundHashOps(Common.OPERATE_RESET_PWD).delete(hash);
     }
 }

@@ -40,10 +40,11 @@ public interface UserDao {
     /**
      * 修改用户hash
      *
-     * @param email
+     * @param userId
+     * @param salt
      * @param hash
      */
-    void changePwd(String email, String salt, String hash);
+    void changePwd(@Param("userId") int userId, @Param("salt") String salt, @Param("hash") String hash);
 
     /**
      * 根据id查找用户
@@ -80,6 +81,7 @@ public interface UserDao {
 
     /**
      * 获取指定的关注
+     *
      * @param from
      * @param to
      * @return
@@ -88,6 +90,7 @@ public interface UserDao {
 
     /**
      * 添加关注
+     *
      * @param from
      * @param to
      * @return
@@ -96,14 +99,16 @@ public interface UserDao {
 
     /**
      * 删除关注
+     *
      * @param from
      * @param to
      * @return
      */
-    int deleteAttention(@Param("from") int from,@Param("to") int to);
+    int deleteAttention(@Param("from") int from, @Param("to") int to);
 
     /**
      * 更新用户信息
+     *
      * @param user
      * @return
      */
@@ -111,22 +116,25 @@ public interface UserDao {
 
     /**
      * 更新关注的数量
+     *
      * @param userId
      * @param count
      * @return
      */
-    int updateAttentionCount(@Param("userId") int userId,@Param("count") int count);
+    int updateAttentionCount(@Param("userId") int userId, @Param("count") int count);
 
     /**
      * 更新粉丝的数量
+     *
      * @param userId
      * @param count
      * @return
      */
-    int updateFansCount(@Param("userId") int userId,@Param("count") int count);
+    int updateFansCount(@Param("userId") int userId, @Param("count") int count);
 
     /**
      * 重新设置关注和粉丝数量
+     *
      * @param userId
      * @return
      */

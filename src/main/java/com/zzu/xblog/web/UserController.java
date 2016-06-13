@@ -93,9 +93,9 @@ public class UserController {
                 result.setSuccess(false);
                 result.setMsg("该邮箱已被注册");
             } else {
-                String salt = Utils.randomString(10);
-                mailService.sendRegisterEmail(salt, user, request);
-                redisService.addUser(salt, user, password);
+                String hash = Utils.MD5(user.getEmail());
+                mailService.sendRegisterEmail(hash, user, request);
+                redisService.addUser(hash, user, password);
             }
         }
         return result;
@@ -104,35 +104,25 @@ public class UserController {
     /* 修改密码 */
     @RequestMapping(value = "/changePwd", method = RequestMethod.PUT)
     @ResponseBody
-    public Result changePwd(String email, String newPassword, String originPassword) {
+    public Result changePwd(@Valid @RequestParam("newPassword") String newPassword,
+                            @RequestParam("originalPassword") String originalPassword,
+                            HttpSession session) {
         Result result = new Result();
         result.setSuccess(true);
-        User user = userService.login(email, originPassword);
+
+        User user = (User) session.getAttribute(Common.USER);
         if (user == null) {
             result.setSuccess(false);
-            result.setMsg("邮箱密码不匹配");
+            result.setMsg("用户未登录");
         } else {
-            userService.changePwd(email, newPassword);
+            user = userService.login(user.getEmail(), originalPassword);
+            if (user == null) {
+                result.setSuccess(false);
+                result.setMsg("原密码输入错误");
+            } else {
+                userService.changePwd(user.getUserId(), newPassword);
+            }
         }
-
-        return result;
-    }
-
-    /* 测试redis */
-    @RequestMapping(value = "/redis", method = RequestMethod.POST)
-    @ResponseBody
-    public Result redis() {
-        Result result = new Result();
-        int userId = 1;
-        String email = "672399171@qq.com";
-        String salt = Utils.randomString();
-        String hash = Utils.MD5(email, salt);
-
-        result.setSuccess(true);
-        redisService.addLink(userId, email, salt, hash);
-
-        Map<String, Object> map = redisService.getLink(userId);
-        System.out.println(map);
 
         return result;
     }
@@ -140,9 +130,33 @@ public class UserController {
     /* 重置密码 */
     @RequestMapping(value = "/resetPwd", method = RequestMethod.PUT)
     @ResponseBody
-    public Result resetPwd(String email, String password) {
+    public Result resetPwd(@RequestParam("password") String password,
+                           @RequestParam("captcha") String captcha,
+                           @RequestParam("hash") String hash, HttpServletRequest request) {
         Result result = new Result();
-        userService.changePwd(email, password);
+        if (!captcha.equalsIgnoreCase(captchaService.getGeneratedKey(request))) {
+            result.setMsg("验证码错误");
+        } else if (password.length() < 6 || password.length() > 32) {
+            result.setMsg("密码长度为6-32位");
+        } else {
+            Map<String, Object> map = redisService.getLink(hash);
+
+            if (map == null || !hash.equals(map.get("hash"))) {
+                result.setMsg("操作无效，请重新发送找回密码邮件");
+            } else if (Utils.getGapMinute((long) map.get("time")) > 30) {
+                result.setMsg("邮件验证码已过期,请重新发送邮件!");
+            } else {
+                User user = userService.searchUserByEmail((String) map.get("email"));
+                if (user == null) {
+                    result.setMsg("未知错误，请重试!");
+                } else {
+                    userService.changePwd(user.getUserId(), password);
+                    result.setSuccess(true);
+                    redisService.deleteLink(hash);
+                }
+            }
+        }
+
         return result;
     }
 

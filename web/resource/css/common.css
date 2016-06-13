@@ -17,3 +17,7 @@
 a:hover {
     text-decoration: dashed;
 }
+
+.bg-danger {
+    padding: 15px;
+}

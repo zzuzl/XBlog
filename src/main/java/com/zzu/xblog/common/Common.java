@@ -19,6 +19,7 @@ public class Common {
 	public static final String PAGE_404 = "common/404";
 
 	public static final String OPERATE_RESET_PWD = "resetpwd";
+	public static final String REGISTER = "register";
 
 	public static final int DEFAULT_ITEM_COUNT = 15;
 	public static final int PHOTO_SIZE = 128;

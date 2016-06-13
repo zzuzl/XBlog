@@ -14,7 +14,7 @@ CREATE TABLE t_user(
   `reg_time` DATETIME NOT NULL DEFAULT now() COMMENT '注册时间',
   `fans_count` INT NOT NULL DEFAULT 0 COMMENT '粉丝数',
   `attention_count` INT NOT NULL DEFAULT 0 COMMENT '关注数',
-  `photo_src` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '头像路径',
+  `photo_src` VARCHAR(50) NOT NULL DEFAULT 'resource/images/default-head-photo.png' COMMENT '头像路径',
   `motto` VARCHAR(255) COMMENT '个性签名',
   `interest` VARCHAR(255) COMMENT '兴趣',
   `sex` VARCHAR(5) NOT NULL DEFAULT '男' COMMENT '性别',
