@@ -43,7 +43,7 @@
         </ul>
     </div>
 </div>
-<div class="container" style="margin-top: 60px">
+<div class="container" style="margin-top: 60px" id="container">
     <div class="row">
         <div class="col-xs-9">
             <div class="row">
@@ -57,30 +57,49 @@
                             <h4>标签：${requestScope.article.tag}</h4>
                             <div class="row">
                                 <div class="col-xs-2">
-                                    <a href="${root}/${requestScope.article.user.url}" class="thumbnail">
+                                    <a href="${root}/u/${requestScope.article.user.url}" class="thumbnail">
                                         <img src="${root}/${requestScope.article.user.photoSrc}" alt="暂无">
                                     </a>
                                 </div>
                                 <div class="col-xs-2">
-                                    <h5><a href="#">${requestScope.article.user.nickname}</a></h5>
-                                    <h5><a href="#">关注：${requestScope.article.user.attentionCount}</a></h5>
-                                    <h5><a href="#">粉丝：${requestScope.article.user.fansCount}</a></h5>
+                                    <h5>
+                                        <a href="${root}/u/${requestScope.article.user.url}">${requestScope.article.user.nickname}</a>
+                                    </h5>
+                                    <h5>
+                                        <a href="${root}/u/${requestScope.article.user.url}">关注：${requestScope.article.user.attentionCount}</a>
+                                    </h5>
+                                    <h5>
+                                        <a href="${root}/u/${requestScope.article.user.url}">粉丝：${requestScope.article.user.fansCount}</a>
+                                    </h5>
                                 </div>
-                                <div class="col-xs-2">
-                                    <a type="button" href="#" class="btn btn-danger gz">关注我</a>
-                                </div>
-                                <div class="col-xs-1 col-xs-offset-4">
-                                    <a type="button" href="#" class="btn btn-info gz">推荐</a>
+                                <div class="col-xs-2 col-xs-offset-6">
+                                    <c:if test="${requestScope.article.user.userId != sessionScope.user.userId}">
+                                        <a type="button" href="javascript:void(0)" class="btn btn-danger gz"
+                                           id="attention-btn"
+                                           onclick="obj.addOrCancelAttention()">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                            关注
+                                        </a>
+                                    </c:if>
+                                    <a type="button" href="javascript:void(0)" class="btn btn-info gz" id="like-btn"
+                                       onclick="obj.like()">
+                                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                                        ${requestScope.article.likeCount}
+                                    </a>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <span>上一篇：</span>
-                                    <a href="#">高性能滚动 scroll 及页面渲染优化</a>
+                                    <c:if test="${requestScope.article.pre}">
+                                        <span>上一篇：</span>
+                                        <a href="${root}/p/${requestScope.article.pre.articleId}">${requestScope.article.pre.title}</a>
+                                    </c:if>
                                 </div>
                                 <div class="col-xs-6" style="text-align: right">
-                                    <span>下一篇：</span>
-                                    <a href="#">高性能滚动 scroll 及页面渲染优化</a>
+                                    <c:if test="${requestScope.article.next}">
+                                        <span>下一篇：</span>
+                                        <a href="${root}/p/${requestScope.article.next.articleId}">${requestScope.article.next.title}</a>
+                                    </c:if>
                                 </div>
                             </div>
                             <h6 class="dash-h6">
@@ -97,6 +116,7 @@
                                 <div class="col-xs-12">
                                     <%-- 放评论 --%>
                                     <label>评论列表</label>
+                                    <a id="comment-top"></a>
                                     <c:forEach items="${requestScope.comments}" var="item">
                                         <div class="comment-item">
                                             <div class="title">
@@ -105,7 +125,7 @@
                                                                     pattern="yyyy-MM-dd HH:mm"/>
                                                 </span>
                                                 <span class="name">
-                                                    <a href="${root}/${item.user.url}">${item.user.nickname}</a>
+                                                    <a href="${root}/u/${item.user.url}">${item.user.nickname}</a>
                                                 </span>
                                             </div>
                                             <div class="content">
@@ -140,13 +160,8 @@
                                         </button>
                                     </div>
                                     <h5 id="tips">
-                                        注册用户登录后才能发表评论，请
-                                        <a href="${root}/login">登录</a>
-                                        或
-                                        <a href="${root}/register">注册</a>
-                                        ，访问
-                                        <a href="${root}/">网站首页</a>
-                                        。
+                                        注册用户登录后才能发表评论，请<a href="${root}/login">登录</a>或
+                                        <a href="${root}/register">注册</a>，访问<a href="${root}/">网站首页</a>。
                                     </h5>
                                 </div>
                             </div>
@@ -159,11 +174,16 @@
             <div class="panel panel-info">
                 <div class="panel-heading">公告</div>
                 <div class="panel-body">
-                    <h5>昵称：${requestScope.article.user.nickname}</h5>
+                    <h5>昵称：
+                        <a href="${root}/u/${requestScope.article.user.url}" target="_blank">
+                            ${requestScope.article.user.nickname}</a></h5>
                     <h5 id="age">博龄：</h5>
-                    <h5>粉丝：<a href="#">${requestScope.article.user.fansCount}</a></h5>
-                    <h5>关注：<a href="#">${requestScope.article.user.attentionCount}</a></h5>
-                    <h5><a href="#">+加关注</a></h5>
+                    <h5>粉丝：<a href="${root}/u/${requestScope.user.url}">${requestScope.article.user.fansCount}</a></h5>
+                    <h5>关注：<a href="${root}/u/${requestScope.user.url}">${requestScope.article.user.attentionCount}</a>
+                    </h5>
+                    <c:if test="${requestScope.article.user.userId != sessionScope.user.userId}">
+                        <h5><a href=${root}/u/${requestScope.user.url}">+加关注</a></h5>
+                    </c:if>
                 </div>
             </div>
         </div>
@@ -187,11 +207,24 @@
             $('.comment-area').hide();
             $('#tips').show();
         }
+
+        if (obj.isLogin() && obj.hasLiked()) {
+            obj.changeLikeBtnState();
+        }
+
     });
 
     var obj = {
+        pId: 0,
+        attention: '${requestScope.attention != null}',
         check: function () {
             return '${sessionScope.user.userId}' && window.editor.html().length > 0;
+        },
+        hasLiked: function () {
+            return '${requestScope.like != null}';
+        },
+        isLogin: function () {
+            return '${sessionScope.user.userId}';
         },
         postComment: function () {
             if (this.check()) {
@@ -206,6 +239,10 @@
         success: function (data) {
             if (data.success) {
                 window.location.reload();
+                $('html, body').animate({
+                    scrollTop: $("#comment-top").offset().top
+                }, 500);
+                window.editor.html("");
             } else {
                 alert(data.msg);
             }
@@ -219,7 +256,81 @@
             $('.click-close').hide();
             this.pId = 0;
         },
-        pId: 0
+        like: function () {
+            if (this.isLogin()) {
+                if (this.hasLiked()) {
+                    return;
+                }
+                $.post('${root}/article/like', {
+                    articleId: '${requestScope.article.articleId}',
+                    userId: '${sessionScope.user.userId}'
+                }, function (data) {
+                    if (data.success) {
+                        window.obj.changeLikeBtnState();
+                    } else {
+                        alert(data.msg);
+                    }
+                }, 'JSON')
+            } else {
+                alert('请先登录！');
+                window.location = '${root}/login';
+            }
+        },
+        addOrCancelAttention: function () {
+            if (this.isLogin()) {
+                if (this.attention) {
+                    this.cancelAttention();
+                } else {
+                    this.addAttention();
+                }
+                this.updateAttentionButton();
+            } else {
+                alert('请先登录');
+                window.location = '${root}/login';
+            }
+        },
+        addAttention: function () {
+            $.post('${root}/user/attention', {
+                from: '${sessionScope.user.userId}',
+                to: '${requestScope.article.user.userId}'
+            }, function (data) {
+                if (data.success) {
+                    window.obj.attention = true;
+                } else {
+                    alert(data.msg);
+                }
+            }, 'JSON')
+        },
+        cancelAttention: function () {
+            $.ajax({
+                url: '${root}/user/attention',
+                type: 'DELETE',
+                data: {
+                    from: '${sessionScope.user.userId}',
+                    to: '${requestScope.article.user.userId}'
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    if (data.success) {
+                        window.obj.attention = false;
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        },
+        updateAttentionButton: function () {
+            if (this.attention) {
+                $('#attention-btn').text("取消关注");
+            } else {
+                $('#attention-btn').text("<i class='fa fa-plus' aria-hidden='true'></i>关注");
+            }
+        },
+        changeLikeBtnState: function () {
+            $('#like-btn').addClass('active');
+            $('#like-btn').attr('disabled', 'disabled');
+            $('#like-btn').css('color', 'black');
+        }
     };
 </script>
 </body>

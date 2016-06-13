@@ -11,7 +11,7 @@
 <body>
 <%@include file="common/title.jsp" %>
 
-<div class="container" ng-controller="IndexCtrl as vm">
+<div class="container" ng-controller="IndexCtrl as vm" id="container">
     <div class="jumbotron" style="margin-top: 60px">
         <h1>欢迎来到XBlog!</h1>
         <p></p>
@@ -19,7 +19,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-xs-3">
             <div class="navbar navbar-default" id="mycollapse">
                 <ul class="nav nav-pills nav-stacked">
                     <c:forEach items="${list}" var="item" varStatus="i">
@@ -44,7 +44,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-xs-9">
             <div class="list-item row" ng-repeat="item in vm.data">
                 <div class="col-xs-1 head-photo">
                     <a href="${root}/{{item.user.url}}" target="_blank" class="thumbnail">

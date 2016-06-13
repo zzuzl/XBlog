@@ -46,7 +46,25 @@
             c.title           AS "category.title",
             c.cate_id         AS "category.cate_id"
         FROM t_article a, t_user u, t_category c
-        WHERE a.user_id = u.user_id AND a.cate_id = c.cate_id
+        WHERE a.user_id = u.user_id AND a.cate_id = c.cate_id AND a.article_id = #{id}
+    </select>
+
+    <select id="getPreAndNext" resultType="Article">
+        (SELECT
+             article_id AS "pre.articleId",
+             title      AS "pre.title"
+         FROM t_article
+         WHERE article_id &lt; #{id}
+         ORDER BY article_id
+         LIMIT 1)
+        UNION ALL
+        (SELECT
+             article_id AS "next.articleId",
+             title      AS "next.title"
+         FROM t_article
+         WHERE article_id &gt; #{id}
+         ORDER BY article_id
+         LIMIT 1)
     </select>
 
     <insert id="insertArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="articleId">
@@ -71,6 +89,22 @@
         INSERT IGNORE INTO t_like (user_id, article_id) VALUES
             (#{userId}, #{articleId})
     </insert>
+
+    <select id="getLikes" resultType="Like">
+        SELECT
+            a.article_id AS "article.articleId",
+            a.title      AS "article.title",
+            u.user_id     AS "user.userId",
+            u.nickname   AS "user.nickname"
+        FROM t_like l, t_article a, t_user u
+        WHERE l.user_id = u.user_id AND l.article_id = a.article_id
+        <if test="userId != 0">
+            AND l.user_id = #{userId}
+        </if>
+        <if test="articleId != 0">
+            AND l.article_id = #{articleId}
+        </if>
+    </select>
 
     <update id="updateLikeCount">
         UPDATE t_article

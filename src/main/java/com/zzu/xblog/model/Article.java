@@ -4,11 +4,8 @@ package com.zzu.xblog.model;
  * Created by Administrator on 2016/6/1.
  */
 
-import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.util.Utils;
-import net.sf.json.JSONObject;
-
 import java.util.Date;
 
 /**
@@ -26,6 +23,8 @@ public class Article {
     private int likeCount;
     private User user;
     private String tag;
+    private Article pre;
+    private Article next;
 
     @Override
     public String toString() {
@@ -63,6 +62,22 @@ public class Article {
             result.setSuccess(true);
         }
         return result;
+    }
+
+    public Article getNext() {
+        return next;
+    }
+
+    public void setNext(Article next) {
+        this.next = next;
+    }
+
+    public Article getPre() {
+        return pre;
+    }
+
+    public void setPre(Article pre) {
+        this.pre = pre;
     }
 
     public int getArticleId() {

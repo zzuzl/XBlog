@@ -36,7 +36,7 @@ public class FileService {
         }
         String fileName = file.getOriginalFilename();
         String fileFormat = fileName.substring(fileName.lastIndexOf(".") + 1);
-        if (Arrays.binarySearch(UploadType.IMAGE.getFormats(), fileFormat) == -1) {
+        if (!Arrays.asList(UploadType.IMAGE.getFormats()).contains(fileFormat)) {
             result.put(Common.MSG, "文件格式错误");
             return result;
         }
@@ -61,7 +61,7 @@ public class FileService {
         if (file.getSize() > uploadType.getMaxSize()) {
             result.put("message", "文件过大：不超过" + uploadType.getMaxSize() / 1000 + "KB");
             return result;
-        } else if (Arrays.binarySearch(uploadType.getFormats(), fileFormat) == -1) {
+        } else if (!Arrays.asList(uploadType.getFormats()).contains(fileFormat)) {
             result.put("message", "文件格式错误，支持的格式：" + Arrays.toString(uploadType.getFormats()));
         } else {
             result = uploadFileCore(file, request, uploadType.getFolder());

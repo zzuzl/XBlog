@@ -2,6 +2,7 @@ package com.zzu.xblog.dao;
 
 
 import com.zzu.xblog.model.Article;
+import com.zzu.xblog.model.Like;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,14 @@ public interface ArticleDao {
      * @return
      */
     Article detail(int id);
+
+    /**
+     * 获取上一篇和下一篇的信息
+     *
+     * @param id
+     * @return
+     */
+    Article getPreAndNext(int id);
 
     /**
      * 插入文章
@@ -67,7 +76,17 @@ public interface ArticleDao {
     int insertLike(@Param("userId") int userId, @Param("articleId") int articleId);
 
     /**
+     * 获取所有的赞
+     *
+     * @param userId
+     * @param articleId
+     * @return
+     */
+    List<Like> getLikes(@Param("userId") int userId, @Param("articleId") int articleId);
+
+    /**
      * 更新点赞量
+     *
      * @param articleId
      * @param count
      * @return
@@ -76,6 +95,7 @@ public interface ArticleDao {
 
     /**
      * 更新浏览量
+     *
      * @param articleId
      * @param count
      * @return
@@ -84,6 +104,7 @@ public interface ArticleDao {
 
     /**
      * 文章数量
+     *
      * @return
      */
     int getArticleCount(@Param("cate") int cate);

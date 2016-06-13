@@ -20,10 +20,6 @@
         <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
         修改头像照片
     </a>
-    <a href="${root}/${sessionScope.user.url}" class="list-group-item" id="blog-item">
-        <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>
-        我的博客空间
-    </a>
     <a href="${root}/editArticle" class="list-group-item" id="article-item">
         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
         发表新的博文

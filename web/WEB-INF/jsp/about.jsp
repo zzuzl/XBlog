@@ -8,7 +8,7 @@
 <body>
 <%@include file="common/title.jsp"%>
 
-<div class="container" style="margin-top: 60px">
+<div class="container" style="margin-top: 60px" id="container">
     <h2 id="title">
         关于
     </h2>

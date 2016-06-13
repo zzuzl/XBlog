@@ -30,8 +30,14 @@
                             <div class="top-div">
                                 <img src="${root}/${sessionScope.user.photoSrc}" width="100" height="100"/>
                                 <div class="user-info">
-                                    <h5><a href="${root}/userInfo">${sessionScope.user.nickname}</a></h5>
+                                    <h5><a href="${root}/u/${sessionScope.user.url}">${sessionScope.user.nickname}</a></h5>
                                     <h6>${sessionScope.user.email}</h6>
+                                    <h6>
+                                        <a href="${root}/setting/userInfo">
+                                            <i class="fa fa-cogs" aria-hidden="true"></i>
+                                            设置
+                                        </a>
+                                    </h6>
                                 </div>
                             </div>
                             <div class="bottom-div">

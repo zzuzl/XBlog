@@ -1,18 +1,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>修改个人信息 - ${sessionScope.user.nickname}的个人中心</title>
-    <%@include file="common/head.jsp" %>
+    <title>修改个人信息</title>
+    <%@include file="../common/head.jsp" %>
     <link rel="stylesheet" href="${root}/resource/css/info.css">
     <script src="${root}/resource/js/validator.min.js"></script>
 </head>
 <body>
-<%@include file="common/title.jsp" %>
+<%@include file="../common/title.jsp" %>
 
-<div class="container" style="margin-top: 80px">
+<div class="container" style="margin-top: 80px" id="container">
     <div class="row">
         <div class="col-xs-3">
-            <%@include file="common/leftList.jsp" %>
+            <%@include file="../common/leftList.jsp" %>
         </div>
         <div class="col-xs-9" style="margin-top: 10px">
             <form id="form" role="form" novalidate>
@@ -67,7 +67,7 @@
     </div>
 </div>
 
-<%@include file="common/footer.jsp" %>
+<%@include file="../common/footer.jsp" %>
 <script type="application/javascript">
     $(function () {
         $('#info-item').addClass('active');

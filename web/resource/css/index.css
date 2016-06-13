@@ -81,10 +81,15 @@ s {
 .user-div .top-div img {
     border-radius: 50px;
     display: inline-block;
+    float: left;
 }
 
 .user-div .top-div .user-info {
     display: inline-block;
+}
+
+.user-info a {
+    text-decoration: none;
 }
 
 .user-div .bottom-div {

@@ -79,6 +79,14 @@ public interface UserDao {
     List<Attention> getAllAttentions(int userId);
 
     /**
+     * 获取指定的关注
+     * @param from
+     * @param to
+     * @return
+     */
+    Attention getOneAttention(@Param("from") int from, @Param("to") int to);
+
+    /**
      * 添加关注
      * @param from
      * @param to

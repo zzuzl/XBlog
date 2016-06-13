@@ -1,6 +1,7 @@
 package com.zzu.xblog.aop;
 
 import com.zzu.xblog.common.Common;
+import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.model.Article;
 import com.zzu.xblog.model.Attention;
 import com.zzu.xblog.model.Pager;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * aop
@@ -39,12 +41,16 @@ public class MyAspect {
      * @param result
      */
     @AfterReturning(pointcut = "declarePointCutExpression()", returning = "result")
-    private void sendEmailToFans(JSONObject result) {
-        /*List<Attention> fansList = userService.getAllFans(article.getUser().getUserId());
+    private void sendEmailToFans(Result result) {
+        Map<String, Object> data = result.getData();
+        HttpServletRequest request = (HttpServletRequest) data.get("request");
+        int userId = (int) data.get("userId");
+
+        List<Attention> fansList = userService.getAllFans(userId);
         for (Attention attention : fansList) {
-            mailService.sendEmailToFans(attention.getFrom().getEmail(), article, request);
-        }*/
+            mailService.sendEmailToFans(attention.getFrom().getEmail(), result.getData(), request);
+        }
         System.out.println(result);
-        System.out.println("------------------------------------------");
+        System.out.println("------------------给fans发送邮件------------------------");
     }
 }

@@ -19,7 +19,7 @@
         </ul>
     </div>
 </div>
-<div class="container" style="margin-top: 60px">
+<div class="container" style="margin-top: 60px" id="container">
     <div class="row">
         <div class="col-xs-9">
             <c:forEach items="${list}" var="item">
@@ -56,10 +56,13 @@
             <div class="panel panel-info">
                 <div class="panel-heading">公告</div>
                 <div class="panel-body">
-                    <h5>昵称：${requestScope.user.nickname}</h5>
+                    <h5>
+                        昵称：<a href="${root}/u/${requestScope.user.url}" target="_blank">
+                        ${requestScope.user.nickname}</a>
+                    </h5>
                     <h5 id="age">博龄：</h5>
-                    <h5>粉丝：<a href="#">${requestScope.user.fansCount}</a></h5>
-                    <h5>关注：<a href="#">${requestScope.user.attentionCount}</a></h5>
+                    <h5>粉丝：<a href="${root}/u/${requestScope.user.url}">${requestScope.user.fansCount}</a></h5>
+                    <h5>关注：<a href="${root}/u/${requestScope.user.url}">${requestScope.user.attentionCount}</a></h5>
                     <h5><a href="#">+加关注</a></h5>
                 </div>
             </div>

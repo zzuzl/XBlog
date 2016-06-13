@@ -45,7 +45,12 @@ public class UserController {
         User user = userService.login(email, password);
         if (user != null) {
             result.setSuccess(true);
-            session.setAttribute(Common.USER, user);
+            if (userService.resetCounts(user.getUserId()) > 0) {
+                System.out.println("------------重置用户粉丝数量和关注数量-------------");
+            } else {
+                System.out.println("------------filed   filed  filed  -------------");
+            }
+            session.setAttribute(Common.USER, userService.getUserById(user.getUserId()));
         } else {
             result.setSuccess(false);
             result.setMsg("用户名或密码错误");
@@ -165,14 +170,16 @@ public class UserController {
     /* 添加关注 */
     @RequestMapping(value = "/attention", method = RequestMethod.POST)
     @ResponseBody
-    public Result addAttention(Integer from, Integer to) {
+    public Result addAttention(@RequestParam("from") Integer from,
+                               @RequestParam("to") Integer to) {
         return userService.insertAttention(from, to);
     }
 
     /* 取消关注 */
     @RequestMapping(value = "/attention", method = RequestMethod.DELETE)
     @ResponseBody
-    public Result cancelAttention(@RequestParam("from") Integer from, @RequestParam("to") Integer to) {
+    public Result cancelAttention(@RequestParam("from") Integer from,
+                                  @RequestParam("to") Integer to) {
         return userService.deleteAttention(from, to);
     }
 

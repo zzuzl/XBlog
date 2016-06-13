@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>修改头像照片</title>
-    <%@include file="common/head.jsp" %>
+    <%@include file="../common/head.jsp" %>
     <link rel="stylesheet" href="${root}/resource/css/info.css">
     <link href="${root}/resource/cropper-master/dist/cropper.min.css" rel="stylesheet">
     <script src="${root}/resource/cropper-master/dist/cropper.min.js"></script>
@@ -36,12 +36,12 @@
     </style>
 </head>
 <body>
-<%@include file="common/title.jsp" %>
+<%@include file="../common/title.jsp" %>
 
-<div class="container" style="margin-top: 80px">
+<div class="container" style="margin-top: 80px" id="container">
     <div class="row">
         <div class="col-xs-3">
-            <%@include file="common/leftList.jsp" %>
+            <%@include file="../common/leftList.jsp" %>
         </div>
         <div class="col-xs-6">
             <div id="box">
@@ -63,7 +63,7 @@
     </div>
 </div>
 
-<%@include file="common/footer.jsp" %>
+<%@include file="../common/footer.jsp" %>
 
 <script type="application/javascript">
 

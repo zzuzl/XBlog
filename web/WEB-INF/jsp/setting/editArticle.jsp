@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>发表博客</title>
-    <%@include file="common/head.jsp" %>
+    <%@include file="../common/head.jsp" %>
     <link href="${root}/resource/kindeditor/themes/default/default.css" rel="stylesheet"/>
     <link href="${root}/resource/kindeditor/themes/simple/simple.css" rel="stylesheet"/>
     <script src="${root}/resource/kindeditor/kindeditor-all-min.js"></script>
@@ -40,12 +40,12 @@
     <link rel="stylesheet" href="${root}/resource/css/info.css">
 </head>
 <body>
-<%@include file="common/title.jsp" %>
+<%@include file="../common/title.jsp" %>
 
-<div class="container" style="margin-top: 80px">
+<div class="container" style="margin-top: 80px" id="container">
     <div class="row">
         <div class="col-xs-3">
-            <%@include file="common/leftList.jsp" %>
+            <%@include file="../common/leftList.jsp" %>
         </div>
         <div class="col-xs-9" style="margin-top: 10px">
             <form role="form" id="form" novalidate>
@@ -97,7 +97,7 @@
     </div>
 </div>
 
-<%@include file="common/footer.jsp" %>
+<%@include file="../common/footer.jsp" %>
 
 <script type="application/javascript">
     $(function () {
@@ -131,7 +131,7 @@
             },
             success: function (data) {
                 if (data.success) {
-                    window.location = "${root}/";
+                    window.location = "../../../";
                 } else {
                     alert(data.msg);
                 }

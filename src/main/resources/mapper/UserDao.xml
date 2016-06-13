@@ -5,79 +5,154 @@
     <!-- 为dao接口方法提供sql语句配置 -->
 
     <select id="searchUserByEmail" resultType="User">
-        select user_id,email,`hash`,salt,nickname,reg_time,fans_count,attention_count,photo_src,motto,interest,sex,url
-        from t_user
-        where email=#{email}
+        SELECT
+            user_id,
+            email,
+            `hash`,
+            salt,
+            nickname,
+            reg_time,
+            fans_count,
+            attention_count,
+            photo_src,
+            motto,
+            interest,
+            sex,
+            url
+        FROM t_user
+        WHERE email = #{email}
     </select>
 
     <select id="searchUserByUrl" resultType="User">
-        select user_id,email,nickname,reg_time,fans_count,attention_count,photo_src,motto,interest,sex,url
-        from t_user
-        where url=#{url}
+        SELECT
+            user_id,
+            email,
+            nickname,
+            reg_time,
+            fans_count,
+            attention_count,
+            photo_src,
+            motto,
+            interest,
+            sex,
+            url
+        FROM t_user
+        WHERE url = #{url}
     </select>
 
     <insert id="addUser" useGeneratedKeys="true" keyProperty="userId">
-        insert ignore into t_user(email,`hash`,salt,nickname,motto,interest,url) VALUES
-            (#{email},#{hash},#{salt},#{nickname},#{motto},#{interest},#{url});
+        INSERT IGNORE INTO t_user (email, `hash`, salt, nickname, motto, interest, url) VALUES
+            (#{email}, #{hash}, #{salt}, #{nickname}, #{motto}, #{interest}, #{url});
     </insert>
 
     <update id="changePwd">
-        UPDATE t_user set salt=#{salt},`hash`=#{hash} where email=#{email}
+        UPDATE t_user
+        SET salt = #{salt}, `hash` = #{hash}
+        WHERE email = #{email}
     </update>
 
     <select id="getUserById" resultType="User">
-        select user_id,email,nickname,reg_time,fans_count,attention_count,photo_src,motto,interest,sex,url
-        from t_user
-        where user_id=#{id}
+        SELECT
+            user_id,
+            email,
+            nickname,
+            reg_time,
+            fans_count,
+            attention_count,
+            photo_src,
+            motto,
+            interest,
+            sex,
+            url
+        FROM t_user
+        WHERE user_id = #{id}
     </select>
 
     <update id="changePhoto">
-        UPDATE t_user set photo_src=#{photoSrc} where user_id=#{userId}
+        UPDATE t_user
+        SET photo_src = #{photoSrc}
+        WHERE user_id = #{userId}
     </update>
 
     <select id="getAllFans" resultType="Attention">
-        select a.id,a.create_time,
-            t.user_id as "to.userId",t.email as "to.email",t.nickname as "to.nickname",t.photo_src as "to.photoSrc"
-        from t_attention a,t_user f,t_user t
-        where a.from=f.user_id and a.to=t.user_id and t.user_id=#{userId}
-        order by a.create_time desc
+        SELECT
+            a.create_time,
+            f.user_id   AS "from.userId",
+            f.email     AS "from.email",
+            f.nickname  AS "from.nickname",
+            f.photo_src AS "from.photoSrc",
+            f.url       AS "from.url"
+        FROM t_attention a, t_user f, t_user t
+        WHERE a.from = f.user_id AND a.to = t.user_id AND t.user_id = #{userId}
+        ORDER BY a.create_time DESC
     </select>
 
     <select id="getAllAttentions" resultType="Attention">
-        select a.id,a.create_time,
-        f.user_id as "from.userId",f.email as "from.email",f.nickname as "from.nickname",f.photo_src as "from.photoSrc"
-        from t_attention a,t_user f,t_user t
-        where a.from=f.user_id and a.to=t.user_id and f.user_id=#{userId}
-        order by a.create_time desc
+        SELECT
+            a.create_time,
+            t.user_id   AS "to.userId",
+            t.email     AS "to.email",
+            t.nickname  AS "to.nickname",
+            t.photo_src AS "to.photoSrc",
+            t.url       AS "to.url"
+        FROM t_attention a, t_user f, t_user t
+        WHERE a.from = f.user_id AND a.to = t.user_id AND f.user_id = #{userId}
+        ORDER BY a.create_time DESC
+    </select>
+
+    <select id="getOneAttention" resultType="Attention">
+        SELECT
+            a.create_time,
+            t.user_id   AS "to.userId",
+            t.email     AS "to.email",
+            t.nickname  AS "to.nickname",
+            t.photo_src AS "to.photoSrc",
+            t.url       AS "to.url",
+            f.user_id   AS "from.userId",
+            f.email     AS "from.email",
+            f.nickname  AS "from.nickname",
+            f.photo_src AS "from.photoSrc",
+            f.url       AS "from.url"
+        FROM t_attention a, t_user f, t_user t
+        WHERE a.from = f.user_id AND a.to = t.user_id AND f.user_id = #{from} AND t.user_id = #{to}
     </select>
 
     <insert id="insertAttention">
-        insert ignore into t_attention(`from`,`to`) values
-            (#{from},#{to})
+        INSERT IGNORE INTO t_attention (`from`, `to`) VALUES
+            (#{from}, #{to})
     </insert>
 
     <delete id="deleteAttention">
-        delete from t_attention where `from`=#{from} and `to`=#{to}
+        DELETE FROM t_attention
+        WHERE `from` = #{from} AND `to` = #{to}
     </delete>
 
     <update id="updateUser">
-        update t_user set nickname=#{nickname},motto=#{motto},interest=#{interest},sex=#{sex}
-        where user_id=#{userId}
+        UPDATE t_user
+        SET nickname = #{nickname}, motto = #{motto}, interest = #{interest}, sex = #{sex}
+        WHERE user_id = #{userId}
     </update>
 
     <update id="updateAttentionCount">
-        update t_user set attention_count=attention_count+#{count}
-        where user_id=#{userId}
+        UPDATE t_user
+        SET attention_count = attention_count + #{count}
+        WHERE user_id = #{userId}
     </update>
 
     <update id="updateFansCount">
-        update t_user set fans_count=fans_count+#{count}
-        where user_id=#{userId}
+        UPDATE t_user
+        SET fans_count = fans_count + #{count}
+        WHERE user_id = #{userId}
     </update>
 
     <update id="resetCounts">
-        update t_user set fans_count=(select count(*) from t_attention where `to`=#{userId}),
-            attention_count=(select count(*) from t_attention where `from`=#{userId})
-        where user_id=#{userId}
+        UPDATE t_user
+        SET fans_count      = (SELECT count(*)
+                               FROM t_attention
+                               WHERE `to` = #{userId}),
+            attention_count = (SELECT count(*)
+                               FROM t_attention
+                               WHERE `from` = #{userId})
+        WHERE user_id = #{userId}
     </update>
 </mapper>

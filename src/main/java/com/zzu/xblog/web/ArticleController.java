@@ -12,6 +12,7 @@ import com.zzu.xblog.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,10 +30,6 @@ public class ArticleController {
     private ArticleService articleService;
     @Resource
     private RedisService redisService;
-    @Resource
-    private UserService userService;
-    @Resource
-    private MailService mailService;
 
     /* 获取第n页的文章，默认每页15篇 */
     @RequestMapping(value = "/page/{page}", method = RequestMethod.GET)
@@ -62,17 +59,7 @@ public class ArticleController {
     @ResponseBody
     public Result postArticle(@Valid @ModelAttribute("article") Article article,
                               BindingResult bindingResult, HttpServletRequest request) {
-        Result result = articleService.insertArticle(article);
-
-        // todo
-        if (result.isSuccess()) {
-            List<Attention> fansList = userService.getAllFans(article.getUser().getUserId());
-            for (Attention attention : fansList) {
-                mailService.sendEmailToFans(attention.getFrom().getEmail(), article, request);
-            }
-        }
-
-        return result;
+        return articleService.insertArticle(article, request);
     }
 
     /* 文章点赞 */
@@ -86,7 +73,7 @@ public class ArticleController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseBody
     public Result updateArticle(@Valid @ModelAttribute("article") Article article,
-                                    BindingResult bindingResult, @PathVariable("id") Integer id) {
+                                BindingResult bindingResult, @PathVariable("id") Integer id) {
         article.setArticleId(id);
         return articleService.updateArticle(article);
     }

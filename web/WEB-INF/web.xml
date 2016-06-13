@@ -74,4 +74,9 @@
         <param-name>logbackConfigLocation</param-name>
         <param-value>classpath:logback.xml</param-value>
     </context-param>
+
+    <!-- 异常处理页面 -->
+    <error-page>
+        <location>/error</location>
+    </error-page>
 </web-app>

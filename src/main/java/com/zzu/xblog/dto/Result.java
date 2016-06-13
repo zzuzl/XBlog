@@ -1,8 +1,6 @@
 package com.zzu.xblog.dto;
 
-/**
- * Created by Administrator on 2016/6/12.
- */
+import java.util.Map;
 
 /**
  * dto,作为后端返回前端的数据传输对象
@@ -10,6 +8,7 @@ package com.zzu.xblog.dto;
 public class Result {
     private boolean success = false;
     private String msg = null;
+    private Map<String,Object> data;
 
     public Result(boolean success) {
         this.success = success;
@@ -18,6 +17,14 @@ public class Result {
     public Result(boolean success, String msg) {
         this.success = success;
         this.msg = msg;
+    }
+
+    public Map<String, Object> getData() {
+        return data;
+    }
+
+    public void setData(Map<String, Object> data) {
+        this.data = data;
     }
 
     public Result() {}

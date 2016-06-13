@@ -11,6 +11,7 @@ import com.zzu.xblog.dao.UserDao;
 import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.exception.DataException;
 import com.zzu.xblog.model.Article;
+import com.zzu.xblog.model.Like;
 import com.zzu.xblog.model.Pager;
 import com.zzu.xblog.model.User;
 import net.sf.json.JSONObject;
@@ -19,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文章相关service
@@ -65,16 +68,23 @@ public class ArticleService {
         if (id < 1) {
             return null;
         }
-        return articleDao.detail(id);
+        Article article = articleDao.detail(id);
+        Article temp = articleDao.getPreAndNext(id);
+        if (temp != null) {
+            article.setPre(temp.getPre());
+            article.setNext(temp.getNext());
+        }
+        return article;
     }
 
     /**
      * 发表文章
      *
      * @param article
+     * @param request
      * @return
      */
-    public Result insertArticle(Article article) {
+    public Result insertArticle(Article article, HttpServletRequest request) {
         Result result = article.valid();
 
         if (result.isSuccess()) {
@@ -85,6 +95,15 @@ public class ArticleService {
                 } else {
                     User user = userDao.getUserById(article.getUser().getUserId());
                     article.setUser(user);
+
+                    // aop发送邮件使用
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("request", request);
+                    data.put("title", article.getTitle());
+                    data.put("nickname", user.getNickname());
+                    data.put("articleId", article.getArticleId());
+                    data.put("userId", user.getUserId());
+                    result.setData(data);
                 }
             } else {
                 result.setSuccess(false);
@@ -156,6 +175,26 @@ public class ArticleService {
             }
         }
         return result;
+    }
+
+    /**
+     * 获取所有的赞
+     *
+     * @param userId
+     * @param articleId
+     * @return
+     */
+    public List<Like> getLikes(int userId, int articleId) {
+        if (userId < 1) {
+            userId = 0;
+        }
+        if (articleId < 1) {
+            articleId = 0;
+        }
+        if (userId == 0 && articleId == 0) {
+            return null;
+        }
+        return articleDao.getLikes(userId, articleId);
     }
 
     /**

@@ -1,14 +1,11 @@
 package com.zzu.xblog.service;
 
-import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dao.UserDao;
 import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.exception.DataException;
 import com.zzu.xblog.model.Attention;
 import com.zzu.xblog.model.User;
 import com.zzu.xblog.util.Utils;
-import net.sf.json.JSONObject;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -165,6 +162,20 @@ public class UserService {
     }
 
     /**
+     * 获取指定的关注
+     *
+     * @param from
+     * @param to
+     * @return
+     */
+    public Attention getOneAttention(int from, int to) {
+        if (from < 1 || to < 1) {
+            return null;
+        }
+        return userDao.getOneAttention(from, to);
+    }
+
+    /**
      * 添加关注
      *
      * @param from
@@ -233,5 +244,18 @@ public class UserService {
             }
         }
         return result;
+    }
+
+    /**
+     * 重新设置关注和粉丝数量
+     *
+     * @param userId
+     * @return
+     */
+    public int resetCounts(int userId) {
+        if (userId < 1) {
+            return 0;
+        }
+        return userDao.resetCounts(userId);
     }
 }

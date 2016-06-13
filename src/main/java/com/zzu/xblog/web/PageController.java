@@ -1,9 +1,7 @@
 package com.zzu.xblog.web;
 
 import com.zzu.xblog.common.Common;
-import com.zzu.xblog.model.Article;
-import com.zzu.xblog.model.Category;
-import com.zzu.xblog.model.User;
+import com.zzu.xblog.model.*;
 import com.zzu.xblog.service.ArticleService;
 import com.zzu.xblog.service.CategoryService;
 import com.zzu.xblog.service.CommentService;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -40,6 +39,12 @@ public class PageController {
         return "index";
     }
 
+    /* 关于 */
+    @RequestMapping(value = "/about", method = RequestMethod.GET)
+    public String about() {
+        return "about";
+    }
+
     /* 登录 */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login() {
@@ -52,24 +57,53 @@ public class PageController {
         return "zc";
     }
 
-    /* 关于 */
-    @RequestMapping(value = "/about", method = RequestMethod.GET)
-    public String about() {
-        return "about";
+    /* 用户个人信息 */
+    @RequestMapping(value = "/setting/userInfo", method = RequestMethod.GET)
+    public String blog(HttpSession session) {
+        User user = (User) session.getAttribute(Common.USER);
+        if (user == null) {
+            return Common.PAGE_404;
+        }
+        return "setting/info";
     }
 
     /* 发表文章 */
-    @RequestMapping(value = "/editArticle", method = RequestMethod.GET)
+    @RequestMapping(value = "/setting/editArticle", method = RequestMethod.GET)
     public String editArticle(Model model) {
         List<Category> list = categoryService.listCategory();
         model.addAttribute("list", list);
-        return "editArticle";
+        return "setting/editArticle";
     }
 
     /* 修改头像 */
-    @RequestMapping(value = "/changePhoto", method = RequestMethod.GET)
+    @RequestMapping(value = "/setting/changePhoto", method = RequestMethod.GET)
     public String changePhoto() {
-        return "changePhoto";
+        return "setting/changePhoto";
+    }
+
+    /* 用户个人中心 */
+    @RequestMapping(value = "/u/{url}", method = RequestMethod.GET)
+    public String personalCenter(@PathVariable("url") String url, Model model, HttpSession session) {
+        User user = userService.searchUserByUrl(url);
+        User loginUser = (User) session.getAttribute(Common.USER);
+        if (user != null) {
+            List<Attention> fans = userService.getAllFans(user.getUserId());
+            model.addAttribute("fans", fans);
+            model.addAttribute("attentions", userService.getAllAttentions(user.getUserId()));
+            model.addAttribute(Common.USER, user);
+
+            if (fans != null && loginUser != null) {
+                for (Attention attention : fans) {
+                    if (attention.getFrom().getUserId() == loginUser.getUserId()) {
+                        model.addAttribute("attention", attention);
+                        break;
+                    }
+                }
+            }
+        } else {
+            return Common.PAGE_404;
+        }
+        return "personalCenter";
     }
 
     /* 用户的博客 */
@@ -88,25 +122,33 @@ public class PageController {
 
     /* 文章详情 */
     @RequestMapping(value = "/p/{id}", method = RequestMethod.GET)
-    public String articleDetail(@PathVariable("id") Integer id, Model model) {
+    public String articleDetail(@PathVariable("id") Integer id, Model model, HttpSession session) {
         Article article = articleService.detail(id);
+        User user = (User) session.getAttribute(Common.USER);
         if (article != null) {
             model.addAttribute("article", article);
             model.addAttribute("comments", commentService.listArticleComments(id));
+
+            if (user != null) {
+                List<Like> likes = articleService.getLikes(user.getUserId(), id);
+                if (likes != null) {
+                    model.addAttribute("like", likes.get(0));
+                }
+
+                model.addAttribute("attention", userService.getOneAttention(user.getUserId(), article.getUser().getUserId()));
+            }
         } else {
             return Common.PAGE_404;
         }
         return "articleDetail";
     }
 
-    /* 用户个人信息 */
-    @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
-    public String blog(HttpSession session) {
-        User user = (User) session.getAttribute(Common.USER);
-        if (user == null) {
-            return Common.PAGE_404;
-        }
-        return "info";
+    /* error页面 */
+    @RequestMapping(value = "/error", method = RequestMethod.GET)
+    public String error(HttpServletRequest request) {
+        System.out.println(request.getAttribute("javax.servlet.error.status_code"));
+        System.out.println(request.getAttribute("javax.servlet.error.message"));
+        return "common/404";
     }
 
     /* 404页面 */

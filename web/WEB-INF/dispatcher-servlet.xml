@@ -39,9 +39,7 @@
     <!-- 配置拦截器 -->
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/userInfo"/>
-            <mvc:mapping path="/changePhoto"/>
-            <mvc:mapping path="/editArticle"/>
+            <mvc:mapping path="/setting/*"/>
             <bean class="com.zzu.xblog.interceptor.RequestInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
