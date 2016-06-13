@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <title>修改个人信息</title>
     <%@include file="../common/head.jsp" %>

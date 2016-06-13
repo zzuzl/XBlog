@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <title>找回密码</title>
     <%@include file="common/head.jsp" %>

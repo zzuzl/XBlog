@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <title>${requestScope.article.title} - XBlog</title>
     <%@include file="common/head.jsp" %>
@@ -216,7 +217,7 @@
 
     var obj = {
         pId: 0,
-        attention: '${requestScope.attention != null}',
+        attention: ${requestScope.attention != null},
         check: function () {
             return '${sessionScope.user.userId}' && window.editor.html().length > 0;
         },
@@ -323,7 +324,7 @@
             if (this.attention) {
                 $('#attention-btn').text("取消关注");
             } else {
-                $('#attention-btn').text("<i class='fa fa-plus' aria-hidden='true'></i>关注");
+                $('#attention-btn').html("<i class='fa fa-plus' aria-hidden='true'></i>关注");
             }
         },
         changeLikeBtnState: function () {

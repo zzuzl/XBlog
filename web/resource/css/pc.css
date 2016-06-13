@@ -1,9 +1,10 @@
 @charset "UTF-8";
 
 #photo-thumbnail {
-    width: 200px;
-    height: 200px;
+    width: 128px;
+    height: 128px;
     cursor: default;
+    margin-top: 20px;
 }
 
 #photo-thumbnail img {

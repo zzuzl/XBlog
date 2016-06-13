@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <title>${requestScope.user.nickname} 的个人空间</title>
     <%@include file="common/head.jsp" %>
@@ -17,8 +19,8 @@
             </a>
         </div>
         <div class="col-xs-7">
-            <h2>${requestScope.user.nickname}(${requestScope.user.sex})</h2>
-            <h4>博龄：2年</h4>
+            <h3>${requestScope.user.nickname}</h3>
+            <h4 id="age">博龄：2年</h4>
             <h5>博客：
                 <a href="http://localhost:8888/${root}/${requestScope.user.url}">
                     http://localhost:8888/${root}/${requestScope.user.url}
@@ -86,9 +88,11 @@
 
 <%@include file="common/footer.jsp" %>
 
+<script src="${root}/resource/js/moment.js"></script>
+<script src="${root}/resource/js/moment-with-locales.js"></script>
 <script type="application/javascript">
     var obj = {
-        attention: '${requestScope.attention != null}',
+        attention: ${requestScope.attention != null},
         isLogin: function () {
             return '${sessionScope.user.userId}';
         },
@@ -139,13 +143,19 @@
             if (this.attention) {
                 $('#attention-btn').text("取消关注");
             } else {
-                $('#attention-btn').text("<span class='glyphicon glyphicon-plus' aria-hidden='true'></span>关注");
+                $('#attention-btn').html("<span class='glyphicon glyphicon-plus' aria-hidden='true'></span>关注");
             }
         }
     };
 
     $(function () {
+        moment.locale('zh-CN');
         obj.updateAttentionButton();
+
+        var regTime = "<fmt:formatDate value='${requestScope.user.regTime}' pattern='yyyy-MM-dd HH:mm'/>";
+        var ageText = moment(regTime, "YYYY-MM-DD").fromNow();
+        var text = '博龄：' + ageText.substr(0, ageText.length - 1);
+        $('#age').text(text);
     });
 </script>
 </body>
