@@ -97,10 +97,7 @@ public class ArticleService {
                     // aop发送邮件使用
                     Map<String, Object> data = new HashMap<>();
                     data.put("request", request);
-                    data.put("title", article.getTitle());
-                    data.put("nickname", user.getNickname());
-                    data.put("articleId", article.getArticleId());
-                    data.put("userId", user.getUserId());
+                    data.put("article", article);
                     result.setData(data);
                 }
             } else {

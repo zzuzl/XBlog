@@ -3,11 +3,10 @@ package com.zzu.xblog.web;
 import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.model.Attention;
+import com.zzu.xblog.model.Dynamic;
+import com.zzu.xblog.model.Pager;
 import com.zzu.xblog.model.User;
-import com.zzu.xblog.service.CaptchaService;
-import com.zzu.xblog.service.MailService;
-import com.zzu.xblog.service.RedisService;
-import com.zzu.xblog.service.UserService;
+import com.zzu.xblog.service.*;
 import com.zzu.xblog.util.Utils;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -36,6 +35,8 @@ public class UserController {
     private MailService mailService;
     @Resource
     private CaptchaService captchaService;
+    @Resource
+    private DynamicService dynamicService;
 
     /* 用户登录 */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -214,6 +215,37 @@ public class UserController {
         if (result.isSuccess()) {
             session.setAttribute(Common.USER, userService.getUserById(user.getUserId()));
         }
+        return result;
+    }
+
+    /* 获取用户动态 */
+    @RequestMapping(value = "/dynamics/page/{page}", method = RequestMethod.GET)
+    @ResponseBody
+    public Pager<Dynamic> getDynamics(@RequestParam("userId") Integer userId,
+                                      @PathVariable("page") Integer page) {
+        page = page == null ? 1 : page;
+        return dynamicService.getDynamics(userId, page, Common.DEFAULT_ITEM_COUNT);
+    }
+
+    /* 删除用户动态 */
+    @RequestMapping(value = "/dynamics/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public Result deleteDynamic(@PathVariable("id") Integer id, HttpSession session) {
+        Result result = new Result();
+
+        Dynamic dynamic = dynamicService.getDynamicById(id);
+        User user = (User) session.getAttribute(Common.USER);
+        if (user != null && dynamic != null &&
+                user.getUserId() == dynamic.getUser().getUserId()) {
+            if (id == null) {
+                result.setMsg("id不能为空");
+            } else {
+                result = dynamicService.deleteDynamic(id);
+            }
+        } else {
+            result.setMsg("用户身份错误");
+        }
+
         return result;
     }
 }

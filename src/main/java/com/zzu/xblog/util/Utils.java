@@ -203,6 +203,22 @@ public class Utils {
         return "";
     }
 
+    /**
+     * 判断一个字符串是否符合正则
+     * @param input
+     * @param pattern
+     * @return
+     */
+    public static boolean isMatch(String input,String pattern) {
+        if(input == null || pattern == null) {
+            return false;
+        }
+
+        Pattern p = Pattern.compile(pattern);
+        Matcher matcher = p.matcher(input);
+        return matcher.find();
+    }
+
     public static void main(String[] args) {
         /*for(int i=0;i<10;i++) {
             System.out.println(randomString(10));
@@ -215,5 +231,8 @@ public class Utils {
         //System.out.println(validEmail("672399171@qq.com"));
         //System.out.println(uuid());
         //System.out.println(MD5("672399171@qq.com"));
+
+        System.out.println(isMatch("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+                ".*text/html.*"));
     }
 }

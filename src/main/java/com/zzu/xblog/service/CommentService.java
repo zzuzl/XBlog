@@ -1,17 +1,16 @@
 package com.zzu.xblog.service;
 
-import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dao.ArticleDao;
 import com.zzu.xblog.dao.CommentDao;
 import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.exception.DataException;
 import com.zzu.xblog.model.Comment;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 评论相关service
@@ -62,6 +61,10 @@ public class CommentService {
             if (commentDao.insertComment(comment) > 0 &&
                     articleDao.updateCommentCount(comment.getArticle().getArticleId(), 1) > 0) {
                 result.setMsg("发表成功!");
+
+                Map<String,Object> data = new HashMap<>();
+                data.put("comment",comment);
+                result.setData(data);
             } else {
                 result.setSuccess(false);
                 result.setMsg("发表失败!");

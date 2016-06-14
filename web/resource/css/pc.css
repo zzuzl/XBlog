@@ -18,7 +18,7 @@
 }
 
 #tabs li {
-    width: 50%;
+    width: 33.3%;
     text-align: center;
 }
 
@@ -49,4 +49,30 @@
     text-align: center;
     overflow: hidden;
     color: #CCCCCC;
+}
+
+.dynamic-item {
+    padding: 10px;
+}
+
+.dynamic-item .thumbnail {
+    display: inline-block;
+    float: left;
+    margin-right: 20px;
+}
+
+.dynamic-item .thumbnail {
+    width: 60px;
+    height: 60px;
+}
+
+.dynamic-content a, .dynamic-content span {
+    margin-right: 10px;
+}
+
+#tip {
+    font-weight: bold;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 100px;
 }

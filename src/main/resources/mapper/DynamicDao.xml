@@ -1,0 +1,50 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzu.xblog.dao.DynamicDao">
+    <select id="getDynamics" resultType="Dynamic">
+        SELECT
+            d.create_time,
+            d.operator,
+            d.content,
+            d.dynamic_id,
+            a.article_id AS "article.articleId",
+            a.title      AS "article.title",
+            u.nickname   AS "user,nickname",
+            u.photo_src  AS "user.photoSrc",
+            u.url        AS "user.url"
+        FROM t_dynamic d, t_user u, t_article a
+        WHERE d.user_id = u.user_id AND d.article_id = a.article_id AND d.user_id = #{userId}
+    </select>
+
+    <select id="getDynamicCount" resultType="int">
+        SELECT count(*) AS num
+        FROM t_dynamic d, t_user u, t_article a
+        WHERE d.user_id = u.user_id AND d.article_id = a.article_id AND d.user_id = #{userId}
+    </select>
+
+    <insert id="insertDynamic" useGeneratedKeys="true" keyProperty="dynamicId">
+        INSERT INTO t_dynamic (user_id, article_id, operator, content) VALUES
+            (#{user.userId}, #{article.articleId}, #{operator}, #{content})
+    </insert>
+
+    <delete id="deleteDynamic">
+        DELETE FROM t_dynamic
+        WHERE dynamic_id = #{id}
+    </delete>
+
+    <select id="getDynamicById">
+        SELECT
+            d.create_time,
+            d.operator,
+            d.content,
+            d.dynamic_id,
+            a.article_id AS "article.articleId",
+            a.title      AS "article.title",
+            u.nickname   AS "user,nickname",
+            u.photo_src  AS "user.photoSrc",
+            u.url        AS "user.url"
+        FROM t_dynamic d, t_user u, t_article a
+        WHERE d.user_id = u.user_id AND d.article_id = a.article_id AND d.dynamic_id = #{id}
+    </select>
+</mapper>

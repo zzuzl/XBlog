@@ -18,7 +18,7 @@
         order by c.post_time desc
     </select>
 
-    <insert id="insertComment">
+    <insert id="insertComment" useGeneratedKeys="true" keyProperty="commentId">
         INSERT INTO t_comment (content, article_id, p_id,user_id) VALUES
             (#{content}, #{article.articleId}, #{pId},#{user.userId})
     </insert>

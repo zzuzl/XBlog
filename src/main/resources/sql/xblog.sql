@@ -11,7 +11,7 @@ CREATE TABLE t_user(
   `hash` VARCHAR(45) NOT NULL  COMMENT 'hash密码',
   `salt` VARCHAR(10) NOT NULL COMMENT 'salt',
   `nickname` VARCHAR(20) NOT NULL COMMENT '昵称',
-  `reg_time` DATETIME NOT NULL DEFAULT now() COMMENT '注册时间',
+  `reg_time` TIMESTAMP NOT NULL DEFAULT current_timestamp COMMENT '注册时间',
   `fans_count` INT NOT NULL DEFAULT 0 COMMENT '粉丝数',
   `attention_count` INT NOT NULL DEFAULT 0 COMMENT '关注数',
   `photo_src` VARCHAR(50) NOT NULL DEFAULT 'resource/images/default-head-photo.png' COMMENT '头像路径',
@@ -35,7 +35,7 @@ INSERT INTO t_user(email,hash,salt,nickname,motto,url) VALUES
 CREATE TABLE t_attention(
   `from` INT NOT NULL COMMENT '关注者id',
   `to` INT NOT NULL COMMENT '被关注者id',
-  `create_time` DATETIME NOT NULL DEFAULT now() COMMENT '创建时间',
+  `create_time` TIMESTAMP NOT NULL DEFAULT current_timestamp COMMENT '创建时间',
   PRIMARY KEY (`from`,`to`),
   KEY create_time_index(create_time),
   FOREIGN KEY(`from`) REFERENCES t_user(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -82,7 +82,7 @@ CREATE TABLE t_article(
   `title` VARCHAR(50) NOT NULL COMMENT '标题',
   `description` TEXT COMMENT '描述',
   `content` TEXT COMMENT '内容',
-  `post_time` DATETIME NOT NULL DEFAULT now() COMMENT '发表时间',
+  `post_time` TIMESTAMP NOT NULL DEFAULT current_timestamp COMMENT '发表时间',
   `view_count` INT DEFAULT 0 COMMENT '浏览次数',
   `comment_count` INT DEFAULT 0 COMMENT '评论次数',
   `like_count` INT DEFAULT 0 COMMENT '赞次数',
@@ -105,7 +105,7 @@ VALUES (2,'JAVA基础教程一','JAVA基础教程,快来学习啊!','JAVA基础�
 CREATE TABLE t_comment (
   `comment_id` INT NOT NULL AUTO_INCREMENT COMMENT 'id',
   `content` TEXT NOT NULL COMMENT '内容',
-  `post_time` DATETIME NOT NULL DEFAULT now() COMMENT '发表时间',
+  `post_time` TIMESTAMP NOT NULL DEFAULT current_timestamp COMMENT '发表时间',
   `article_id` INT NOT NULL COMMENT '文章id',
   `user_id` INT NOT NULL COMMENT '用户id',
   `p_id` INT NOT NULL COMMENT '父亲id',
@@ -127,7 +127,7 @@ INSERT INTO t_comment(content, article_id, p_id,user_id) VALUES
 CREATE TABLE t_like(
   `user_id` INT NOT NULL COMMENT '用户id',
   `article_id` INT NOT NULL COMMENT '文章id',
-  `create_time` DATETIME NOT NULL DEFAULT now() COMMENT '创建时间',
+  `create_time` TIMESTAMP NOT NULL DEFAULT current_timestamp COMMENT '创建时间',
   PRIMARY KEY (user_id,article_id),
   KEY create_time_index(create_time),
   FOREIGN KEY (user_id) REFERENCES t_user(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -137,4 +137,20 @@ CREATE TABLE t_like(
   DEFAULT CHARSET = utf8
   COMMENT '点赞表';
 
+/* 创建动态表 */
+CREATE TABLE t_dynamic(
+  `dynamic_id` INT NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `user_id` INT NOT NULL COMMENT '用户id',
+  `article_id` INT NOT NULL COMMENT '文章id',
+  `create_time` TIMESTAMP NOT NULL DEFAULT current_timestamp COMMENT '创建时间',
+  `operator` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '操作',
+  `content` TEXT,
+  PRIMARY KEY (dynamic_id),
+  KEY create_time_index(create_time),
+  FOREIGN KEY (user_id) REFERENCES t_user(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (article_id) REFERENCES t_article(article_id) ON UPDATE CASCADE ON DELETE CASCADE
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COMMENT '动态表';
 

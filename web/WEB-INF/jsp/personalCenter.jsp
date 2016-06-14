@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" ng-app="app">
 <head>
     <title>${requestScope.user.nickname} 的个人空间</title>
     <%@include file="common/head.jsp" %>
     <link rel="stylesheet" href="${root}/resource/css/index.css">
     <link rel="stylesheet" href="${root}/resource/css/pc.css">
+    <script src="${root}/resource/angular-1.4.8/angular.min.js"></script>
 </head>
 <body>
 <%@include file="common/title.jsp" %>
@@ -51,6 +52,11 @@
                         ${requestScope.user.nickname}的粉丝(${requestScope.user.fansCount})
                     </a>
                 </li>
+                <li role="presentation">
+                    <a href="#dynamic" aria-controls="dynamic" role="tab" data-toggle="tab">
+                        最新动态
+                    </a>
+                </li>
             </ul>
 
             <!-- Tab panes -->
@@ -80,6 +86,35 @@
                             </div>
                         </li>
                     </c:forEach>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="dynamic" ng-controller="DynamicCtrl as vm">
+                    <c:if test="${sessionScope.user != null}">
+                        <div class="col-xs-10 col-xs-offset-1 dynamic-item" ng-repeat="item in vm.data">
+                            <a href="${root}/{{item.user.url}}" class="thumbnail" target="_blank">
+                                <img src="${root}/{{item.user.photoSrc}}" alt="暂无">
+                            </a>
+                            <div class="dynamic-content">
+                                <a href="${root}/u/{{item.user.url}}">我是张三</a>
+                                <span data-ng-bind="item.operator"></span>
+                                <a href="${root}/p/{{item.article.articleId}}" data-ng-bind="item.article.title"></a>
+                                <span data-ng-bind="item.createTime | dateFormat"></span>
+                                <c:if test="${sessionScope.user.userId == requestScope.user.userId}">
+                                    <a href="javascript:void(0)" ng-click="vm.deleteDynamic(item.dynamicId)">
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    </a>
+                                </c:if>
+                            </div>
+                            <p data-ng-bind="item.content"></p>
+                        </div>
+
+                        <xl-page pageSize="15" n="5" method="load" cla="pagination-sm" ng-show="vm.totalPage>1"
+                                 data="itemList" totalItem="totalItem" totalPage="totalPage"></xl-page>
+                    </c:if>
+                    <c:if test="${sessionScope.user == null}">
+                        <div id="tip">
+                            注册用户登录后才能查看动态，请<a href="${root}/login">登录</a>
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>
@@ -157,6 +192,63 @@
         var text = '博龄：' + ageText.substr(0, ageText.length - 1);
         $('#age').text(text);
     });
+
+    /**
+     * 最新动态
+     */
+    (function () {
+        'use strict';
+
+        angular.module('app', [])
+                .controller('DynamicCtrl', DynamicCtrl);
+
+        DynamicCtrl.$inject = ['$http'];
+
+        function DynamicCtrl($http) {
+            var vm = this;
+            vm.init = false;
+
+            // 加载动态
+            vm.load = function (params, callback) {
+                var url = "${root}/user/dynamics/page/" + params.page + '?userId=${requestScope.user.userId}';
+
+                $http.get(url).then(function (res) {
+                    if (callback) {
+                        callback(res.data);
+                        if (!vm.init) {
+                            vm.init = true;
+                        }
+                    } else {
+                        vm.data = res.data.itemList;
+                        vm.total = res.data.totalItem;
+                    }
+                });
+            };
+
+            // 删除动态
+            vm.deleteDynamic = function (id) {
+                if (id) {
+                    var r = confirm("确认删除该动态吗?");
+                    if (r === true) {
+                        $http.delete('${root}/user/dynamics/' + id)
+                                .then(function (res) {
+                                    if (res.data.success) {
+                                        for (var i = 0; i < vm.data.length; i++) {
+                                            if (vm.data[i].dynamicId === id) {
+                                                vm.data.splice(i, 1);
+                                            } else {
+                                                alert(res.data.msg);
+                                            }
+                                        }
+                                    }
+                                });
+                    }
+                }
+            };
+        }
+    })();
 </script>
+<script src="${root}/resource/js/filters.js"></script>
+<script src="${root}/resource/js/page.js"></script>
 </body>
 </html>
