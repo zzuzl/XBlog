@@ -85,11 +85,11 @@ public class ArticleController {
         return articleService.listMyArticle(page, Common.DEFAULT_ITEM_COUNT, id);
     }
 
-    /* 全局搜索文章 */
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    /* 搜索文章 */
+    @RequestMapping(value = "/search/{page}", method = RequestMethod.GET)
     @ResponseBody
-    public List<Article> searchArticle(String keyword) {
-        System.out.println(keyword);
-        return articleService.searchArticle(keyword);
+    public Pager<Article> searchArticle(@RequestParam("keyword") String keyword,
+                                        @PathVariable("page") Integer page) {
+        return articleService.searchArticle(page, Common.DEFAULT_ITEM_COUNT, keyword);
     }
 }

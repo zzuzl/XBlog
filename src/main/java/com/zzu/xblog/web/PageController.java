@@ -3,11 +3,13 @@ package com.zzu.xblog.web;
 import com.zzu.xblog.common.Common;
 import com.zzu.xblog.model.*;
 import com.zzu.xblog.service.*;
+import com.zzu.xblog.util.Utils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -103,6 +105,8 @@ public class PageController {
     public String personalCenter(@PathVariable("url") String url, Model model, HttpSession session) {
         User user = userService.searchUserByUrl(url);
         User loginUser = (User) session.getAttribute(Common.USER);
+        model.addAttribute("host", Utils.getHostAddress());
+
         if (user != null) {
             List<Attention> fans = userService.getAllFans(user.getUserId());
             model.addAttribute("fans", fans);
@@ -168,9 +172,14 @@ public class PageController {
             redisService.updateViewCount(id);
         }
         session.setAttribute(Common.ARTICLE_ARRAY, array);
-
-
         return "articleDetail";
+    }
+
+    /* 搜索文章结果页面 */
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String search(@RequestParam("keyword") String keyword, Model model) {
+        model.addAttribute("keyword",keyword);
+        return "search";
     }
 
     /* error页面 */

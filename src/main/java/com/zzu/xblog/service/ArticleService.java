@@ -9,12 +9,10 @@ import com.zzu.xblog.dao.ArticleDao;
 import com.zzu.xblog.dao.LuceneDao;
 import com.zzu.xblog.dao.UserDao;
 import com.zzu.xblog.dto.Result;
-import com.zzu.xblog.exception.DataException;
 import com.zzu.xblog.model.Article;
 import com.zzu.xblog.model.Like;
 import com.zzu.xblog.model.Pager;
 import com.zzu.xblog.model.User;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -200,10 +198,12 @@ public class ArticleService {
     /**
      * 查询文章
      *
+     * @param page
+     * @param count
      * @param keyword
      * @return
      */
-    public List<Article> searchArticle(String keyword) {
-        return luceneDao.searchArticle(keyword);
+    public Pager<Article> searchArticle(int page, int count, String keyword) {
+        return luceneDao.searchArticle(page, count, keyword);
     }
 }

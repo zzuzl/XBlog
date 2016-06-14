@@ -82,7 +82,7 @@
             </div>
 
             <%-- 分页 --%>
-            <xl-page pageSize="15" n="5" method="load" cla="pagination-sm"
+            <xl-page pageSize="15" n="5" method="load" cla="pagination-sm" ng-show="vm.totalPage>1"
                      data="itemList" totalItem="totalItem" totalPage="totalPage"></xl-page>
         </div>
     </div>

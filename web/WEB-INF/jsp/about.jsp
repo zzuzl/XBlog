@@ -5,6 +5,12 @@
     <title>关于</title>
     <%@include file="common/head.jsp" %>
     <link rel="stylesheet" href="${root}/resource/css/index.css">
+    <style>
+        .media-left img {
+            height: 80px;
+            width: 80px;
+        }
+    </style>
 </head>
 <body>
 <%@include file="common/title.jsp"%>
@@ -36,6 +42,18 @@
         <li><a href="http://redis.io/" target="_blank">Redis</a></li>
     </ul>
     <h3>小组成员</h3>
+    <div class="media">
+        <div class="media-left">
+            <a href="#">
+                <img class="media-object" src="${root}/resource/images/default-head-photo.png" alt="...">
+            </a>
+        </div>
+        <div class="media-body">
+            <p>
+                说点什么
+            </p>
+        </div>
+    </div>
 </div>
 
 <%@include file="common/footer.jsp"%>

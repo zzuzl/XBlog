@@ -30,7 +30,8 @@
                             <div class="top-div">
                                 <img src="${root}/${sessionScope.user.photoSrc}" width="100" height="100"/>
                                 <div class="user-info">
-                                    <h5><a href="${root}/u/${sessionScope.user.url}">${sessionScope.user.nickname}</a></h5>
+                                    <h5><a href="${root}/u/${sessionScope.user.url}">${sessionScope.user.nickname}</a>
+                                    </h5>
                                     <h6>${sessionScope.user.email}</h6>
                                     <h6>
                                         <a href="${root}/setting/userInfo">
@@ -58,25 +59,45 @@
                     </c:otherwise>
                 </c:choose>
             </div>
+            <form class="navbar-form navbar-right" role="search" id="searchForm" action="${root}/search" method="get">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="keyword"
+                           placeholder="Search for..." value="${requestScope.keyword}">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">搜索</button>
+                    </span>
+                </div>
+            </form>
         </div>
     </div>
 </nav>
 
 <script>
-    /* 头像个人信息切换 */
-    $("#photo_img").click(function (event) {
-        event.stopPropagation();
-        $("s").toggle();
-        $(".user-div").toggle();
-    });
 
-    $("s,.user-div").click(function (event) {
-        event.stopPropagation();
-    });
+    $(function () {
+        /* 头像个人信息切换 */
+        $("#photo_img").click(function (event) {
+            event.stopPropagation();
+            $("s").toggle();
+            $(".user-div").toggle();
+        });
 
-    $(document).click(function () {
-        $("s").hide();
-        $(".user-div").hide();
+        $("s,.user-div").click(function (event) {
+            event.stopPropagation();
+        });
+
+        $(document).click(function () {
+            $("s").hide();
+            $(".user-div").hide();
+        });
+
+        $('#searchForm').submit(function () {
+            var keyword = $("input[name='keyword']").val();
+            console.log("keyword:" + keyword);
+            if (keyword.trim().length < 1) {
+                return false;
+            }
+        });
     });
 
     /* 退出 */

@@ -22,8 +22,8 @@
             <h3>${requestScope.user.nickname}</h3>
             <h4 id="age">博龄：2年</h4>
             <h5>博客：
-                <a href="http://localhost:8888/${root}/${requestScope.user.url}">
-                    http://localhost:8888/${root}/${requestScope.user.url}
+                <a href="http://${requestScope.host}:8888${root}/${requestScope.user.url}">
+                    http://${requestScope.host}:8888${root}/${requestScope.user.url}
                 </a>
             </h5>
             <h4>${requestScope.user.motto}</h4>
