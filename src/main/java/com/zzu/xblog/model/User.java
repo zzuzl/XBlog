@@ -1,10 +1,7 @@
 package com.zzu.xblog.model;
 
-import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.util.Utils;
-import net.sf.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.Date;
 

@@ -35,4 +35,5 @@ public class Common {
 
 	// 上传图片缩放宽度限制
 	public static final int MAX_PICTURE_WIDTH = 900;
+
 }

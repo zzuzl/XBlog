@@ -98,7 +98,7 @@
                                 <img src="${root}/{{item.user.photoSrc}}" alt="暂无">
                             </a>
                             <div class="dynamic-content">
-                                <a href="${root}/u/{{item.user.url}}">我是张三</a>
+                                <a href="${root}/u/{{item.user.url}}" data-ng-bind="item.user.nickname"></a>
                                 <span data-ng-bind="item.operator"></span>
                                 <a href="${root}/p/{{item.article.articleId}}" data-ng-bind="item.article.title"></a>
                                 <span data-ng-bind="item.createTime | dateFormat"></span>
@@ -108,7 +108,8 @@
                                     </a>
                                 </c:if>
                             </div>
-                            <p>{{item.content}}</p>
+                            <%-- ng-bind-html 用于解析html --%>
+                            <p ng-bind-html="item.content | trustHtml"></p>
                         </div>
 
                         <xl-page pageSize="15" n="5" method="load" cla="pagination-sm" ng-show="vm.totalPage>1"
@@ -192,7 +193,7 @@
         obj.updateAttentionButton();
 
         var regTime = "<fmt:formatDate value='${requestScope.user.regTime}' pattern='yyyy-MM-dd HH:mm'/>";
-        var ageText = moment(regTime, "YYYY-MM-DD").fromNow();
+        var ageText = moment(regTime, "YYYY-MM-DD HH:mm").fromNow();
         var text = '博龄：' + ageText.substr(0, ageText.length - 1);
         $('#age').text(text);
     });

@@ -67,8 +67,10 @@ public class ArticleService {
             return null;
         }
         Article article = articleDao.detail(id);
-        article.setPre(articleDao.getPre(id, article.getUser().getUserId()));
-        article.setNext(articleDao.getNext(id, article.getUser().getUserId()));
+        if(article != null) {
+            article.setPre(articleDao.getPre(id, article.getUser().getUserId()));
+            article.setNext(articleDao.getNext(id, article.getUser().getUserId()));
+        }
         return article;
     }
 

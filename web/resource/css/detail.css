@@ -9,6 +9,11 @@
     margin-top: 15px;
 }
 
+.comment-item .thumbnail {
+    width: 80px;
+    height: 80px;
+}
+
 .comment-item .title {
     width: 100%;
     height: 25px;
@@ -29,14 +34,12 @@
     color: #000000;
 }
 
-.thumbnail {
-    width: 80px;
-    height: 80px;
-}
-
 .gz {
     border-radius: 20px;
-    margin: 3px
+}
+
+#like-btn {
+    margin-top: 15px;
 }
 
 .dash-h6 {

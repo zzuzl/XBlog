@@ -150,7 +150,7 @@
             },
             success: function (data) {
                 if (data.success) {
-                    window.location.reload();
+                    window.location = '${root}/${sessionScope.user.url}';
                 } else {
                     alert(data.msg);
                 }
@@ -171,7 +171,7 @@
                     dataType: 'JSON',
                     success: function (data) {
                         if (data.success) {
-                            window.location.reload();
+                            window.location = '${root}/${sessionScope.user.url}';
                         } else {
                             alert(data.msg);
                         }

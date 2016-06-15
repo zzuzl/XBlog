@@ -1,9 +1,5 @@
 package com.zzu.xblog.model;
 
-/**
- * Created by Administrator on 2016/6/1.
- */
-
 import java.util.ArrayList;
 import java.util.List;
 

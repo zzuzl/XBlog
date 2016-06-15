@@ -36,7 +36,13 @@ public class PageController {
     /* 主页 */
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
-        List<Category> list = categoryService.listCategory();
+        List<Category> list = redisService.getAllCategory();
+        if(list == null) {
+            redisService.syncCategory(categoryService.listCategory());
+            list = redisService.getAllCategory();
+        }
+
+        /*List<Category> list = categoryService.listCategory();*/
         model.addAttribute("list", list);
         return "index";
     }

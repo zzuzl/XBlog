@@ -196,6 +196,9 @@ public class LuceneDao {
                     article.setContent(hitDoc.get("content"));
                     article.setTag(hitDoc.get("tag"));
                     article.setPostTime(Utils.parseDate(hitDoc.get("post_time"), "yyyy-MM-dd"));
+                    article.setViewCount(Integer.parseInt(hitDoc.get("view_count")));
+                    article.setLikeCount(Integer.parseInt(hitDoc.get("like_count")));
+                    article.setCommentCount(Integer.parseInt(hitDoc.get("comment_count")));
 
                     User user = new User();
                     user.setNickname(hitDoc.get("nickname"));

@@ -10,7 +10,7 @@
             d.dynamic_id,
             a.article_id AS "article.articleId",
             a.title      AS "article.title",
-            u.nickname   AS "user,nickname",
+            u.nickname   AS "user.nickname",
             u.photo_src  AS "user.photoSrc",
             u.url        AS "user.url"
         FROM t_dynamic d, t_user u, t_article a

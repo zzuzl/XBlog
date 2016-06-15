@@ -50,9 +50,11 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="panel panel-default">
-                        <div class="panel-body" id="content-body">
+                        <div class="panel-body">
                             <%-- 放文章内容 --%>
-                            ${requestScope.article.content}
+                            <div id="content-body">
+                                ${requestScope.article.content}
+                            </div>
                             <h6 class="dash-h6"></h6>
                             <h4>分类：${requestScope.article.category.title}</h4>
                             <h4>标签：${requestScope.article.tag}</h4>
@@ -122,8 +124,14 @@
                                     <label>评论列表</label>
                                     <a id="comment-top"></a>
                                     <c:forEach items="${requestScope.comments}" var="item">
-                                        <div class="comment-item">
-                                            <div class="title">
+                                        <div class="comment-item row">
+                                            <div class="col-xs-2">
+                                                <a href="${root}/${item.user.url}" class="thumbnail">
+                                                    <img src="${root}/${item.user.photoSrc}"/>
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-10">
+                                                <div class="title">
                                                 <span class="time">
                                                     <fmt:formatDate value="${item.postTime}"
                                                                     pattern="yyyy-MM-dd HH:mm"/>
@@ -131,20 +139,21 @@
                                                 <span class="name">
                                                     <a href="${root}/u/${item.user.url}">${item.user.nickname}</a>
                                                 </span>
-                                            </div>
-                                            <div class="content">
-                                                <c:if test="${item.pId > 0}">
-                                                    <h6>
+                                                </div>
+                                                <div class="content">
+                                                    <c:if test="${item.pId > 0}">
+                                                        <h6>
+                                                            回复
+                                                            <a href="${root}/${item.parent.user.url}">${item.parent.user.nickname}</a>
+                                                            :
+                                                        </h6>
+                                                    </c:if>
+                                                    <p>${item.content}</p>
+                                                    <a href="#comment"
+                                                       onclick="obj.reply('${item.user.nickname}','${item.commentId}')">
                                                         回复
-                                                        <a href="${root}/${item.parent.user.url}">${item.parent.user.nickname}</a>
-                                                        :
-                                                    </h6>
-                                                </c:if>
-                                                <p>${item.content}</p>
-                                                <a href="#comment"
-                                                   onclick="obj.reply('${item.user.nickname}','${item.commentId}')">
-                                                    回复
-                                                </a>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </c:forEach>
@@ -189,7 +198,7 @@
                             href="${root}/u/${requestScope.article.user.url}">${requestScope.article.user.attentionCount}</a>
                     </h5>
                     <c:if test="${requestScope.article.user.userId != sessionScope.user.userId}">
-                        <h5><a href=${root}/u/${requestScope.article.user.url}">+加关注</a></h5>
+                        <h5><a href="${root}/u/${requestScope.article.user.url}">+加关注</a></h5>
                     </c:if>
                 </div>
             </div>
@@ -206,7 +215,7 @@
         moment.locale('zh-CN');
 
         var regTime = "<fmt:formatDate value='${requestScope.article.user.regTime}' pattern='yyyy-MM-dd HH:mm'/>";
-        var ageText = moment(regTime, "YYYY-MM-DD").fromNow();
+        var ageText = moment(regTime, "YYYY-MM-DD HH:mm").fromNow();
         var text = '博龄：' + ageText.substr(0, ageText.length - 1);
         $('#age').text(text);
 

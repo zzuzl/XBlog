@@ -2,11 +2,17 @@ package com.zzu.xblog.service;
 
 import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dao.ArticleDao;
+import com.zzu.xblog.model.Category;
 import com.zzu.xblog.model.User;
+import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -101,6 +107,7 @@ public class RedisService {
 
     /**
      * 删除user model
+     *
      * @param hash
      */
     public void deleteUserModel(String hash) {
@@ -124,5 +131,36 @@ public class RedisService {
      */
     public void deleteLink(String hash) {
         redisTemplate.boundHashOps(Common.OPERATE_RESET_PWD).delete(hash);
+    }
+
+    /**
+     * 把mysql的分类信息同步到redis
+     *
+     * @param categoryList
+     */
+    public void syncCategory(List<Category> categoryList) {
+        for(Category category : categoryList) {
+            redisTemplate.boundListOps("category").leftPushAll(category);
+        }
+    }
+
+    /**
+     * 获取所有的分类
+     *
+     * @return
+     */
+    public List<Category> getAllCategory() {
+        List<Category> categories = new ArrayList<>();
+        BoundListOperations<Object, Object> listOperations = redisTemplate.boundListOps("category");
+        if (listOperations == null || listOperations.size() < 1) {
+            return null;
+        } else {
+            for (long i = 0; i < listOperations.size(); i++) {
+                Category category = (Category) listOperations.index(i);
+                categories.add(category);
+            }
+        }
+
+        return categories;
     }
 }

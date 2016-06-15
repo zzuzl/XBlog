@@ -64,7 +64,7 @@
                     <h5 id="age">博龄：</h5>
                     <h5>粉丝：<a href="${root}/u/${requestScope.user.url}">${requestScope.user.fansCount}</a></h5>
                     <h5>关注：<a href="${root}/u/${requestScope.user.url}">${requestScope.user.attentionCount}</a></h5>
-                    <h5><a href="#">+加关注</a></h5>
+                    <h5><a href="${root}/u/${requestScope.user.url}">+加关注</a></h5>
                 </div>
             </div>
         </div>
@@ -79,7 +79,7 @@
         moment.locale('zh-CN');
 
         var regTime = "<fmt:formatDate value='${requestScope.user.regTime}' pattern='yyyy-MM-dd HH:mm'/>";
-        var ageText = moment(regTime, "YYYY-MM-DD").fromNow();
+        var ageText = moment(regTime, "YYYY-MM-DD HH:mm").fromNow();
         var text = '博龄：' + ageText.substr(0, ageText.length - 1);
         $('#age').text(text);
     });
