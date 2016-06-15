@@ -123,6 +123,21 @@ public class ArticleService {
     }
 
     /**
+     * 删除文章
+     * @param id
+     * @return
+     */
+    public Result deleteArticle(int id) {
+        Result result = new Result();
+        if (id < 1 || articleDao.deleteArticle(id) < 1) {
+            result.setMsg("文章不存在");
+        } else {
+            result.setSuccess(true);
+        }
+        return result;
+    }
+
+    /**
      * 获取某个用户发表的第n页文章
      *
      * @param page

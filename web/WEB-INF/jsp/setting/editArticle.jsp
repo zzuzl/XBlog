@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title>发表博客</title>
+    <title>编辑文章</title>
     <%@include file="../common/head.jsp" %>
     <link href="${root}/resource/kindeditor/themes/default/default.css" rel="stylesheet"/>
     <link href="${root}/resource/kindeditor/themes/simple/simple.css" rel="stylesheet"/>
@@ -53,19 +53,21 @@
                 <div class="form-group">
                     <label class="title-label">博客标题</label>
                     <input class="form-control" type="text" name="title" id="title"
+                           value="${requestScope.article.title}"
                            placeholder="输入文章标题（50字以内）" data-maxlength="50" required>
                     <div class="help-block with-errors"></div>
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
                         <label class="title-label">博客内容</label>
-                        <textarea id="editor_id" name="content" cols="100" rows="8"></textarea>
+                        <textarea id="editor_id" name="content" cols="100"
+                                  rows="8">${requestScope.article.content}</textarea>
                         <span id="contentLength"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="title-label">博客标签</label>
-                    <input type="text" class="form-control" id="tag" required
+                    <input type="text" class="form-control" id="tag" required value="${requestScope.article.tag}"
                            placeholder="输入文章标签，以‘#’分隔开（100字以内）" data-maxlength="100"/>
                     <div class="help-block with-errors"></div>
                 </div>
@@ -83,13 +85,21 @@
                 <div class="form-group">
                     <label class="title-label">博客描述</label>
                         <textarea id="description" placeholder="输入文章描述（300字以内）" required
-                                  style="width: 100%" rows="3" data-maxlength="300"></textarea>
+                                  style="width: 100%" rows="3"
+                                  data-maxlength="300">${requestScope.article.description}</textarea>
                     <div class="help-block with-errors"></div>
                 </div>
                 <div class="row">
                     <div class="col-xs-2 col-xs-offset-3">
                         <button type="submit" class="btn btn-primary" style="margin: 30px;width: 300px">
-                            发表文章
+                            <c:choose>
+                                <c:when test="${requestScope.article == null}">
+                                    发表文章
+                                </c:when>
+                                <c:otherwise>
+                                    保存修改
+                                </c:otherwise>
+                            </c:choose>
                         </button>
                     </div>
                 </div>
@@ -109,7 +119,11 @@
 
             } else {
                 if ('${sessionScope.user.userId}') {
-                    obj.postArticle();
+                    if (${requestScope.article != null}) {
+                        obj.updateArticle();
+                    } else {
+                        obj.postArticle();
+                    }
                 } else {
                     alert('请先登录');
                     window.location = '${root}/login';
@@ -118,6 +132,10 @@
 
             return false;
         });
+
+        if (${requestScope.article != null}) {
+            $('#cate').val(${requestScope.article.category.cateId});
+        }
 
         var obj = {
             postArticle: function () {
@@ -136,6 +154,29 @@
                 } else {
                     alert(data.msg);
                 }
+            },
+            updateArticle: function () {
+                $.ajax({
+                    url: '${root}/article',
+                    type: 'PUT',
+                    data: {
+                        "articleId": "${requestScope.article.articleId}",
+                        "category.cateId": $('#cate').val(),
+                        "title": $("#title").val(),
+                        "description": $('#description').val(),
+                        "content": window.editor.html(),
+                        "user.userId": '${sessionScope.user.userId}',
+                        "tag": $('#tag').val()
+                    },
+                    dataType: 'JSON',
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.reload();
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                });
             }
         };
     });

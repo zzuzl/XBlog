@@ -1,19 +1,11 @@
 package com.zzu.xblog.service;
 
-/**
- * Created by Administrator on 2016/6/2.
- */
-
 import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dao.ArticleDao;
 import com.zzu.xblog.model.User;
-import net.sf.json.JSONObject;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

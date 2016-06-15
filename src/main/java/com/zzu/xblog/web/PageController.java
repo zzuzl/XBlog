@@ -91,6 +91,22 @@ public class PageController {
         return "setting/editArticle";
     }
 
+    /* 编辑文章 */
+    @RequestMapping(value = "/setting/editArticle/{id}", method = RequestMethod.GET)
+    public String editArticle(@PathVariable() Integer id, Model model, HttpSession session) {
+        List<Category> list = categoryService.listCategory();
+        model.addAttribute("list", list);
+        if (id != null && id > 0) {
+            User user = (User) session.getAttribute(Common.USER);
+            Article article = articleService.detail(id);
+            if (user.getUserId() == article.getUser().getUserId()) {
+                model.addAttribute("article", articleService.detail(id));
+            }
+        }
+
+        return "setting/editArticle";
+    }
+
     /* 修改密码 */
     @RequestMapping(value = "/setting/changePwd", method = RequestMethod.GET)
     public String changePwd() {

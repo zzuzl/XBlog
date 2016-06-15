@@ -54,7 +54,7 @@
             article_id,
             title
         FROM t_article
-        WHERE article_id &lt; #{articleId} and user_id=#{userId}
+        WHERE article_id &lt; #{articleId} AND user_id = #{userId}
         ORDER BY article_id
         LIMIT 1
     </select>
@@ -64,7 +64,7 @@
             article_id,
             title
         FROM t_article
-        WHERE article_id &gt; #{articleId} and user_id=#{userId}
+        WHERE article_id &gt; #{articleId} AND user_id = #{userId}
         ORDER BY article_id
         LIMIT 1
     </select>
@@ -82,10 +82,15 @@
 
     <update id="updateArticle">
         UPDATE t_article
-        SET cate_id = #{category.cateId}, title = #{title}, description = #{sescription}, content = #{content},
+        SET cate_id = #{category.cateId}, title = #{title}, description = #{description}, content = #{content},
             tag     = #{tag}
         WHERE article_id = #{articleId}
     </update>
+
+    <delete id="deleteArticle">
+        DELETE FROM t_article
+        WHERE article_id = #{id}
+    </delete>
 
     <insert id="insertLike">
         INSERT IGNORE INTO t_like (user_id, article_id) VALUES

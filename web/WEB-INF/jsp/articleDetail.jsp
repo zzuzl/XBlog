@@ -50,7 +50,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="panel panel-default">
-                        <div class="panel-body">
+                        <div class="panel-body" id="content-body">
                             <%-- 放文章内容 --%>
                             ${requestScope.article.content}
                             <h6 class="dash-h6"></h6>
@@ -76,10 +76,13 @@
                                 <div class="col-xs-2 col-xs-offset-6">
                                     <c:if test="${requestScope.article.user.userId != sessionScope.user.userId}">
                                         <a type="button" href="javascript:void(0)" class="btn btn-danger gz"
-                                           id="attention-btn"
-                                           onclick="obj.addOrCancelAttention()">
+                                           id="add-btn" onclick="obj.addOrCancelAttention()">
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                             关注
+                                        </a>
+                                        <a type="button" href="javascript:void(0)" class="btn btn-danger gz"
+                                           id="cancel-btn" onclick="obj.addOrCancelAttention()">
+                                            取消关注
                                         </a>
                                     </c:if>
                                     <a type="button" href="javascript:void(0)" class="btn btn-info gz" id="like-btn"
@@ -179,8 +182,11 @@
                         <a href="${root}/u/${requestScope.article.user.url}" target="_blank">
                             ${requestScope.article.user.nickname}</a></h5>
                     <h5 id="age">博龄：</h5>
-                    <h5>粉丝：<a href="${root}/u/${requestScope.article.user.url}">${requestScope.article.user.fansCount}</a></h5>
-                    <h5>关注：<a href="${root}/u/${requestScope.article.user.url}">${requestScope.article.user.attentionCount}</a>
+                    <h5>粉丝：<a
+                            href="${root}/u/${requestScope.article.user.url}">${requestScope.article.user.fansCount}</a>
+                    </h5>
+                    <h5>关注：<a
+                            href="${root}/u/${requestScope.article.user.url}">${requestScope.article.user.attentionCount}</a>
                     </h5>
                     <c:if test="${requestScope.article.user.userId != sessionScope.user.userId}">
                         <h5><a href=${root}/u/${requestScope.article.user.url}">+加关注</a></h5>
@@ -212,6 +218,8 @@
         if (obj.isLogin() && obj.hasLiked()) {
             obj.changeLikeBtnState();
         }
+
+        obj.updateAttentionButton();
     });
 
     var obj = {
@@ -297,6 +305,7 @@
             }, function (data) {
                 if (data.success) {
                     window.obj.attention = true;
+                    window.obj.updateAttentionButton();
                 } else {
                     alert(data.msg);
                 }
@@ -304,16 +313,13 @@
         },
         cancelAttention: function () {
             $.ajax({
-                url: '${root}/user/attention',
+                url: '${root}/user/attention?from=${sessionScope.user.userId}&to=${requestScope.article.user.userId}',
                 type: 'DELETE',
-                data: {
-                    from: '${sessionScope.user.userId}',
-                    to: '${requestScope.article.user.userId}'
-                },
                 dataType: 'JSON',
                 success: function (data) {
                     if (data.success) {
                         window.obj.attention = false;
+                        window.obj.updateAttentionButton();
                     } else {
                         alert(data.msg);
                     }
@@ -322,9 +328,11 @@
         },
         updateAttentionButton: function () {
             if (this.attention) {
-                $('#attention-btn').text("取消关注");
+                $('#add-btn').hide();
+                $('#cancel-btn').show();
             } else {
-                $('#attention-btn').html("<i class='fa fa-plus' aria-hidden='true'></i>关注");
+                $('#add-btn').show();
+                $('#cancel-btn').hide();
             }
         },
         changeLikeBtnState: function () {

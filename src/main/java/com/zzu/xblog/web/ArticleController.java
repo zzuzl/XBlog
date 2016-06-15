@@ -5,6 +5,7 @@ import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.model.Article;
 import com.zzu.xblog.model.Attention;
 import com.zzu.xblog.model.Pager;
+import com.zzu.xblog.model.User;
 import com.zzu.xblog.service.ArticleService;
 import com.zzu.xblog.service.MailService;
 import com.zzu.xblog.service.RedisService;
@@ -60,6 +61,30 @@ public class ArticleController {
     public Result postArticle(@Valid @ModelAttribute("article") Article article,
                               BindingResult bindingResult, HttpServletRequest request) {
         return articleService.insertArticle(article, request);
+    }
+
+    /* 修改文章 */
+    @RequestMapping(value = "", method = RequestMethod.PUT)
+    @ResponseBody
+    public Result editArticle(@Valid @ModelAttribute("article") Article article, BindingResult bindingResult) {
+        return articleService.updateArticle(article);
+    }
+
+    /* 删除文章 */
+    @RequestMapping(value = "", method = RequestMethod.DELETE)
+    @ResponseBody
+    public Result deleteArticle(@RequestParam("id") Integer id, HttpSession session) {
+        User user = (User) session.getAttribute(Common.USER);
+        Article article = articleService.detail(id);
+
+        Result result = new Result();
+        if (user == null || article == null ||
+                user.getUserId() != article.getUser().getUserId()) {
+            result.setMsg("身份错误");
+        } else {
+            result = articleService.deleteArticle(id);
+        }
+        return result;
     }
 
     /* 文章点赞 */

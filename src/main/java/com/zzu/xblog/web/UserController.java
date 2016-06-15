@@ -186,16 +186,30 @@ public class UserController {
     @RequestMapping(value = "/attention", method = RequestMethod.POST)
     @ResponseBody
     public Result addAttention(@RequestParam("from") Integer from,
-                               @RequestParam("to") Integer to) {
-        return userService.insertAttention(from, to);
+                               @RequestParam("to") Integer to, HttpSession session) {
+        User user = (User) session.getAttribute(Common.USER);
+        if(user.getUserId() == from) {
+            return userService.insertAttention(from, to);
+        } else {
+            Result result = new Result();
+            result.setMsg("用户身份错误");
+            return result;
+        }
     }
 
     /* 取消关注 */
     @RequestMapping(value = "/attention", method = RequestMethod.DELETE)
     @ResponseBody
     public Result cancelAttention(@RequestParam("from") Integer from,
-                                  @RequestParam("to") Integer to) {
-        return userService.deleteAttention(from, to);
+                                  @RequestParam("to") Integer to,HttpSession session) {
+        User user = (User) session.getAttribute(Common.USER);
+        if(user.getUserId() == from) {
+            return userService.deleteAttention(from, to);
+        } else {
+            Result result = new Result();
+            result.setMsg("用户身份错误");
+            return result;
+        }
     }
 
     /* 退出 */

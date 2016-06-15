@@ -70,3 +70,11 @@
 .click-close .text {
     color: #9a9afb;
 }
+
+#add-btn, #cancel-btn {
+    display: none;
+}
+
+#content-body img {
+    max-width: 800px;
+}

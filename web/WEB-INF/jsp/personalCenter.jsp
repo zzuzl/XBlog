@@ -31,9 +31,13 @@
             <h4>兴趣：${requestScope.user.interest}</h4>
             <c:if test="${sessionScope.user.userId != requestScope.user.userId}">
                 <a href="javascript:void(0)" type="button" class="btn btn-info"
-                   onclick="obj.addOrCancelAttention()" id="attention-btn">
+                   onclick="obj.addOrCancelAttention()" id="add-btn">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     关注
+                </a>
+                <a href="javascript:void(0)" type="button" class="btn btn-info"
+                   onclick="obj.addOrCancelAttention()" id="cancel-btn">
+                    取消关注
                 </a>
             </c:if>
         </div>
@@ -147,10 +151,11 @@
         addAttention: function () {
             $.post('${root}/user/attention', {
                 from: '${sessionScope.user.userId}',
-                to: '${requestScope.article.user.userId}'
+                to: '${requestScope.user.userId}'
             }, function (data) {
                 if (data.success) {
                     window.obj.attention = true;
+                    window.obj.updateAttentionButton();
                 } else {
                     alert(data.msg);
                 }
@@ -158,16 +163,13 @@
         },
         cancelAttention: function () {
             $.ajax({
-                url: '${root}/user/attention',
+                url: '${root}/user/attention?from=${sessionScope.user.userId}&to=${requestScope.user.userId}',
                 type: 'DELETE',
-                data: {
-                    from: '${sessionScope.user.userId}',
-                    to: '${requestScope.article.user.userId}'
-                },
                 dataType: 'JSON',
                 success: function (data) {
                     if (data.success) {
                         window.obj.attention = false;
+                        window.obj.updateAttentionButton();
                     } else {
                         alert(data.msg);
                     }
@@ -176,9 +178,11 @@
         },
         updateAttentionButton: function () {
             if (this.attention) {
-                $('#attention-btn').text("取消关注");
+                $('#add-btn').hide();
+                $('#cancel-btn').show();
             } else {
-                $('#attention-btn').html("<span class='glyphicon glyphicon-plus' aria-hidden='true'></span>关注");
+                $('#add-btn').show();
+                $('#cancel-btn').hide();
             }
         }
     };

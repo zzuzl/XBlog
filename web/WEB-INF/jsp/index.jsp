@@ -15,8 +15,12 @@
 <div class="container" ng-controller="IndexCtrl as vm" id="container">
     <div class="jumbotron" style="margin-top: 60px">
         <h1>欢迎来到XBlog!</h1>
-        <p></p>
-        <p><a class="btn btn-primary btn-lg" href="${root}/about" role="button">Learn more</a></p>
+        <p>
+            <a class="btn btn-primary btn-lg" href="${root}/about" role="button">Learn more</a>
+            <c:if test="${sessionScope.user != null}">
+                <a class="btn btn-info btn-lg" href="${root}/setting/editArticle" role="button">写博客</a>
+            </c:if>
+        </p>
     </div>
 
     <div class="row">

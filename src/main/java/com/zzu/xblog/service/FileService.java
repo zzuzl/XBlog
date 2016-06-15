@@ -67,7 +67,7 @@ public class FileService {
             result = uploadFileCore(file, request, uploadType.getFolder());
             if (result.getBoolean(Common.SUCCESS)) {
                 result.put("error", 0);
-                result.put("url", result.getString(Common.FILENAME));
+                result.put("url", request.getContextPath() + "/" + result.getString(Common.FILENAME));
             } else {
                 result.put("message", result.getString(Common.MSG));
             }

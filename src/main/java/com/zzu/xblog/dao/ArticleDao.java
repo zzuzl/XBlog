@@ -45,7 +45,8 @@ public interface ArticleDao {
     /**
      * 获取下一篇
      *
-     * @param id
+     * @param articleId
+     * @param userId
      * @return
      */
     Article getNext(@Param("articleId") int articleId,@Param("userId") int userId);
@@ -74,6 +75,14 @@ public interface ArticleDao {
      * @return
      */
     int updateArticle(Article article);
+
+    /**
+     * 删除文章
+     *
+     * @param id
+     * @return
+     */
+    int deleteArticle(int id);
 
     /**
      * 插入点赞

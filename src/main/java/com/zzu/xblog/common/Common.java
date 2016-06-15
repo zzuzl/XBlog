@@ -32,4 +32,7 @@ public class Common {
 	public static final int DEFAULT_ITEM_COUNT = 15;
 	// 默认头像图片尺寸
 	public static final int PHOTO_SIZE = 128;
+
+	// 上传图片缩放宽度限制
+	public static final int MAX_PICTURE_WIDTH = 900;
 }

@@ -6,6 +6,8 @@ import com.zzu.xblog.model.UploadType;
 import com.zzu.xblog.model.User;
 import com.zzu.xblog.service.FileService;
 import com.zzu.xblog.service.UserService;
+import net.coobird.thumbnailator.Thumbnailator;
+import net.coobird.thumbnailator.Thumbnails;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static com.zzu.xblog.model.UploadType.*;
@@ -48,7 +54,7 @@ public class FileController {
         return result;
     }
 
-    /* 发表文章文件上传controller */
+    /* 编辑器文件上传controller */
     @RequestMapping(value = "/uploadInArticle", method = RequestMethod.POST)
     @ResponseBody
     public JSONObject uploadInArticle(@RequestParam("imgFile") MultipartFile imgFile,
@@ -72,6 +78,10 @@ public class FileController {
         } else {
             if (uploadType != null) {
                 result = fileService.uploadFiles(imgFile, uploadType, request);
+                if (result.getInt("error") == 0 && uploadType == UploadType.IMAGE) {
+                    // 对上传的图片进行缩放处理
+                    zoomPicture(request.getSession().getServletContext().getRealPath("/") + result.getString(Common.FILENAME));
+                }
             } else {
                 result.put("error", 1);
                 result.put("message", "文件类型错误");
@@ -103,5 +113,35 @@ public class FileController {
         }
 
         return result;
+    }
+
+    /**
+     * 缩放图片
+     *
+     * @param fileName
+     */
+    private void zoomPicture(final String fileName) {
+        int width = 0, height = 0;
+        try {
+            FileInputStream fis = new FileInputStream(fileName);
+            BufferedImage bufferedImage = ImageIO.read(fis);
+            width = bufferedImage.getWidth();
+            height = bufferedImage.getHeight();
+
+            if (width > 0 && height > 0) {
+                if (width > Common.MAX_PICTURE_WIDTH) {
+                    height = (int) (((width + 0.0) / height) * Common.MAX_PICTURE_WIDTH);
+                    width = Common.MAX_PICTURE_WIDTH;
+                }
+
+                Thumbnails.of(fileName)
+                        .size(width, height)
+                        .toFile(new File(fileName));
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

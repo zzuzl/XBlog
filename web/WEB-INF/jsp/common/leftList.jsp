@@ -25,7 +25,7 @@
         编辑我的文章
     </a>
     <a href="${root}/setting/manageArticle" class="list-group-item" id="manage-item">
-        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+        <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
         管理我的文章
     </a>
 </div>

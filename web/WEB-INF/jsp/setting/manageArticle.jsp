@@ -6,8 +6,45 @@
     <title>管理我的博客</title>
     <%@include file="../common/head.jsp" %>
     <link rel="stylesheet" href="${root}/resource/css/info.css">
-    <link rel="stylesheet" href="${root}/resource/css/blog.css">
     <script src="${root}/resource/js/validator.min.js"></script>
+    <style>
+        .list-item {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            background: white;
+            border: 1px solid #c0c0c0;
+            margin: -1px;
+            z-index: 1;
+        }
+
+        .list-item .dateTitle {
+            width: 100%;
+            background: #2aabd2;
+            color: white;
+            text-align: center;
+            height: 20px;
+            line-height: 20px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .list-item .title {
+            font-size: 15px;
+            color: black;
+            text-decoration: none;
+        }
+
+        .list-item .content {
+            margin-top: 3px;
+            font-size: 13px;
+        }
+
+        .list-item .count {
+            color: #CCCCCC;
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
 <%@include file="../common/title.jsp" %>
@@ -26,14 +63,21 @@
                                 <fmt:formatDate value="${item.postTime}" pattern="yyyy年MM月dd日"/>
                             </div>
                         </div>
-                        <div class="col-xs-9 title">
+                        <div class="col-xs-8 title">
                             <a href="${root}/p/${item.articleId}">${item.title}</a>
+                        </div>
+                        <div class="col-xs-1 operate">
+                            <a href="${root}/setting/editArticle/${item.articleId}">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                            </a>
+                            <a href="javascript:void(0)" onclick="obj.deleteArticle('${item.articleId}')">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 content">
                             <p>${item.description}</p>
-                            <a href="${root}/p/${item.articleId}">查看全文</a>
                         </div>
                     </div>
                     <div class="row">
@@ -56,6 +100,26 @@
     $(function () {
         $('#manage-item').addClass('active');
     });
+
+    var obj = {
+        deleteArticle: function (id) {
+            var r = confirm("确定要删除吗？");
+            if (r === true) {
+                $.ajax({
+                    url: '${root}/article?id=' + id,
+                    type: 'DELETE',
+                    dataType: 'JSON',
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.reload();
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                });
+            }
+        }
+    };
 </script>
 </body>
 </html>

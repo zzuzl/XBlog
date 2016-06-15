@@ -42,6 +42,11 @@
             <mvc:mapping path="/setting/*"/>
             <bean class="com.zzu.xblog.interceptor.RequestInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/user/attention"/>
+            <mvc:mapping path="/article"/>
+            <bean class="com.zzu.xblog.interceptor.AuthInterceptor"/>
+        </mvc:interceptor>
     </mvc:interceptors>
 
     <!-- 处理静态资源 -->
