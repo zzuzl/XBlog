@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -72,11 +73,13 @@ public class PageController {
 
     /* 用户个人信息 */
     @RequestMapping(value = "/setting/userInfo", method = RequestMethod.GET)
-    public String blog(HttpSession session) {
+    public String blog(HttpSession session, Model model) {
         User user = (User) session.getAttribute(Common.USER);
         if (user == null) {
             return Common.PAGE_404;
         }
+
+        model.addAttribute("host", Utils.getHostAddress());
         return "setting/info";
     }
 
@@ -98,6 +101,18 @@ public class PageController {
     @RequestMapping(value = "/setting/changePhoto", method = RequestMethod.GET)
     public String changePhoto() {
         return "setting/changePhoto";
+    }
+
+    /* 管理文章 */
+    @RequestMapping(value = "/setting/manageArticle", method = RequestMethod.GET)
+    public String manageArticle(Model model, HttpSession session) {
+        User user = (User) session.getAttribute(Common.USER);
+        if (user != null) {
+            List<Article> list = articleService.listMyArticle(1, 100, user.getUserId());
+            model.addAttribute("list", list);
+        }
+
+        return "setting/manageArticle";
     }
 
     /* 用户个人中心 */
@@ -152,7 +167,7 @@ public class PageController {
 
             if (user != null) {
                 List<Like> likes = articleService.getLikes(user.getUserId(), id);
-                if (likes != null) {
+                if (likes != null && likes.size() > 0) {
                     model.addAttribute("like", likes.get(0));
                 }
 
@@ -178,7 +193,7 @@ public class PageController {
     /* 搜索文章结果页面 */
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public String search(@RequestParam("keyword") String keyword, Model model) {
-        model.addAttribute("keyword",keyword);
+        model.addAttribute("keyword", keyword);
         return "search";
     }
 

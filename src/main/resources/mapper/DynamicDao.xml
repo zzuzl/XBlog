@@ -15,6 +15,8 @@
             u.url        AS "user.url"
         FROM t_dynamic d, t_user u, t_article a
         WHERE d.user_id = u.user_id AND d.article_id = a.article_id AND d.user_id = #{userId}
+        ORDER BY d.create_time DESC
+        LIMIT #{start}, #{count}
     </select>
 
     <select id="getDynamicCount" resultType="int">
@@ -33,7 +35,7 @@
         WHERE dynamic_id = #{id}
     </delete>
 
-    <select id="getDynamicById">
+    <select id="getDynamicById" resultType="Dynamic">
         SELECT
             d.create_time,
             d.operator,
@@ -43,7 +45,8 @@
             a.title      AS "article.title",
             u.nickname   AS "user,nickname",
             u.photo_src  AS "user.photoSrc",
-            u.url        AS "user.url"
+            u.url        AS "user.url",
+            u.user_id    AS "user.userId"
         FROM t_dynamic d, t_user u, t_article a
         WHERE d.user_id = u.user_id AND d.article_id = a.article_id AND d.dynamic_id = #{id}
     </select>

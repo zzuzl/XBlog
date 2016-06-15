@@ -38,6 +38,9 @@
                                             <i class="fa fa-cogs" aria-hidden="true"></i>
                                             设置
                                         </a>
+                                        <a href="${root}/setting/editArticle">
+                                            发表博客
+                                        </a>
                                     </h6>
                                 </div>
                             </div>

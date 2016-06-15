@@ -52,7 +52,7 @@
             <form role="form" id="form" novalidate>
                 <div class="form-group">
                     <label class="title-label">博客标题</label>
-                    <input class="form-control" type="text" name="title"
+                    <input class="form-control" type="text" name="title" id="title"
                            placeholder="输入文章标题（50字以内）" data-maxlength="50" required>
                     <div class="help-block with-errors"></div>
                 </div>
@@ -132,7 +132,7 @@
             },
             success: function (data) {
                 if (data.success) {
-                    window.location = "../../../";
+                    window.location.reload();
                 } else {
                     alert(data.msg);
                 }

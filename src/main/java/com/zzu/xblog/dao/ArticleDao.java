@@ -34,12 +34,21 @@ public interface ArticleDao {
     Article detail(int id);
 
     /**
-     * 获取上一篇和下一篇的信息
+     * 获取上一篇
+     *
+     * @param articleId
+     * @param userId
+     * @return
+     */
+    Article getPre(@Param("articleId") int articleId,@Param("userId") int userId);
+
+    /**
+     * 获取下一篇
      *
      * @param id
      * @return
      */
-    Article getPreAndNext(int id);
+    Article getNext(@Param("articleId") int articleId,@Param("userId") int userId);
 
     /**
      * 插入文章

@@ -104,7 +104,7 @@
                                     </a>
                                 </c:if>
                             </div>
-                            <p data-ng-bind="item.content"></p>
+                            <p>{{item.content}}</p>
                         </div>
 
                         <xl-page pageSize="15" n="5" method="load" cla="pagination-sm" ng-show="vm.totalPage>1"
@@ -236,10 +236,10 @@
                                         for (var i = 0; i < vm.data.length; i++) {
                                             if (vm.data[i].dynamicId === id) {
                                                 vm.data.splice(i, 1);
-                                            } else {
-                                                alert(res.data.msg);
                                             }
                                         }
+                                    } else {
+                                        alert(res.data.msg);
                                     }
                                 });
                     }

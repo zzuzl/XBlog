@@ -91,13 +91,13 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <c:if test="${requestScope.article.pre}">
+                                    <c:if test="${requestScope.article.pre != null}">
                                         <span>上一篇：</span>
                                         <a href="${root}/p/${requestScope.article.pre.articleId}">${requestScope.article.pre.title}</a>
                                     </c:if>
                                 </div>
                                 <div class="col-xs-6" style="text-align: right">
-                                    <c:if test="${requestScope.article.next}">
+                                    <c:if test="${requestScope.article.next != null}">
                                         <span>下一篇：</span>
                                         <a href="${root}/p/${requestScope.article.next.articleId}">${requestScope.article.next.title}</a>
                                     </c:if>
@@ -179,11 +179,11 @@
                         <a href="${root}/u/${requestScope.article.user.url}" target="_blank">
                             ${requestScope.article.user.nickname}</a></h5>
                     <h5 id="age">博龄：</h5>
-                    <h5>粉丝：<a href="${root}/u/${requestScope.user.url}">${requestScope.article.user.fansCount}</a></h5>
-                    <h5>关注：<a href="${root}/u/${requestScope.user.url}">${requestScope.article.user.attentionCount}</a>
+                    <h5>粉丝：<a href="${root}/u/${requestScope.article.user.url}">${requestScope.article.user.fansCount}</a></h5>
+                    <h5>关注：<a href="${root}/u/${requestScope.article.user.url}">${requestScope.article.user.attentionCount}</a>
                     </h5>
                     <c:if test="${requestScope.article.user.userId != sessionScope.user.userId}">
-                        <h5><a href=${root}/u/${requestScope.user.url}">+加关注</a></h5>
+                        <h5><a href=${root}/u/${requestScope.article.user.url}">+加关注</a></h5>
                     </c:if>
                 </div>
             </div>
@@ -212,7 +212,6 @@
         if (obj.isLogin() && obj.hasLiked()) {
             obj.changeLikeBtnState();
         }
-
     });
 
     var obj = {
@@ -222,7 +221,7 @@
             return '${sessionScope.user.userId}' && window.editor.html().length > 0;
         },
         hasLiked: function () {
-            return '${requestScope.like != null}';
+            return ${requestScope.like != null};
         },
         isLogin: function () {
             return '${sessionScope.user.userId}';
@@ -267,6 +266,7 @@
                     userId: '${sessionScope.user.userId}'
                 }, function (data) {
                     if (data.success) {
+                        $('#like-btn').html("<i class='fa fa-thumbs-up' aria-hidden='true'></i>${requestScope.article.likeCount+1}");
                         window.obj.changeLikeBtnState();
                     } else {
                         alert(data.msg);

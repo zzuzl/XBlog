@@ -70,7 +70,7 @@
                             <a href="javascript:void(0)">浏览({{item.viewCount}})</a>
                         </span>
                         <span class="zan">
-                            <i class="fa fa-thumbs-up" ng-class="vm.currentClass" aria-hidden="true"></i>
+                            <i class="fa fa-thumbs-up" ng-class="item.currentClass" aria-hidden="true"></i>
                             <a href="javascript:void(0)" ng-click="vm.like(item)">赞({{item.likeCount}})</a>
                         </span>
                     </div>
@@ -127,12 +127,10 @@
 
         function IndexCtrl($http) {
             var vm = this;
-            vm.currentClass = 'unClicked';
             vm.init = false;
 
             // 加载文章数据
             vm.load = function (params, callback) {
-                console.log(params);
                 var url = "${root}/article/page/" + params.page;
                 if (params.cate === undefined) {
                     vm.cate = 0;
@@ -142,9 +140,14 @@
                 url += '?cate=' + vm.cate;
 
                 $http.get(url).then(function (res) {
+                    if(res.data.itemList) {
+                        for (var i = 0; i < res.data.itemList.length; i++) {
+                            res.data.itemList[i].currentClass = 'unClicked';
+                        }
+                    }
                     if (callback) {
                         callback(res.data);
-                        if(!vm.init) {
+                        if (!vm.init) {
                             vm.init = true;
                         }
                     } else {
@@ -159,7 +162,7 @@
             vm.like = function (item) {
                 if (vm.currentClass !== 'clicked') {
                     vm.syncLike(item, function () {
-                        vm.currentClass = 'clicked';
+                        item.currentClass = 'clicked';
                         item.likeCount++;
                     }, function (text) {
                         alert(text);

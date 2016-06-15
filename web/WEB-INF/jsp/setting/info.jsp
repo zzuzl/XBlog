@@ -27,7 +27,7 @@
                     <label for="url">博客地址</label>
                     <p class="form-control-static" id="url">
                         <a href="${root}/${sessionScope.user.url}" target="_blank">
-                            http://localhost:8888/XBlog/${sessionScope.user.url}
+                            http://${requestScope.host}:8888/XBlog/${sessionScope.user.url}
                         </a>
                     </p>
                 </div>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="form-group">
                     <label for="nickname">昵称</label>
-                    <input type="text" class="form-control" id="nickname" data-minlength="6"
+                    <input type="text" class="form-control" id="nickname" data-minlength="1"
                            data-maxlength="30" required name="nickname" placeholder="昵称"
                            value="${sessionScope.user.nickname}">
                     <div class="help-block with-errors"></div>
@@ -71,6 +71,7 @@
 <%@include file="../common/footer.jsp" %>
 <script type="application/javascript">
     $(function () {
+        $('#sex').val('${sessionScope.user.sex}');
         $('#info-item').addClass('active');
 
         $('#form').validator().on('submit', function (e) {
@@ -97,7 +98,7 @@
                     dataType: 'JSON',
                     type: 'PUT',
                     success: function (data) {
-                        if(data.success) {
+                        if (data.success) {
                             alert("修改成功");
                             window.location.reload();
                         } else {
@@ -108,8 +109,6 @@
             }
         };
     });
-
-
 </script>
 </body>
 </html>

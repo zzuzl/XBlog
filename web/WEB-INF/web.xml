@@ -76,7 +76,7 @@
     </context-param>
 
     <!-- 异常处理页面 -->
-    <error-page>
+    <!--<error-page>
         <location>/error</location>
-    </error-page>
+    </error-page>-->
 </web-app>

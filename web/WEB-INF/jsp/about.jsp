@@ -41,6 +41,13 @@
         <li><a href="https://www.mysql.com/" target="_blank">MySQL</a></li>
         <li><a href="http://redis.io/" target="_blank">Redis</a></li>
     </ul>
+    <h4>其他</h4>
+    <ul>
+        <li><a href="https://lucene.apache.org/" target="_blank">Lucene</a></li>
+        <li><a href="https://github.com/kindsoft/kindeditor" target="_blank">kindeditor</a></li>
+        <li><a href="https://github.com/coobird/thumbnailator" target="_blank">thumbnailator</a></li>
+        <li><a href="https://github.com/fengyuanchen/cropper" target="_blank">cropper</a></li>
+    </ul>
     <h3>小组成员</h3>
     <div class="media">
         <div class="media-left">

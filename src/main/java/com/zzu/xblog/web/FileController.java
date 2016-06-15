@@ -93,7 +93,8 @@ public class FileController {
             if (result.isSuccess()) {
                 result = userService.changePhoto(filename, user.getUserId());
                 if (result.isSuccess()) {
-                    request.getSession().setAttribute(Common.USER, user.getUserId());
+                    user.setPhotoSrc(filename);
+                    request.getSession().setAttribute(Common.USER, user);
                 }
             }
         } else {

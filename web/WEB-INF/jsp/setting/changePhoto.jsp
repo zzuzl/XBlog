@@ -21,8 +21,7 @@
         }
 
         #box {
-            width: 500px;
-            height: 500px;
+            width: 100%;
         }
 
         #okBtn {
@@ -122,6 +121,12 @@
             },
             preview: "#preview"
         });
+
+        $(window).resize(function () {
+            $('#box').height($('#box').width() + 'px');
+        });
+
+        $('#box').height($('#box').width() + 'px');
     });
 </script>
 </body>

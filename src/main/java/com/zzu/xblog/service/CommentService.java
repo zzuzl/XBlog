@@ -1,10 +1,13 @@
 package com.zzu.xblog.service;
 
+import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dao.ArticleDao;
 import com.zzu.xblog.dao.CommentDao;
+import com.zzu.xblog.dao.DynamicDao;
 import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.exception.DataException;
 import com.zzu.xblog.model.Comment;
+import com.zzu.xblog.model.Dynamic;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
@@ -21,6 +24,8 @@ public class CommentService {
     private CommentDao commentDao;
     @Resource
     private ArticleDao articleDao;
+    @Resource
+    private DynamicDao dynamicDao;
 
     /**
      * 获取文章对应的评论
@@ -62,9 +67,9 @@ public class CommentService {
                     articleDao.updateCommentCount(comment.getArticle().getArticleId(), 1) > 0) {
                 result.setMsg("发表成功!");
 
-                Map<String,Object> data = new HashMap<>();
-                data.put("comment",comment);
-                result.setData(data);
+                // 插入动态
+                Dynamic dynamic = new Dynamic(comment.getUser(), comment.getArticle(), Common.COMMENT_OPERATOR, comment.getContent());
+                dynamicDao.insertDynamic(dynamic);
             } else {
                 result.setSuccess(false);
                 result.setMsg("发表失败!");

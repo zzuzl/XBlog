@@ -13,7 +13,7 @@ public enum UploadType {
     FILE("file", "uploadFile",
             new String[]{"doc", "docx", "xls", "xlsx", "ppt", "htm", "html", "txt", "zip", "rar", "gz", "bz2"}, 10 * 1024 * 1024),
     IMAGE("image", "uploadImage",
-            new String[]{"gif", "jpg", "jpeg", "png", "bmp"}, 1024 * 1024),
+            new String[]{"gif", "jpg", "jpeg", "png", "bmp","GIF", "JPG", "JPEG", "PNG", "BMP"}, 1024 * 1024),
     FLASH("flash", "uploadFlash",
             new String[]{"swf", "flv"}, 10 * 1024 * 1024);
 

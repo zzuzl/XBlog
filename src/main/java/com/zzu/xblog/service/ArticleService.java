@@ -6,13 +6,11 @@ package com.zzu.xblog.service;
 
 import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dao.ArticleDao;
+import com.zzu.xblog.dao.DynamicDao;
 import com.zzu.xblog.dao.LuceneDao;
 import com.zzu.xblog.dao.UserDao;
 import com.zzu.xblog.dto.Result;
-import com.zzu.xblog.model.Article;
-import com.zzu.xblog.model.Like;
-import com.zzu.xblog.model.Pager;
-import com.zzu.xblog.model.User;
+import com.zzu.xblog.model.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +31,8 @@ public class ArticleService {
     private UserDao userDao;
     @Resource
     private LuceneDao luceneDao;
+    @Resource
+    private DynamicDao dynamicDao;
 
     /**
      * 获取第page页文章列表
@@ -67,11 +67,8 @@ public class ArticleService {
             return null;
         }
         Article article = articleDao.detail(id);
-        Article temp = articleDao.getPreAndNext(id);
-        if (temp != null) {
-            article.setPre(temp.getPre());
-            article.setNext(temp.getNext());
-        }
+        article.setPre(articleDao.getPre(id, article.getUser().getUserId()));
+        article.setNext(articleDao.getNext(id, article.getUser().getUserId()));
         return article;
     }
 
@@ -94,11 +91,10 @@ public class ArticleService {
                     User user = userDao.getUserById(article.getUser().getUserId());
                     article.setUser(user);
 
-                    // aop发送邮件使用
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("request", request);
-                    data.put("article", article);
-                    result.setData(data);
+                    // 发送邮件
+
+                    Dynamic dynamic = new Dynamic(user, article, Common.POST_OPERATOR, article.getDescription());
+                    dynamicDao.insertDynamic(dynamic);
                 }
             } else {
                 result.setSuccess(false);

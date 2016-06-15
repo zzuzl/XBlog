@@ -117,7 +117,7 @@
         });
 
         if (${requestScope.hash != null}) {
-            if (${requestScope.success}) {
+            if (${requestScope.success != null && requestScope.success}) {
                 $('.panel-heading').text('重置密码');
                 $('#form').hide();
                 $('#form-hidden').show();

@@ -49,22 +49,24 @@
         WHERE a.user_id = u.user_id AND a.cate_id = c.cate_id AND a.article_id = #{id}
     </select>
 
-    <select id="getPreAndNext" resultType="Article">
-        (SELECT
-             article_id AS "pre.articleId",
-             title      AS "pre.title"
-         FROM t_article
-         WHERE article_id &lt; #{id}
-         ORDER BY article_id
-         LIMIT 1)
-        UNION ALL
-        (SELECT
-             article_id AS "next.articleId",
-             title      AS "next.title"
-         FROM t_article
-         WHERE article_id &gt; #{id}
-         ORDER BY article_id
-         LIMIT 1)
+    <select id="getPre" resultType="Article">
+        SELECT
+            article_id,
+            title
+        FROM t_article
+        WHERE article_id &lt; #{articleId} and user_id=#{userId}
+        ORDER BY article_id
+        LIMIT 1
+    </select>
+
+    <select id="getNext" resultType="Article">
+        SELECT
+            article_id,
+            title
+        FROM t_article
+        WHERE article_id &gt; #{articleId} and user_id=#{userId}
+        ORDER BY article_id
+        LIMIT 1
     </select>
 
     <insert id="insertArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="articleId">
@@ -92,10 +94,10 @@
 
     <select id="getLikes" resultType="Like">
         SELECT
-            a.article_id AS "article.articleId",
-            a.title      AS "article.title",
-            u.user_id     AS "user.userId",
-            u.nickname   AS "user.nickname"
+        a.article_id AS "article.articleId",
+        a.title AS "article.title",
+        u.user_id AS "user.userId",
+        u.nickname AS "user.nickname"
         FROM t_like l, t_article a, t_user u
         WHERE l.user_id = u.user_id AND l.article_id = a.article_id
         <if test="userId != 0">

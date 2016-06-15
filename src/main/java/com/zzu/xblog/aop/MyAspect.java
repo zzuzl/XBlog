@@ -34,9 +34,9 @@ public class MyAspect {
     /**
      * 标记发表文章的切点
      */
-    @Pointcut("execution(* com.zzu.xblog.service.*.insertArticle(..))")
+    /*@Pointcut("execution(* com.zzu.xblog.service.*.insertArticle(..))")
     public void insertArticlePointcut() {
-    }
+    }*/
 
     /**
      * 标记发表评论的切点
@@ -50,28 +50,30 @@ public class MyAspect {
      *
      * @param result
      */
-    @AfterReturning(pointcut = "insertArticlePointcut()", returning = "result")
+    /*@AfterReturning(pointcut = "insertArticlePointcut()", returning = "result")
     private void afterInsertArticle(Result result) {
-        Map<String, Object> data = result.getData();
-        HttpServletRequest request = (HttpServletRequest) data.get(Common.REQUEST);
-        Article article = (Article) data.get("article");
-        if (article != null) {
-            User user = article.getUser();
-            if (user != null) {
-                Map<String, Object> model = new HashMap<>();
-                model.put("userId", user.getUserId());
-                model.put("nickname", user.getNickname());
-                model.put("articleId", article.getArticleId());
-                model.put("title", article.getTitle());
-                sendEmailToFans(user.getUserId(), model, request);
+        if(result.isSuccess()) {
+            Map<String, Object> data = result.getData();
+            HttpServletRequest request = (HttpServletRequest) data.get(Common.REQUEST);
+            Article article = (Article) data.get("article");
+            if (article != null) {
+                User user = article.getUser();
+                if (user != null) {
+                    Map<String, Object> model = new HashMap<>();
+                    model.put("userId", user.getUserId());
+                    model.put("nickname", user.getNickname());
+                    model.put("articleId", article.getArticleId());
+                    model.put("title", article.getTitle());
+                    sendEmailToFans(user.getUserId(), model, request);
 
-                Dynamic dynamic = new Dynamic(user, article, Common.POST_OPERATOR, article.getDescription());
-                insertDynamic(dynamic);
+                    Dynamic dynamic = new Dynamic(user, article, Common.POST_OPERATOR, article.getDescription());
+                    insertDynamic(dynamic);
+                }
             }
         }
 
         System.out.println("------------------给fans发送邮件,插入动态------------------------");
-    }
+    }*/
 
     /**
      * 给fans发送邮件
@@ -101,7 +103,7 @@ public class MyAspect {
      *
      * @param result
      */
-    @AfterReturning(pointcut = "insertCommentPointcut()", returning = "result")
+    /*@AfterReturning(pointcut = "insertCommentPointcut()", returning = "result")
     private void afterInsertComment(Result result) {
         Map<String, Object> data = result.getData();
         Comment comment = (Comment) data.get("comment");
@@ -114,5 +116,5 @@ public class MyAspect {
         }
 
         System.out.println("------------------发表评论,插入动态------------------------");
-    }
+    }*/
 }
