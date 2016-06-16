@@ -36,14 +36,17 @@ public class PageController {
     /* 主页 */
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
-        List<Category> list = redisService.getAllCategory();
-        if(list == null) {
+        List<Object> list = redisService.getAllCategory();
+        if (list == null) {
             redisService.syncCategory(categoryService.listCategory());
             list = redisService.getAllCategory();
         }
 
-        /*List<Category> list = categoryService.listCategory();*/
         model.addAttribute("list", list);
+
+        List<Object> userRank = redisService.getUserRank();
+        System.out.println(userRank);
+        model.addAttribute("userRank", userRank);
         return "index";
     }
 
@@ -92,7 +95,11 @@ public class PageController {
     /* 发表文章 */
     @RequestMapping(value = "/setting/editArticle", method = RequestMethod.GET)
     public String editArticle(Model model) {
-        List<Category> list = categoryService.listCategory();
+        List<Object> list = redisService.getAllCategory();
+        if (list == null) {
+            redisService.syncCategory(categoryService.listCategory());
+            list = redisService.getAllCategory();
+        }
         model.addAttribute("list", list);
         return "setting/editArticle";
     }

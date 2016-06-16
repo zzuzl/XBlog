@@ -140,3 +140,45 @@ s {
 .clicked {
     color: #0f0f0f;
 }
+
+.user-rank {
+    list-style: none;
+    display: block;
+    width: 100%;
+    padding: 10px;
+}
+
+.user-rank li {
+    width: 100%;
+    vertical-align: middle;
+    clear: both;
+}
+
+.user-rank li .index-order {
+    width: 20px;
+    height: 100%;
+    float: left;
+    font-weight: bold;
+    margin-top: 20px;
+    color: rebeccapurple;
+    margin-right: 10px;
+}
+
+.user-rank li .nickname {
+    overflow: hidden;
+    display: inline-block;
+    margin: 10px;
+    margin-top: 20px;
+
+}
+
+.user-rank li .thumbnail {
+    width: 58px;
+    display: inline-block;
+    float: left;
+}
+
+.user-rank li .thumbnail img {
+    width: 50px;
+    height: 50px;
+}

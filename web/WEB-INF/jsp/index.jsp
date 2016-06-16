@@ -48,6 +48,22 @@
                     </c:forEach>
                 </ul>
             </div>
+            <label style="margin: 10px;font-size: 20px;text-align: center">用户排行</label>
+            <ol class="user-rank">
+                <c:forEach items="${requestScope.userRank}" var="item" varStatus="index">
+                    <li>
+                        <div class="index-order">
+                            ${index.index + 1}.
+                        </div>
+                        <a href="${root}/${item.url}" class="thumbnail" title="${item.nickname}" target="_blank">
+                            <img src="${root}/${item.photoSrc}"/>
+                        </a>
+                        <%--<a href="${root}/u/${item.url}" class="nickname" title="${item.nickname}" target="_blank">
+                            ${item.nickname}
+                        </a>--%>
+                    </li>
+                </c:forEach>
+            </ol>
         </div>
         <div class="col-xs-9">
             <div class="list-item row" ng-repeat="item in vm.data">

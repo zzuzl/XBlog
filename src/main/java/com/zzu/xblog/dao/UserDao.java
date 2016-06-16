@@ -139,4 +139,12 @@ public interface UserDao {
      * @return
      */
     int resetCounts(@Param("userId") int userId);
+
+    /**
+     * 获取主页用户排行 count个
+     *
+     * @param count
+     * @return
+     */
+    List<User> getUserRank(@Param("count") int count);
 }

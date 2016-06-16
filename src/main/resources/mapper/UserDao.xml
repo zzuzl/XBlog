@@ -155,4 +155,17 @@
                                WHERE `from` = #{userId})
         WHERE user_id = #{userId}
     </update>
+    <select id="getUserRank" resultType="User">
+        SELECT
+            sum(a.view_count + a.like_count + a.comment_count) AS score,
+            u.user_id,
+            u.nickname,
+            u.photo_src,
+            u.url
+        FROM t_user u, t_article a
+        WHERE a.user_id = u.user_id
+        GROUP BY a.user_id
+        ORDER BY score ASC
+        LIMIT 0, #{count};
+    </select>
 </mapper>

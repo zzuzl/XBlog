@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 用户实体类
  */
-public class User implements Serializable {
+public class User {
     private int userId;
     private String email;
     private String hash;
