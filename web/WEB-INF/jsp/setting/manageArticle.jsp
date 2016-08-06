@@ -5,8 +5,8 @@
 <head>
     <title>管理我的博客</title>
     <%@include file="../common/head.jsp" %>
-    <link rel="stylesheet" href="${root}/resource/css/info.css">
-    <script src="${root}/resource/js/validator.min.js"></script>
+    <link rel="stylesheet" href="/resource/css/info.css">
+    <script src="/resource/js/validator.min.js"></script>
     <style>
         .list-item {
             width: 100%;
@@ -64,10 +64,10 @@
                             </div>
                         </div>
                         <div class="col-xs-8 title">
-                            <a href="${root}/p/${item.articleId}">${item.title}</a>
+                            <a href="/p/${item.articleId}">${item.title}</a>
                         </div>
                         <div class="col-xs-1 operate">
-                            <a href="${root}/setting/editArticle/${item.articleId}">
+                            <a href="/setting/editArticle/${item.articleId}">
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                             </a>
                             <a href="javascript:void(0)" onclick="obj.deleteArticle('${item.articleId}')">
@@ -106,7 +106,7 @@
             var r = confirm("确定要删除吗？");
             if (r === true) {
                 $.ajax({
-                    url: '${root}/article?id=' + id,
+                    url: '/article?id=' + id,
                     type: 'DELETE',
                     dataType: 'JSON',
                     success: function (data) {

@@ -35,7 +35,7 @@ public class RedisService {
         Object temp = redisTemplate.boundHashOps("viewCount").get(id + "");
         int num = 0;
         if (temp != null) {
-            num = (int) temp;
+            num = (Integer) temp;
         }
 
         System.out.println(id + "----" + num);
@@ -56,7 +56,7 @@ public class RedisService {
         Map<Object, Object> map = redisTemplate.boundHashOps("viewCount").entries();
         for (Map.Entry<Object, Object> entry : map.entrySet()) {
             int articleId = Integer.parseInt((String) entry.getKey());
-            int count = (int) entry.getValue();
+            int count = (Integer) entry.getValue();
             if (count > 0) {
                 articleDao.updateViewCount(articleId, count);
                 redisTemplate.boundHashOps("viewCount").put(entry.getKey(), 0);

@@ -4,8 +4,8 @@
 <head>
     <title>XBlog登录</title>
     <%@include file="common/head.jsp" %>
-    <script src="${root}/resource/js/validator.min.js"></script>
-    <link rel="stylesheet" href="${root}/resource/font-awesome-4.6.3/css/font-awesome.min.css">
+    <script src="/resource/js/validator.min.js"></script>
+    <link rel="stylesheet" href="/resource/font-awesome-4.6.3/css/font-awesome.min.css">
     <style type="text/css">
         #login-btn {
             width: 100%;
@@ -81,11 +81,11 @@
                         <div class="form-group">
                             <div class="col-xs-6">
                                 <span>忘记密码</span>
-                                <a href="${root}/findPwd" target="_blank">找回密码</a>
+                                <a href="/findPwd" target="_blank">找回密码</a>
                             </div>
                             <div class="col-xs-6 link">
                                 <span>没有账号?</span>
-                                <a href="${root}/register" target="_blank">注册</a>
+                                <a href="/register" target="_blank">注册</a>
                             </div>
                         </div>
                     </form>
@@ -114,7 +114,7 @@
     });
 
     var obj = {
-        url: "${root}/user/login",
+        url: "/user/login",
         login: function () {
             /* jquery的post方法发送post请求到url */
             $.post(this.url, {
@@ -126,7 +126,7 @@
         success: function (data) {
             if (data.success) {
                 $("#error").hide();
-                window.location = '${root}/';
+                window.location = '/';
             } else {
                 $("#error").text(data.msg);
                 $("#error").show();

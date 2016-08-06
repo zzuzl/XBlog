@@ -96,7 +96,7 @@ public class LuceneDao {
         MyResultSetHandler(String keyword) throws Exception {
             this.keyword = keyword;
             analyzer = new StandardAnalyzer();
-            directory = FSDirectory.open(Paths.get("F:/index"));
+            directory = FSDirectory.open(Paths.get("/index"));
             config = new IndexWriterConfig(analyzer);
             config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
             iwriter = new IndexWriter(directory, config);
@@ -144,9 +144,9 @@ public class LuceneDao {
         private List<Article> search(String keyword) {
             DirectoryReader ireader = null;
             IndexSearcher isearcher = null;
-            List<Article> list = new ArrayList<>();
-            List<ScoreDoc> hits = new ArrayList<>();
-            List<Integer> helper = new ArrayList<>();
+            List<Article> list = new ArrayList<Article>();
+            List<ScoreDoc> hits = new ArrayList<ScoreDoc>();
+            List<Integer> helper = new ArrayList<Integer>();
             Sort sort = new Sort();
 
             try {
@@ -172,8 +172,7 @@ public class LuceneDao {
                 }
 
                 // 按搜索分数排序
-                hits.sort(new Comparator<ScoreDoc>() {
-                    @Override
+                Collections.sort(hits, new Comparator<ScoreDoc>() {
                     public int compare(ScoreDoc o1, ScoreDoc o2) {
                         if (o1.score > o2.score) {
                             return 1;

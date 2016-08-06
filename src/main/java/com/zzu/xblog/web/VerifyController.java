@@ -64,7 +64,7 @@ public class VerifyController {
         User user = null;
         if (map == null || (user = (User) map.get("user")) == null) {
             model.addAttribute(Common.MSG, "激活失败!");
-        } else if (Utils.getGapMinute((long) map.get("time")) > 30) {
+        } else if (Utils.getGapMinute((Long) map.get("time")) > 30) {
             model.addAttribute(Common.MSG, "验证码已过期!");
         } else if (userService.register(user, (String) map.get("password")) < 1) {
             model.addAttribute(Common.MSG, "注册失败，邮箱已存在!");

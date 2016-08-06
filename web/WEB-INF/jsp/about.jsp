@@ -4,7 +4,7 @@
 <head>
     <title>关于</title>
     <%@include file="common/head.jsp" %>
-    <link rel="stylesheet" href="${root}/resource/css/index.css">
+    <link rel="stylesheet" href="/resource/css/index.css">
     <style>
         .media-left img {
             height: 80px;
@@ -52,7 +52,7 @@
     <div class="media">
         <div class="media-left">
             <a href="#">
-                <img class="media-object" src="${root}/resource/images/default-head-photo.png" alt="...">
+                <img class="media-object" src="/resource/images/default-head-photo.png" alt="...">
             </a>
         </div>
         <div class="media-body">

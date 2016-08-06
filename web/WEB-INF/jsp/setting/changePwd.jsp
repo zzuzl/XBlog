@@ -4,8 +4,8 @@
 <head>
     <title>修改登录密码</title>
     <%@include file="../common/head.jsp" %>
-    <link rel="stylesheet" href="${root}/resource/css/info.css">
-    <script src="${root}/resource/js/validator.min.js"></script>
+    <link rel="stylesheet" href="/resource/css/info.css">
+    <script src="/resource/js/validator.min.js"></script>
 </head>
 <body>
 <%@include file="../common/title.jsp" %>
@@ -63,7 +63,7 @@
         // 发送put请求时，必须使用标准json格式，加双引号
         var obj = {
             changePwd: function () {
-                $.ajax('${root}/user/changePwd', {
+                $.ajax('/user/changePwd', {
                     data: {
                         originalPassword: $('#originalPassword').val(),
                         newPassword: $('#newPassword').val()

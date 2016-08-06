@@ -22,7 +22,7 @@ public class CategoryService {
      */
     public List<Category> listCategory() {
         List<Category> list = categoryDao.listCategory();
-        Map<Integer, Category> map = new HashMap<>();
+        Map<Integer, Category> map = new HashMap<Integer, Category>();
 
         for (Category category : list) {
             if (category.getParent() != null &&
@@ -36,7 +36,7 @@ public class CategoryService {
             category.setParent(null);
         }
 
-        list = new ArrayList<>();
+        list = new ArrayList<Category>();
         for(Category category : map.values()) {
             list.add(category);
         }

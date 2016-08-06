@@ -4,8 +4,8 @@
 <head>
     <title>找回密码</title>
     <%@include file="common/head.jsp" %>
-    <script src="${root}/resource/js/validator.min.js"></script>
-    <link rel="stylesheet" href="${root}/resource/font-awesome-4.6.3/css/font-awesome.min.css">
+    <script src="/resource/js/validator.min.js"></script>
+    <link rel="stylesheet" href="/resource/font-awesome-4.6.3/css/font-awesome.min.css">
     <style type="text/css">
         #panel {
             width: 500px;
@@ -65,8 +65,8 @@
                         </div>
                         <div class="form-group">
                             <input type="text" id="captcha" class="form-control" name="captcha"
-                                   data-remote="${root}/captcha/verify" placeholder="验证码" required/>
-                            <img src="${root}/captcha/generate" id="image"/>
+                                   data-remote="/captcha/verify" placeholder="验证码" required/>
+                            <img src="/captcha/generate" id="image"/>
                             <a href="javascript:void(0)" onclick="obj.changeCaptcha('#image')">换一张</a>
                             <div class="help-block with-errors"></div>
                         </div>
@@ -83,8 +83,8 @@
                         </div>
                         <div class="form-group">
                             <input type="text" id="captcha2" class="form-control" name="captcha"
-                                   data-remote="${root}/captcha/verify" placeholder="验证码" required/>
-                            <img src="${root}/captcha/generate" id="image2"/>
+                                   data-remote="/captcha/verify" placeholder="验证码" required/>
+                            <img src="/captcha/generate" id="image2"/>
                             <a href="javascript:void(0)" onclick="obj.changeCaptcha('#image2')">换一张</a>
                             <div class="help-block with-errors"></div>
                         </div>
@@ -144,7 +144,7 @@
     });
 
     var obj = {
-        url: "${root}/mail/send/resetpwd",
+        url: "/mail/send/resetpwd",
         find: function () {
             $.post(this.url, {
                 email: $('#email').val(),
@@ -163,7 +163,7 @@
             }
         },
         reset: function () {
-            $.ajax('${root}/user/resetPwd', {
+            $.ajax('/user/resetPwd', {
                 data: {
                     password: $('#password').val(),
                     captcha: $('#captcha2').val(),
@@ -174,7 +174,7 @@
                 success: function (data) {
                     if (data.success) {
                         alert('密码重置成功');
-                        window.location = '${root}/login';
+                        window.location = '/login';
                     } else {
                         $('#error').show();
                         $('#error').text(data.msg);
@@ -185,7 +185,7 @@
             });
         },
         changeCaptcha: function (id) {
-            $(id).attr('src', '${root}/captcha/generate?t=' + new Date().getTime());
+            $(id).attr('src', '/captcha/generate?t=' + new Date().getTime());
         }
     };
 </script>

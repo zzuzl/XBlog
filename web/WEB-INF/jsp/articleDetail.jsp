@@ -5,13 +5,13 @@
 <head>
     <title>${requestScope.article.title} - XBlog</title>
     <%@include file="common/head.jsp" %>
-    <link href="${root}/resource/kindeditor/themes/default/default.css" rel="stylesheet"/>
-    <link href="${root}/resource/kindeditor/themes/simple/simple.css" rel="stylesheet"/>
-    <script src="${root}/resource/kindeditor/kindeditor-all-min.js"></script>
-    <script src="${root}/resource/kindeditor/lang/zh-CN.js"></script>
-    <link rel="stylesheet" href="${root}/resource/css/blog.css">
-    <link href="${root}/resource/css/index.css" rel="stylesheet"/>
-    <link href="${root}/resource/css/detail.css" rel="stylesheet"/>
+    <link href="/resource/kindeditor/themes/default/default.css" rel="stylesheet"/>
+    <link href="/resource/kindeditor/themes/simple/simple.css" rel="stylesheet"/>
+    <script src="/resource/kindeditor/kindeditor-all-min.js"></script>
+    <script src="/resource/kindeditor/lang/zh-CN.js"></script>
+    <link rel="stylesheet" href="/resource/css/blog.css">
+    <link href="/resource/css/index.css" rel="stylesheet"/>
+    <link href="/resource/css/detail.css" rel="stylesheet"/>
     <script>
         var editorConfig = {
             width: '100%',
@@ -32,15 +32,15 @@
     </script>
 </head>
 <body>
-<div class="header" style="background: url('${root}/resource/images/body_bg.png')">
-    <div class="blog-title" style="background: url('${root}/resource/images/title-yellow.png')">
-        <h1><a href="${root}/${requestScope.article.user.url}">${requestScope.article.user.nickname}</a></h1>
+<div class="header" style="background: url('/resource/images/body_bg.png')">
+    <div class="blog-title" style="background: url('/resource/images/title-yellow.png')">
+        <h1><a href="/${requestScope.article.user.url}">${requestScope.article.user.nickname}</a></h1>
         <h4>${requestScope.article.user.motto}</h4>
     </div>
     <div id="navigator">
         <ul class="navList">
-            <li><a href="${root}/">XBlog</a></li>
-            <li><a id="index-li" href="${root}/${requestScope.article.user.url}">首页</a></li>
+            <li><a href="/">XBlog</a></li>
+            <li><a id="index-li" href="/${requestScope.article.user.url}">首页</a></li>
         </ul>
     </div>
 </div>
@@ -60,19 +60,19 @@
                             <h4>标签：${requestScope.article.tag}</h4>
                             <div class="row">
                                 <div class="col-xs-2">
-                                    <a href="${root}/u/${requestScope.article.user.url}" class="thumbnail">
-                                        <img src="${root}/${requestScope.article.user.photoSrc}" alt="暂无">
+                                    <a href="/u/${requestScope.article.user.url}" class="thumbnail">
+                                        <img src="/${requestScope.article.user.photoSrc}" alt="暂无">
                                     </a>
                                 </div>
                                 <div class="col-xs-2">
                                     <h5>
-                                        <a href="${root}/u/${requestScope.article.user.url}">${requestScope.article.user.nickname}</a>
+                                        <a href="/u/${requestScope.article.user.url}">${requestScope.article.user.nickname}</a>
                                     </h5>
                                     <h5>
-                                        <a href="${root}/u/${requestScope.article.user.url}">关注：${requestScope.article.user.attentionCount}</a>
+                                        <a href="/u/${requestScope.article.user.url}">关注：${requestScope.article.user.attentionCount}</a>
                                     </h5>
                                     <h5>
-                                        <a href="${root}/u/${requestScope.article.user.url}">粉丝：${requestScope.article.user.fansCount}</a>
+                                        <a href="/u/${requestScope.article.user.url}">粉丝：${requestScope.article.user.fansCount}</a>
                                     </h5>
                                 </div>
                                 <div class="col-xs-2 col-xs-offset-6">
@@ -98,18 +98,18 @@
                                 <div class="col-xs-6">
                                     <c:if test="${requestScope.article.pre != null}">
                                         <span>上一篇：</span>
-                                        <a href="${root}/p/${requestScope.article.pre.articleId}">${requestScope.article.pre.title}</a>
+                                        <a href="/p/${requestScope.article.pre.articleId}">${requestScope.article.pre.title}</a>
                                     </c:if>
                                 </div>
                                 <div class="col-xs-6" style="text-align: right">
                                     <c:if test="${requestScope.article.next != null}">
                                         <span>下一篇：</span>
-                                        <a href="${root}/p/${requestScope.article.next.articleId}">${requestScope.article.next.title}</a>
+                                        <a href="/p/${requestScope.article.next.articleId}">${requestScope.article.next.title}</a>
                                     </c:if>
                                 </div>
                             </div>
                             <h6 class="dash-h6">
-                                <a href="${root}/${requestScope.article.user.url}" target="_blank">
+                                <a href="/${requestScope.article.user.url}" target="_blank">
                                     ${requestScope.article.user.nickname}
                                 </a>
                                 发表于：
@@ -126,8 +126,8 @@
                                     <c:forEach items="${requestScope.comments}" var="item">
                                         <div class="comment-item row">
                                             <div class="col-xs-2">
-                                                <a href="${root}/${item.user.url}" class="thumbnail">
-                                                    <img src="${root}/${item.user.photoSrc}"/>
+                                                <a href="/${item.user.url}" class="thumbnail">
+                                                    <img src="/${item.user.photoSrc}"/>
                                                 </a>
                                             </div>
                                             <div class="col-xs-10">
@@ -137,14 +137,14 @@
                                                                     pattern="yyyy-MM-dd HH:mm"/>
                                                 </span>
                                                 <span class="name">
-                                                    <a href="${root}/u/${item.user.url}">${item.user.nickname}</a>
+                                                    <a href="/u/${item.user.url}">${item.user.nickname}</a>
                                                 </span>
                                                 </div>
                                                 <div class="content">
                                                     <c:if test="${item.pId > 0}">
                                                         <h6>
                                                             回复
-                                                            <a href="${root}/${item.parent.user.url}">${item.parent.user.nickname}</a>
+                                                            <a href="/${item.parent.user.url}">${item.parent.user.nickname}</a>
                                                             :
                                                         </h6>
                                                     </c:if>
@@ -173,8 +173,8 @@
                                         </button>
                                     </div>
                                     <h5 id="tips">
-                                        注册用户登录后才能发表评论，请<a href="${root}/login">登录</a>或
-                                        <a href="${root}/register">注册</a>，访问<a href="${root}/">网站首页</a>。
+                                        注册用户登录后才能发表评论，请<a href="/login">登录</a>或
+                                        <a href="/register">注册</a>，访问<a href="/">网站首页</a>。
                                     </h5>
                                 </div>
                             </div>
@@ -188,17 +188,17 @@
                 <div class="panel-heading">公告</div>
                 <div class="panel-body">
                     <h5>昵称：
-                        <a href="${root}/u/${requestScope.article.user.url}" target="_blank">
+                        <a href="/u/${requestScope.article.user.url}" target="_blank">
                             ${requestScope.article.user.nickname}</a></h5>
                     <h5 id="age">博龄：</h5>
                     <h5>粉丝：<a
-                            href="${root}/u/${requestScope.article.user.url}">${requestScope.article.user.fansCount}</a>
+                            href="/u/${requestScope.article.user.url}">${requestScope.article.user.fansCount}</a>
                     </h5>
                     <h5>关注：<a
-                            href="${root}/u/${requestScope.article.user.url}">${requestScope.article.user.attentionCount}</a>
+                            href="/u/${requestScope.article.user.url}">${requestScope.article.user.attentionCount}</a>
                     </h5>
                     <c:if test="${requestScope.article.user.userId != sessionScope.user.userId}">
-                        <h5><a href="${root}/u/${requestScope.article.user.url}">+加关注</a></h5>
+                        <h5><a href="/u/${requestScope.article.user.url}">+加关注</a></h5>
                     </c:if>
                 </div>
             </div>
@@ -208,8 +208,8 @@
 
 <%@include file="common/footer.jsp" %>
 
-<script src="${root}/resource/js/moment.js"></script>
-<script src="${root}/resource/js/moment-with-locales.js"></script>
+<script src="/resource/js/moment.js"></script>
+<script src="/resource/js/moment-with-locales.js"></script>
 <script type="application/javascript">
     $(function () {
         moment.locale('zh-CN');
@@ -245,7 +245,7 @@
         },
         postComment: function () {
             if (this.check()) {
-                $.post('${root}/comment', {
+                $.post('/comment', {
                     'article.articleId': '${requestScope.article.articleId}',
                     'user.userId': '${sessionScope.user.userId}',
                     'content': window.editor.html(),
@@ -278,7 +278,7 @@
                 if (this.hasLiked()) {
                     return;
                 }
-                $.post('${root}/article/like', {
+                $.post('/article/like', {
                     articleId: '${requestScope.article.articleId}',
                     userId: '${sessionScope.user.userId}'
                 }, function (data) {
@@ -291,7 +291,7 @@
                 }, 'JSON')
             } else {
                 alert('请先登录！');
-                window.location = '${root}/login';
+                window.location = '/login';
             }
         },
         addOrCancelAttention: function () {
@@ -304,11 +304,11 @@
                 this.updateAttentionButton();
             } else {
                 alert('请先登录');
-                window.location = '${root}/login';
+                window.location = '/login';
             }
         },
         addAttention: function () {
-            $.post('${root}/user/attention', {
+            $.post('/user/attention', {
                 from: '${sessionScope.user.userId}',
                 to: '${requestScope.article.user.userId}'
             }, function (data) {
@@ -322,7 +322,7 @@
         },
         cancelAttention: function () {
             $.ajax({
-                url: '${root}/user/attention?from=${sessionScope.user.userId}&to=${requestScope.article.user.userId}',
+                url: '/user/attention?from=${sessionScope.user.userId}&to=${requestScope.article.user.userId}',
                 type: 'DELETE',
                 dataType: 'JSON',
                 success: function (data) {

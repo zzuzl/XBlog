@@ -4,10 +4,10 @@
 <head>
     <title>XBlog</title>
     <%@include file="common/head.jsp" %>
-    <link rel="stylesheet" href="${root}/resource/css/index.css">
-    <script src="${root}/resource/bower_components/bootstrap/js/collapse.js"></script>
-    <script src="${root}/resource/angular-1.4.8/angular.min.js"></script>
-    <script src="${root}/resource/js/app.js"></script>
+    <link rel="stylesheet" href="/resource/css/index.css">
+    <script src="/resource/bower_components/bootstrap/js/collapse.js"></script>
+    <script src="/resource/angular-1.4.8/angular.min.js"></script>
+    <script src="/resource/js/app.js"></script>
 </head>
 <body>
 <%@include file="common/title.jsp" %>
@@ -16,9 +16,9 @@
     <div class="jumbotron" style="margin-top: 60px">
         <h1>欢迎来到XBlog!</h1>
         <p>
-            <a class="btn btn-primary btn-lg" href="${root}/about" role="button">Learn more</a>
+            <a class="btn btn-primary btn-lg" href="/about" role="button">Learn more</a>
             <c:if test="${sessionScope.user != null}">
-                <a class="btn btn-info btn-lg" href="${root}/setting/editArticle" role="button">写博客</a>
+                <a class="btn btn-info btn-lg" href="/setting/editArticle" role="button">写博客</a>
             </c:if>
         </p>
     </div>
@@ -55,10 +55,10 @@
                         <div class="index-order">
                             ${index.index + 1}.
                         </div>
-                        <a href="${root}/${item.url}" class="thumbnail" title="${item.nickname}" target="_blank">
-                            <img src="${root}/${item.photoSrc}"/>
+                        <a href="/${item.url}" class="thumbnail" title="${item.nickname}" target="_blank">
+                            <img src="/${item.photoSrc}"/>
                         </a>
-                        <%--<a href="${root}/u/${item.url}" class="nickname" title="${item.nickname}" target="_blank">
+                        <%--<a href="/u/${item.url}" class="nickname" title="${item.nickname}" target="_blank">
                             ${item.nickname}
                         </a>--%>
                     </li>
@@ -68,22 +68,22 @@
         <div class="col-xs-9">
             <div class="list-item row" ng-repeat="item in vm.data">
                 <div class="col-xs-1 head-photo">
-                    <a href="${root}/{{item.user.url}}" target="_blank" class="thumbnail">
-                        <img src="${root}/{{item.user.photoSrc}}" alt="暂无"
-                             onerror="this.src='${root}/resource/images/default-head-photo.png'"/>
+                    <a href="/{{item.user.url}}" target="_blank" class="thumbnail">
+                        <img src="/{{item.user.photoSrc}}" alt="暂无"
+                             onerror="this.src='/resource/images/default-head-photo.png'"/>
                     </a>
                 </div>
                 <div class="col-xs-11">
                     <h4>
-                        <a href="${root}/p/{{item.articleId}}" target="_blank" data-ng-bind="item.title"></a>
+                        <a href="/p/{{item.articleId}}" target="_blank" data-ng-bind="item.title"></a>
                     </h4>
                     <p class="list-body-content" data-ng-bind="item.description"></p>
                     <div class="list-foot">
-                        <a href="${root}/{{item.user.url}}" class="lightblue" data-ng-bind="item.user.nickname"></a>
+                        <a href="/{{item.user.url}}" class="lightblue" data-ng-bind="item.user.nickname"></a>
                         发表于：<span data-ng-bind="item.postTime | dateFormat"></span>
                         <span class="comment">
                             <i class="fa fa-comments unClicked" aria-hidden="true"></i>
-                            <a href="${root}/p/{{item.articleId}}#comment" target="_blank">评论({{item.commentCount}})</a>
+                            <a href="/p/{{item.articleId}}#comment" target="_blank">评论({{item.commentCount}})</a>
                         </span>
                         <span class="view">
                             <i class="fa fa-eye unClicked" aria-hidden="true"></i>
@@ -151,7 +151,7 @@
 
             // 加载文章数据
             vm.load = function (params, callback) {
-                var url = "${root}/article/page/" + params.page;
+                var url = "/article/page/" + params.page;
                 if (params.cate === undefined) {
                     vm.cate = 0;
                 } else {
@@ -193,7 +193,7 @@
             // 更新点赞到服务器
             vm.syncLike = function (item, success, error) {
                 if ('${sessionScope.user.userId}') {
-                    $http.post('${root}/article/like', {
+                    $http.post('/article/like', {
                         "userId": '${sessionScope.user.userId}',
                         "articleId": item.articleId
                     }).then(function (res) {
@@ -205,13 +205,13 @@
                     });
                 } else {
                     alert('登录后可评论和赞');
-                    window.location = '${root}/login';
+                    window.location = '/login';
                 }
             };
         }
     })();
 </script>
-<script src="${root}/resource/js/filters.js"></script>
-<script src="${root}/resource/js/page.js"></script>
+<script src="/resource/js/filters.js"></script>
+<script src="/resource/js/page.js"></script>
 </body>
 </html>

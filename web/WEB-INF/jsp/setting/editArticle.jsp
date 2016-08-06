@@ -4,11 +4,11 @@
 <head>
     <title>编辑文章</title>
     <%@include file="../common/head.jsp" %>
-    <link href="${root}/resource/kindeditor/themes/default/default.css" rel="stylesheet"/>
-    <link href="${root}/resource/kindeditor/themes/simple/simple.css" rel="stylesheet"/>
-    <script src="${root}/resource/kindeditor/kindeditor-all-min.js"></script>
-    <script src="${root}/resource/kindeditor/lang/zh-CN.js"></script>
-    <script src="${root}/resource/js/validator.min.js"></script>
+    <link href="/resource/kindeditor/themes/default/default.css" rel="stylesheet"/>
+    <link href="/resource/kindeditor/themes/simple/simple.css" rel="stylesheet"/>
+    <script src="/resource/kindeditor/kindeditor-all-min.js"></script>
+    <script src="/resource/kindeditor/lang/zh-CN.js"></script>
+    <script src="/resource/js/validator.min.js"></script>
     <script>
         var editorConfig = {
             width: '100%',
@@ -27,7 +27,7 @@
             ],
             langType: 'zh-CN',
             themeType: 'simple',
-            uploadJson: '${root}/file/uploadInArticle',
+            uploadJson: '/file/uploadInArticle',
             afterChange: function () {
                 var allCount = this.count();
                 $("#contentLength").text("字数：" + allCount + "/" + 30000);
@@ -38,7 +38,7 @@
             window.editor = K.create('#editor_id', editorConfig);
         });
     </script>
-    <link rel="stylesheet" href="${root}/resource/css/info.css">
+    <link rel="stylesheet" href="/resource/css/info.css">
 </head>
 <body>
 <%@include file="../common/title.jsp" %>
@@ -126,7 +126,7 @@
                     }
                 } else {
                     alert('请先登录');
-                    window.location = '${root}/login';
+                    window.location = '/login';
                 }
             }
 
@@ -139,7 +139,7 @@
 
         var obj = {
             postArticle: function () {
-                $.post('${root}/article', {
+                $.post('/article', {
                     "category.cateId": $('#cate').val(),
                     "title": $("#title").val(),
                     "description": $('#description').val(),
@@ -150,14 +150,14 @@
             },
             success: function (data) {
                 if (data.success) {
-                    window.location = '${root}/${sessionScope.user.url}';
+                    window.location = '/${sessionScope.user.url}';
                 } else {
                     alert(data.msg);
                 }
             },
             updateArticle: function () {
                 $.ajax({
-                    url: '${root}/article',
+                    url: '/article',
                     type: 'PUT',
                     data: {
                         "articleId": "${requestScope.article.articleId}",
@@ -171,7 +171,7 @@
                     dataType: 'JSON',
                     success: function (data) {
                         if (data.success) {
-                            window.location = '${root}/${sessionScope.user.url}';
+                            window.location = '/${sessionScope.user.url}';
                         } else {
                             alert(data.msg);
                         }

@@ -5,9 +5,9 @@
 <head>
     <title>${requestScope.user.nickname} 的个人空间</title>
     <%@include file="common/head.jsp" %>
-    <link rel="stylesheet" href="${root}/resource/css/index.css">
-    <link rel="stylesheet" href="${root}/resource/css/pc.css">
-    <script src="${root}/resource/angular-1.4.8/angular.min.js"></script>
+    <link rel="stylesheet" href="/resource/css/index.css">
+    <link rel="stylesheet" href="/resource/css/pc.css">
+    <script src="/resource/angular-1.4.8/angular.min.js"></script>
 </head>
 <body>
 <%@include file="common/title.jsp" %>
@@ -16,15 +16,15 @@
     <div class="row">
         <div class="col-xs-3 col-xs-offset-1">
             <a href="javascript:void(0)" class="thumbnail" id="photo-thumbnail">
-                <img src="${root}/${requestScope.user.photoSrc}" alt="暂无"/>
+                <img src="/${requestScope.user.photoSrc}" alt="暂无"/>
             </a>
         </div>
         <div class="col-xs-7">
             <h3>${requestScope.user.nickname}</h3>
             <h4 id="age">博龄：2年</h4>
             <h5>博客：
-                <a href="http://${requestScope.host}:8888${root}/${requestScope.user.url}">
-                    http://${requestScope.host}:8888${root}/${requestScope.user.url}
+                <a href="http://${requestScope.host}:8888/${requestScope.user.url}">
+                    http://${requestScope.host}:8888/${requestScope.user.url}
                 </a>
             </h5>
             <h4>${requestScope.user.motto}</h4>
@@ -69,11 +69,11 @@
                     <ul>
                         <c:forEach items="${requestScope.attentions}" var="item">
                             <li class="user-li">
-                                <a href="${root}/u/${item.to.url}" class="thumbnail" target="_blank">
-                                    <img src="${root}/${item.to.photoSrc}" alt="暂无">
+                                <a href="/u/${item.to.url}" class="thumbnail" target="_blank">
+                                    <img src="/${item.to.photoSrc}" alt="暂无">
                                 </a>
                                 <div class="nickname-div">
-                                    <a href="${root}/u/${item.to.url}" target="_blank">${item.to.nickname}</a>
+                                    <a href="/u/${item.to.url}" target="_blank">${item.to.nickname}</a>
                                 </div>
                             </li>
                         </c:forEach>
@@ -82,11 +82,11 @@
                 <div role="tabpanel" class="tab-pane" id="fans">
                     <c:forEach items="${requestScope.fans}" var="item">
                         <li class="user-li">
-                            <a href="${root}/u/${item.from.url}" class="thumbnail" target="_blank">
-                                <img src="${root}/${item.from.photoSrc}" alt="暂无">
+                            <a href="/u/${item.from.url}" class="thumbnail" target="_blank">
+                                <img src="/${item.from.photoSrc}" alt="暂无">
                             </a>
                             <div class="nickname-div">
-                                <a href="${root}/u/${item.from.url}" target="_blank">${item.from.nickname}</a>
+                                <a href="/u/${item.from.url}" target="_blank">${item.from.nickname}</a>
                             </div>
                         </li>
                     </c:forEach>
@@ -94,13 +94,13 @@
                 <div role="tabpanel" class="tab-pane" id="dynamic" ng-controller="DynamicCtrl as vm">
                     <c:if test="${sessionScope.user != null}">
                         <div class="col-xs-10 col-xs-offset-1 dynamic-item" ng-repeat="item in vm.data">
-                            <a href="${root}/{{item.user.url}}" class="thumbnail" target="_blank">
-                                <img src="${root}/{{item.user.photoSrc}}" alt="暂无">
+                            <a href="/{{item.user.url}}" class="thumbnail" target="_blank">
+                                <img src="/{{item.user.photoSrc}}" alt="暂无">
                             </a>
                             <div class="dynamic-content">
-                                <a href="${root}/u/{{item.user.url}}" data-ng-bind="item.user.nickname"></a>
+                                <a href="/u/{{item.user.url}}" data-ng-bind="item.user.nickname"></a>
                                 <span data-ng-bind="item.operator"></span>
-                                <a href="${root}/p/{{item.article.articleId}}" data-ng-bind="item.article.title"></a>
+                                <a href="/p/{{item.article.articleId}}" data-ng-bind="item.article.title"></a>
                                 <span data-ng-bind="item.createTime | dateFormat"></span>
                                 <c:if test="${sessionScope.user.userId == requestScope.user.userId}">
                                     <a href="javascript:void(0)" ng-click="vm.deleteDynamic(item.dynamicId)">
@@ -117,7 +117,7 @@
                     </c:if>
                     <c:if test="${sessionScope.user == null}">
                         <div id="tip">
-                            注册用户登录后才能查看动态，请<a href="${root}/login">登录</a>
+                            注册用户登录后才能查看动态，请<a href="/login">登录</a>
                         </div>
                     </c:if>
                 </div>
@@ -128,8 +128,8 @@
 
 <%@include file="common/footer.jsp" %>
 
-<script src="${root}/resource/js/moment.js"></script>
-<script src="${root}/resource/js/moment-with-locales.js"></script>
+<script src="/resource/js/moment.js"></script>
+<script src="/resource/js/moment-with-locales.js"></script>
 <script type="application/javascript">
     var obj = {
         attention: ${requestScope.attention != null},
@@ -146,11 +146,11 @@
                 this.updateAttentionButton();
             } else {
                 alert('请先登录');
-                window.location = '${root}/login';
+                window.location = '/login';
             }
         },
         addAttention: function () {
-            $.post('${root}/user/attention', {
+            $.post('/user/attention', {
                 from: '${sessionScope.user.userId}',
                 to: '${requestScope.user.userId}'
             }, function (data) {
@@ -164,7 +164,7 @@
         },
         cancelAttention: function () {
             $.ajax({
-                url: '${root}/user/attention?from=${sessionScope.user.userId}&to=${requestScope.user.userId}',
+                url: '/user/attention?from=${sessionScope.user.userId}&to=${requestScope.user.userId}',
                 type: 'DELETE',
                 dataType: 'JSON',
                 success: function (data) {
@@ -215,7 +215,7 @@
 
             // 加载动态
             vm.load = function (params, callback) {
-                var url = "${root}/user/dynamics/page/" + params.page + '?userId=${requestScope.user.userId}';
+                var url = "/user/dynamics/page/" + params.page + '?userId=${requestScope.user.userId}';
 
                 $http.get(url).then(function (res) {
                     if (callback) {
@@ -235,7 +235,7 @@
                 if (id) {
                     var r = confirm("确认删除该动态吗?");
                     if (r === true) {
-                        $http.delete('${root}/user/dynamics/' + id)
+                        $http.delete('/user/dynamics/' + id)
                                 .then(function (res) {
                                     if (res.data.success) {
                                         for (var i = 0; i < vm.data.length; i++) {
@@ -253,7 +253,7 @@
         }
     })();
 </script>
-<script src="${root}/resource/js/filters.js"></script>
-<script src="${root}/resource/js/page.js"></script>
+<script src="/resource/js/filters.js"></script>
+<script src="/resource/js/page.js"></script>
 </body>
 </html>

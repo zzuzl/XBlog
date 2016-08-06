@@ -4,7 +4,7 @@
 <head>
     <title>注册页面</title>
     <%@include file="common/head.jsp" %>
-    <script src="${root}/resource/js/validator.min.js"></script>
+    <script src="/resource/js/validator.min.js"></script>
     <style type="text/css">
         .form-control {
             width: 400px;
@@ -53,7 +53,7 @@
                     <label for="email" class="col-sm-2 control-label">邮 箱</label>
                     <div class="col-sm-10">
                         <input type="email" class="form-control" id="email" name="email"
-                               placeholder="Email" required data-remote="${root}/user/exists">
+                               placeholder="Email" required data-remote="/user/exists">
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -86,9 +86,9 @@
                 <div class="form-group">
                     <label for="captcha" class="col-sm-2 control-label">验证码</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="captcha" data-remote="${root}/captcha/verify"
+                        <input type="text" class="form-control" name="captcha" data-remote="/captcha/verify"
                                id="captcha" required data-remote-error="验证码错误">
-                        <img src="${root}/captcha/generate" id="image">
+                        <img src="/captcha/generate" id="image">
                         <a href="javascript:void(0)" onclick="obj.updateCaptcha()">换一张</a>
                         <div class="help-block with-errors"></div>
                     </div>
@@ -104,12 +104,12 @@
     </div>
 </div>
 <div id="hidden" hidden>
-    <div id="divv"><a href="${root}/">首页</a></div>
+    <div id="divv"><a href="/">首页</a></div>
     <div class="page-header" align="center">
         <h1></h1>
     </div>
     <div class="jumbotron container" id="div" align="center">
-        <p><a href="${root}/zc">请重新注册</a></p>
+        <p><a href="/zc">请重新注册</a></p>
     </div>
 </div>
 
@@ -133,7 +133,7 @@
         });
     });
     var obj = {
-        url: "${root}/user/register",
+        url: "/user/register",
         register: function () {
             $.post(this.url, {
                 nickname: $("#nickname").val(),
@@ -144,7 +144,7 @@
         },
         success: function (data) {
             if (data.success) {
-                window.location = "${root}/check";
+                window.location = "/check";
             } else {
                 $("#error").text(data.msg);
                 $("#error").show();
@@ -153,7 +153,7 @@
             }
         },
         updateCaptcha: function () {
-            $('#image').attr('src', '${root}/captcha/generate?t=' + new Date());
+            $('#image').attr('src', '/captcha/generate?t=' + new Date());
         }
     }
 </script>

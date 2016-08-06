@@ -144,7 +144,7 @@ public class UserController {
 
             if (map == null || !hash.equals(map.get("hash"))) {
                 result.setMsg("操作无效，请重新发送找回密码邮件");
-            } else if (Utils.getGapMinute((long) map.get("time")) > 30) {
+            } else if (Utils.getGapMinute((Long) map.get("time")) > 30) {
                 result.setMsg("邮件验证码已过期,请重新发送邮件!");
             } else {
                 User user = userService.searchUserByEmail((String) map.get("email"));
@@ -188,7 +188,7 @@ public class UserController {
     public Result addAttention(@RequestParam("from") Integer from,
                                @RequestParam("to") Integer to, HttpSession session) {
         User user = (User) session.getAttribute(Common.USER);
-        if(user.getUserId() == from) {
+        if (user.getUserId() == from) {
             return userService.insertAttention(from, to);
         } else {
             Result result = new Result();
@@ -201,9 +201,9 @@ public class UserController {
     @RequestMapping(value = "/attention", method = RequestMethod.DELETE)
     @ResponseBody
     public Result cancelAttention(@RequestParam("from") Integer from,
-                                  @RequestParam("to") Integer to,HttpSession session) {
+                                  @RequestParam("to") Integer to, HttpSession session) {
         User user = (User) session.getAttribute(Common.USER);
-        if(user.getUserId() == from) {
+        if (user.getUserId() == from) {
             return userService.deleteAttention(from, to);
         } else {
             Result result = new Result();

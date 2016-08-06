@@ -4,8 +4,8 @@
 <head>
     <title>${requestScope.keyword} - 搜索结果</title>
     <%@include file="common/head.jsp" %>
-    <link rel="stylesheet" href="${root}/resource/css/index.css">
-    <script src="${root}/resource/angular-1.4.8/angular.min.js"></script>
+    <link rel="stylesheet" href="/resource/css/index.css">
+    <script src="/resource/angular-1.4.8/angular.min.js"></script>
     <style>
 
     </style>
@@ -17,17 +17,17 @@
         <div class="col-xs-10 col-xs-offset-1">
             <div class="list-item row" ng-repeat="item in vm.data">
                 <div class="col-xs-1 head-photo">
-                    <a href="${root}/{{item.user.url}}" target="_blank" class="thumbnail">
-                        <img src="${root}/{{item.user.photoSrc}}" alt="暂无"/>
+                    <a href="/{{item.user.url}}" target="_blank" class="thumbnail">
+                        <img src="/{{item.user.photoSrc}}" alt="暂无"/>
                     </a>
                 </div>
                 <div class="col-xs-11">
                     <h4>
-                        <a href="${root}/p/{{item.articleId}}" target="_blank" data-ng-bind="item.title"></a>
+                        <a href="/p/{{item.articleId}}" target="_blank" data-ng-bind="item.title"></a>
                     </h4>
                     <p class="list-body-content" data-ng-bind="item.description"></p>
                     <div class="list-foot">
-                        <a href="${root}/{{item.user.url}}" class="lightblue" data-ng-bind="item.user.nickname"></a>
+                        <a href="/{{item.user.url}}" class="lightblue" data-ng-bind="item.user.nickname"></a>
                         发表于：<span data-ng-bind="item.postTime | dateFormat"></span>
                         <span class="comment">
                             <i class="fa fa-comments unClicked" aria-hidden="true"></i>
@@ -75,7 +75,7 @@
 
             // 加载文章数据
             vm.load = function (params, callback) {
-                var url = "${root}/article/search/" + params.page + '?keyword=${requestScope.keyword}';
+                var url = "/article/search/" + params.page + '?keyword=${requestScope.keyword}';
 
                 $http.get(url).then(function (res) {
                     if (callback) {
@@ -92,7 +92,7 @@
         }
     })();
 </script>
-<script src="${root}/resource/js/filters.js"></script>
-<script src="${root}/resource/js/page.js"></script>
+<script src="/resource/js/filters.js"></script>
+<script src="/resource/js/page.js"></script>
 </body>
 </html>

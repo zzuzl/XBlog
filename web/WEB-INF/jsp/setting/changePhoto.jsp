@@ -4,11 +4,11 @@
 <head>
     <title>修改头像照片</title>
     <%@include file="../common/head.jsp" %>
-    <link rel="stylesheet" href="${root}/resource/css/info.css">
-    <link href="${root}/resource/cropper-master/dist/cropper.min.css" rel="stylesheet">
-    <script src="${root}/resource/cropper-master/dist/cropper.min.js"></script>
-    <script src="${root}/resource/js/ajaxfileupload.js"></script>
-    <link rel="stylesheet" href="${root}/resource/font-awesome-4.6.3/css/font-awesome.css">
+    <link rel="stylesheet" href="/resource/css/info.css">
+    <link href="/resource/cropper-master/dist/cropper.min.css" rel="stylesheet">
+    <script src="/resource/cropper-master/dist/cropper.min.js"></script>
+    <script src="/resource/js/ajaxfileupload.js"></script>
+    <link rel="stylesheet" href="/resource/font-awesome-4.6.3/css/font-awesome.css">
     <style>
         img {
             max-width: 100%;
@@ -45,7 +45,7 @@
         </div>
         <div class="col-xs-6">
             <div id="box">
-                <img id="image" src="${root}/resource/images/picture.jpg">
+                <img id="image" src="/resource/images/picture.jpg">
             </div>
         </div>
         <div class="col-xs-3">
@@ -69,13 +69,13 @@
 
     var obj = {
         changeSrc: function (filename) {
-            $('#image').cropper('replace', '${root}/' + filename);
+            $('#image').cropper('replace', '/' + filename);
             this.filename = filename;
             $('#okBtn').removeAttr('disabled');
         },
         uploadFile: function () {
             $.ajaxFileUpload({
-                url: '${root}/file/upload',
+                url: '/file/upload',
                 secureuri: false,
                 fileElementId: 'file',
                 dataType: 'json',
@@ -93,7 +93,7 @@
         },
         savePhoto: function () {
             var data = $('#image').cropper('getData');
-            $.post('${root}/file/changePhoto', {
+            $.post('/file/changePhoto', {
                 filename: obj.filename || '',
                 x: data.x,
                 y: data.y,

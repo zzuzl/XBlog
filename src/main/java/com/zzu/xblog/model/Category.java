@@ -14,7 +14,7 @@ public class Category {
 
 	public List<Category> getChildren() {
 		if(children == null) {
-			children = new ArrayList<>();
+			children = new ArrayList<Category>();
 		}
 		return children;
 	}

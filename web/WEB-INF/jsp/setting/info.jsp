@@ -4,8 +4,8 @@
 <head>
     <title>修改个人信息</title>
     <%@include file="../common/head.jsp" %>
-    <link rel="stylesheet" href="${root}/resource/css/info.css">
-    <script src="${root}/resource/js/validator.min.js"></script>
+    <link rel="stylesheet" href="/resource/css/info.css">
+    <script src="/resource/js/validator.min.js"></script>
 </head>
 <body>
 <%@include file="../common/title.jsp" %>
@@ -26,7 +26,7 @@
                 <div class="form-group">
                     <label for="url">博客地址</label>
                     <p class="form-control-static" id="url">
-                        <a href="${root}/${sessionScope.user.url}" target="_blank">
+                        <a href="/${sessionScope.user.url}" target="_blank">
                             http://${requestScope.host}:8888/XBlog/${sessionScope.user.url}
                         </a>
                     </p>
@@ -86,7 +86,7 @@
 
         var obj = {
             updateInfo: function () {
-                $.ajax('${root}/user', {
+                $.ajax('/user', {
                     data: {
                         userId: '${sessionScope.user.userId}',
                         email: '${sessionScope.user.email}',

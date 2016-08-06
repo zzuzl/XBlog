@@ -26,9 +26,9 @@
         <p>感谢你注册Blog，验证信息已发送至你的邮箱,请注意查收。</p>
     </div>
     <h3 id="msg"></h3>
-    <a href="${root}/login" class="btn btn-primary">登录</a>
-    <a href="${root}/" class="btn btn-primary">主页</a>
-    <a href="${root}/register" class="btn btn-info">返回重新注册</a>
+    <a href="/login" class="btn btn-primary">登录</a>
+    <a href="/" class="btn btn-primary">主页</a>
+    <a href="/register" class="btn btn-info">返回重新注册</a>
 </div>
 
 <script>

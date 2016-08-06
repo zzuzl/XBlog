@@ -5,18 +5,18 @@
 <head>
     <title>${requestScope.user.nickname}的博客</title>
     <%@include file="common/head.jsp" %>
-    <link rel="stylesheet" href="${root}/resource/css/blog.css">
+    <link rel="stylesheet" href="/resource/css/blog.css">
 </head>
 <body>
-<div class="header" style="background: url('${root}/resource/images/body_bg.png')">
-    <div class="blog-title" style="background: url('${root}/resource/images/title-yellow.png')">
-        <h1><a href="${root}/${requestScope.user.url}">${requestScope.user.nickname}</a></h1>
+<div class="header" style="background: url('/resource/images/body_bg.png')">
+    <div class="blog-title" style="background: url('/resource/images/title-yellow.png')">
+        <h1><a href="/${requestScope.user.url}">${requestScope.user.nickname}</a></h1>
         <h4>${requestScope.user.motto}</h4>
     </div>
     <div id="navigator">
         <ul class="navList">
-            <li><a href="${root}/">XBlog</a></li>
-            <li><a style="background: white;color: #2aabd2;" href="${root}/${requestScope.user.url}">首页</a></li>
+            <li><a href="/">XBlog</a></li>
+            <li><a style="background: white;color: #2aabd2;" href="/${requestScope.user.url}">首页</a></li>
         </ul>
     </div>
 </div>
@@ -32,13 +32,13 @@
                             </div>
                         </div>
                         <div class="col-xs-9 title">
-                            <a href="${root}/p/${item.articleId}">${item.title}</a>
+                            <a href="/p/${item.articleId}">${item.title}</a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 content">
                             <p>${item.description}</p>
-                            <a href="${root}/p/${item.articleId}">查看全文</a>
+                            <a href="/p/${item.articleId}">查看全文</a>
                         </div>
                     </div>
                     <div class="row">
@@ -58,13 +58,13 @@
                 <div class="panel-heading">公告</div>
                 <div class="panel-body">
                     <h5>
-                        昵称：<a href="${root}/u/${requestScope.user.url}" target="_blank">
+                        昵称：<a href="/u/${requestScope.user.url}" target="_blank">
                         ${requestScope.user.nickname}</a>
                     </h5>
                     <h5 id="age">博龄：</h5>
-                    <h5>粉丝：<a href="${root}/u/${requestScope.user.url}">${requestScope.user.fansCount}</a></h5>
-                    <h5>关注：<a href="${root}/u/${requestScope.user.url}">${requestScope.user.attentionCount}</a></h5>
-                    <h5><a href="${root}/u/${requestScope.user.url}">+加关注</a></h5>
+                    <h5>粉丝：<a href="/u/${requestScope.user.url}">${requestScope.user.fansCount}</a></h5>
+                    <h5>关注：<a href="/u/${requestScope.user.url}">${requestScope.user.attentionCount}</a></h5>
+                    <h5><a href="/u/${requestScope.user.url}">+加关注</a></h5>
                 </div>
             </div>
         </div>
@@ -72,8 +72,8 @@
 </div>
 
 <%@include file="common/footer.jsp" %>
-<script src="${root}/resource/js/moment.js"></script>
-<script src="${root}/resource/js/moment-with-locales.js"></script>
+<script src="/resource/js/moment.js"></script>
+<script src="/resource/js/moment-with-locales.js"></script>
 <script type="application/javascript">
     $(function () {
         moment.locale('zh-CN');
