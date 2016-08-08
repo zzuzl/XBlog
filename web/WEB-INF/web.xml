@@ -3,50 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
     <!-- 加载spring配置文件 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/applicationContext.xml</param-value>
+        <param-value>classpath:spring-config.xml</param-value>
     </context-param>
 
     <!-- spring托管 -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-
-    <!-- springmvc配置 -->
-    <servlet>
-        <servlet-name>dispatcher</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/dispatcher-servlet.xml</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>dispatcher</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
-
-    <!-- 转换put和delete请求，使支持resuful，浏览器默认不支持put，delete -->
-    <filter>
-        <filter-name>httpMethodFilter</filter-name>
-        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>httpMethodFilter</filter-name>
-        <servlet-name>dispatcher</servlet-name>
-    </filter-mapping>
-
-    <filter>
-        <filter-name>putMethodFilter</filter-name>
-        <filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>putMethodFilter</filter-name>
-        <servlet-name>dispatcher</servlet-name>
-    </filter-mapping>
 
     <!-- spring统一配置编码为utf-8 -->
     <filter>
@@ -66,6 +33,40 @@
         <url-pattern>/</url-pattern>
     </filter-mapping>
 
+    <!-- springmvc配置 -->
+    <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value></param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <!-- 转换put和delete请求，使支持resuful，浏览器默认不支持put，delete -->
+    <filter>
+        <filter-name>httpMethodFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>httpMethodFilter</filter-name>
+        <servlet-name>springmvc</servlet-name>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>putMethodFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>putMethodFilter</filter-name>
+        <servlet-name>springmvc</servlet-name>
+    </filter-mapping>
+
     <!-- logback日志 -->
     <listener>
         <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
@@ -73,6 +74,12 @@
     <context-param>
         <param-name>logbackConfigLocation</param-name>
         <param-value>classpath:logback.xml</param-value>
+    </context-param>
+
+    <!-- webAppRootKey -->
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>xblog</param-value>
     </context-param>
 
     <!-- 异常处理页面 -->

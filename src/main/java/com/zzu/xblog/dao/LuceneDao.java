@@ -28,14 +28,9 @@ import org.springframework.test.annotation.Commit;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.*;
-
-import static javafx.scene.input.KeyCode.T;
 
 /**
  * Lucene全文检索

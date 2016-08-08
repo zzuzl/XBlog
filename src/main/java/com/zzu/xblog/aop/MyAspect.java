@@ -1,20 +1,14 @@
 package com.zzu.xblog.aop;
 
-import com.zzu.xblog.common.Common;
-import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.model.*;
 import com.zzu.xblog.service.DynamicService;
 import com.zzu.xblog.service.MailService;
 import com.zzu.xblog.service.UserService;
-import com.zzu.xblog.util.Utils;
-import net.sf.json.JSONObject;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

@@ -4,11 +4,8 @@ package com.zzu.xblog.model;
  * Created by Administrator on 2016/6/1.
  */
 
-import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.util.Utils;
-import net.sf.json.JSONObject;
-
 import java.util.Date;
 
 /**

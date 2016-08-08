@@ -8,7 +8,6 @@ import com.zzu.xblog.model.Pager;
 import com.zzu.xblog.model.User;
 import com.zzu.xblog.service.*;
 import com.zzu.xblog.util.Utils;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;

@@ -3,13 +3,11 @@ package com.zzu.xblog.web;
 import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.model.Comment;
 import com.zzu.xblog.service.CommentService;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 评论相关controller

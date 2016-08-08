@@ -5,7 +5,6 @@ import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.model.UploadType;
 import com.zzu.xblog.util.Utils;
 import net.coobird.thumbnailator.Thumbnails;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 文件相关service
@@ -27,8 +28,9 @@ public class FileService {
      * @param request
      * @return
      */
-    public JSONObject uploadPhoto(MultipartFile file, HttpServletRequest request) {
-        JSONObject result = new JSONObject();
+    public Map<String, Object> uploadPhoto(MultipartFile file, HttpServletRequest request) {
+
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put(Common.SUCCESS, false);
         if (file.getSize() > 1024 * 1024) {
             result.put(Common.MSG, "文件过大：不超过1MB");
@@ -52,10 +54,10 @@ public class FileService {
      * @param request
      * @return
      */
-    public JSONObject uploadFiles(MultipartFile file, UploadType uploadType, HttpServletRequest request) {
+    public Map<String, Object> uploadFiles(MultipartFile file, UploadType uploadType, HttpServletRequest request) {
         String fileName = file.getOriginalFilename();
         String fileFormat = fileName.substring(fileName.lastIndexOf(".") + 1);
-        JSONObject result = new JSONObject();
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put("error", 1);
 
         if (file.getSize() > uploadType.getMaxSize()) {
@@ -65,11 +67,11 @@ public class FileService {
             result.put("message", "文件格式错误，支持的格式：" + Arrays.toString(uploadType.getFormats()));
         } else {
             result = uploadFileCore(file, request, uploadType.getFolder());
-            if (result.getBoolean(Common.SUCCESS)) {
+            if ((Boolean) result.get(Common.SUCCESS)) {
                 result.put("error", 0);
-                result.put("url", request.getContextPath() + "/" + result.getString(Common.FILENAME));
+                result.put("url", request.getContextPath() + "/" + result.get(Common.FILENAME));
             } else {
-                result.put("message", result.getString(Common.MSG));
+                result.put("message", result.get(Common.MSG));
             }
         }
 
@@ -113,8 +115,8 @@ public class FileService {
      * @param childPath
      * @return
      */
-    private JSONObject uploadFileCore(MultipartFile file, HttpServletRequest request, String childPath) {
-        JSONObject result = new JSONObject();
+    private Map<String, Object> uploadFileCore(MultipartFile file, HttpServletRequest request, String childPath) {
+        Map<String, Object> result = new HashMap<String, Object>();
         String path = request.getSession().getServletContext().getRealPath("/");
         File folder = new File(path + childPath);
         if (!folder.exists()) {

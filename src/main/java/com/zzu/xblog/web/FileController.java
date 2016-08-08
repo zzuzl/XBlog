@@ -6,9 +6,7 @@ import com.zzu.xblog.model.UploadType;
 import com.zzu.xblog.model.User;
 import com.zzu.xblog.service.FileService;
 import com.zzu.xblog.service.UserService;
-import net.coobird.thumbnailator.Thumbnailator;
 import net.coobird.thumbnailator.Thumbnails;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +23,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.zzu.xblog.model.UploadType.*;
 
@@ -42,8 +42,8 @@ public class FileController {
     /* 文件上传controller */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
-        JSONObject result = new JSONObject();
+    public Map<String,Object> upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
+        Map<String,Object> result = new HashMap<String, Object>();
         result.put(Common.SUCCESS, true);
         if (!file.isEmpty()) {
             result = fileService.uploadPhoto(file, request);
@@ -57,7 +57,7 @@ public class FileController {
     /* 编辑器文件上传controller */
     @RequestMapping(value = "/uploadInArticle", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject uploadInArticle(@RequestParam("imgFile") MultipartFile imgFile,
+    public Map<String,Object> uploadInArticle(@RequestParam("imgFile") MultipartFile imgFile,
                                       @RequestParam("dir") final String dir,
                                       HttpServletRequest request) throws IOException {
         UploadType uploadType = null;
@@ -70,7 +70,7 @@ public class FileController {
         } else if (dir.equals(IMAGE.getType())) {
             uploadType = IMAGE;
         }
-        JSONObject result = new JSONObject();
+        Map<String,Object> result = new HashMap<String, Object>();
 
         if (imgFile.isEmpty()) {
             result.put("error", 1);
@@ -78,9 +78,9 @@ public class FileController {
         } else {
             if (uploadType != null) {
                 result = fileService.uploadFiles(imgFile, uploadType, request);
-                if (result.getInt("error") == 0 && uploadType == UploadType.IMAGE) {
+                if ((Integer)result.get("error") == 0 && uploadType == UploadType.IMAGE) {
                     // 对上传的图片进行缩放处理
-                    zoomPicture(request.getSession().getServletContext().getRealPath("/") + result.getString(Common.FILENAME));
+                    zoomPicture(request.getSession().getServletContext().getRealPath("/") + result.get(Common.FILENAME));
                 }
             } else {
                 result.put("error", 1);

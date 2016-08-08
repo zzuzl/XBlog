@@ -8,10 +8,8 @@ import com.zzu.xblog.service.MailService;
 import com.zzu.xblog.service.RedisService;
 import com.zzu.xblog.service.UserService;
 import com.zzu.xblog.util.Utils;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
