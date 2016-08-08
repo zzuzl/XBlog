@@ -1,17 +1,13 @@
 package com.zzu.xblog.service;
 
-import com.zzu.xblog.model.Article;
 import com.zzu.xblog.model.User;
 import com.zzu.xblog.util.Utils;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.test.annotation.Commit;
 import org.springframework.ui.velocity.VelocityEngineUtils;
-
 import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +23,8 @@ public class MailService {
     private JavaMailSender mailSender;
     @Resource
     private VelocityEngine velocityEngine;
+    @Resource
+    private String domain;
     private static final String FROM = "m15617536860@163.com";
 
     /**
@@ -69,8 +67,8 @@ public class MailService {
      * @param request
      */
     public void sendEmailToFans(final String email, Map<String, Object> model, HttpServletRequest request) {
-        String rootPath = Utils.getRootPath(request);
-        rootPath += "/article/" + model.get("articleId");
+        String rootPath = "http://" + domain;
+        rootPath += "/p/" + model.get("articleId");
         model.put("url", rootPath);
 
         sendEmail(email, "tpl/fans.vm", "关注动态", model);

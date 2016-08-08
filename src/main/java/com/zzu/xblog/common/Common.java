@@ -14,7 +14,6 @@ public class Common {
 	public static final String DATA = "data";
 	public static final String USER = "user";
 	public static final String FILENAME = "filename";
-	public static final String REQUEST = "request";
 	public static final String ARTICLE_ARRAY = "articleArray";
 
 	// 错误页面
@@ -35,5 +34,8 @@ public class Common {
 
 	// 上传图片缩放宽度限制
 	public static final int MAX_PICTURE_WIDTH = 900;
+
+	// redis发布订阅常量
+	public static final String NEW_ARTICLE_TOPIC = "newArticle";
 
 }

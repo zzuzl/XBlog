@@ -13,6 +13,26 @@
         <lucene.version>5.4.1</lucene.version>
     </properties>
 
+    <profiles>
+        <!-- 测试环境 -->
+        <profile>
+            <id>test</id>
+            <properties>
+                <domain>localhost</domain>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <!-- 线上环境 -->
+        <profile>
+            <id>product</id>
+            <properties>
+                <domain>xblog.zzuzl.cn</domain>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
         <!-- 数据库相关 -->
         <dependency>

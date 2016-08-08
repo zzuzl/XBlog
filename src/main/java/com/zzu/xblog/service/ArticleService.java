@@ -1,24 +1,21 @@
 package com.zzu.xblog.service;
 
-/**
- * Created by ZhangLei on 2016/6/4.
- */
-
 import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dao.ArticleDao;
 import com.zzu.xblog.dao.DynamicDao;
 import com.zzu.xblog.dao.LuceneDao;
 import com.zzu.xblog.dao.UserDao;
 import com.zzu.xblog.dto.Result;
+import com.zzu.xblog.message.PubSub;
 import com.zzu.xblog.model.*;
+import com.zzu.xblog.model.message.NewArticleMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 文章相关service
@@ -33,6 +30,8 @@ public class ArticleService {
     private LuceneDao luceneDao;
     @Resource
     private DynamicDao dynamicDao;
+    @Resource
+    private PubSub pubSub;
 
     /**
      * 获取第page页文章列表
@@ -67,7 +66,7 @@ public class ArticleService {
             return null;
         }
         Article article = articleDao.detail(id);
-        if(article != null) {
+        if (article != null) {
             article.setPre(articleDao.getPre(id, article.getUser().getUserId()));
             article.setNext(articleDao.getNext(id, article.getUser().getUserId()));
         }
@@ -81,6 +80,7 @@ public class ArticleService {
      * @param request
      * @return
      */
+    @Transactional
     public Result insertArticle(Article article, HttpServletRequest request) {
         Result result = article.valid();
 
@@ -93,7 +93,15 @@ public class ArticleService {
                     User user = userDao.getUserById(article.getUser().getUserId());
                     article.setUser(user);
 
-                    // 发送邮件
+                    // 发送message
+                    NewArticleMessage message = new NewArticleMessage("新博客发表",
+                            article.getArticleId(),
+                            article.getTitle(),
+                            user.getUserId(),
+                            user.getUrl(),
+                            user.getNickname(),
+                            new Date());
+                    pubSub.sendMessage(Common.NEW_ARTICLE_TOPIC, message);
 
                     Dynamic dynamic = new Dynamic(user, article, Common.POST_OPERATOR, article.getDescription());
                     dynamicDao.insertDynamic(dynamic);
@@ -126,6 +134,7 @@ public class ArticleService {
 
     /**
      * 删除文章
+     *
      * @param id
      * @return
      */
