@@ -1,5 +1,7 @@
 package com.zzu.xblog.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +21,7 @@ import java.util.regex.Pattern;
 public class Utils {
     private static final String STRING = "abcdefghijklmnopqrstuvwxyz123456789";
     private static final int DEFAULT_LENGTH = 5;
+    private static final Logger logger = LogManager.getLogger(Utils.class);
 
     /**
      * 判断字符串是否为空
@@ -220,19 +223,7 @@ public class Utils {
     }
 
     public static void main(String[] args) {
-        /*for(int i=0;i<10;i++) {
-            System.out.println(randomString(10));
-		}*/
-		/*String random = randomString();
-		System.out.println(random);
-		String str = MD5("123456", random);
-		System.out.println(str + "  " + str.length());*/
-
-        //System.out.println(validEmail("672399171@qq.com"));
-        //System.out.println(uuid());
-        //System.out.println(MD5("672399171@qq.com"));
-
-        System.out.println(isMatch("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        logger.info(isMatch("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
                 ".*text/html.*"));
     }
 }

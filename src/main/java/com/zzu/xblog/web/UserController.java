@@ -8,6 +8,8 @@ import com.zzu.xblog.model.Pager;
 import com.zzu.xblog.model.User;
 import com.zzu.xblog.service.*;
 import com.zzu.xblog.util.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,7 @@ public class UserController {
     private CaptchaService captchaService;
     @Resource
     private DynamicService dynamicService;
+    private final Logger logger = LogManager.getLogger(getClass());
 
     /* 用户登录 */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -46,9 +49,9 @@ public class UserController {
         if (user != null) {
             result.setSuccess(true);
             if (userService.resetCounts(user.getUserId()) > 0) {
-                System.out.println("------------重置用户粉丝数量和关注数量-------------");
+                logger.debug("------------重置用户粉丝数量和关注数量-------------");
             } else {
-                System.out.println("------------filed   filed  filed  -------------");
+                logger.debug("------------filed   filed  filed  -------------");
             }
             session.setAttribute(Common.USER, userService.getUserById(user.getUserId()));
         } else {

@@ -126,7 +126,7 @@
     <bean id="domain" class="java.lang.String"/>
 
     <!-- the default ConnectionFactory -->
-    <redis:listener-container>
+    <redis:listener-container connection-factory="jedisConnFactory">
         <!-- the method attribute can be skipped as the default method name is "handleMessage" -->
         <redis:listener ref="messageListener" method="handleMessage" topic="newArticle" />
     </redis:listener-container>

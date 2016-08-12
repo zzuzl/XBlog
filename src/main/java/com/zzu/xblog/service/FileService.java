@@ -5,6 +5,8 @@ import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.model.UploadType;
 import com.zzu.xblog.util.Utils;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +22,7 @@ import java.util.Map;
  */
 @Service
 public class FileService {
+    private final Logger logger = LogManager.getLogger(getClass());
 
     /**
      * 上传头像图片
@@ -137,7 +140,7 @@ public class FileService {
         result.put(Common.SUCCESS, true);
         result.put(Common.FILENAME, newFileName);
 
-        System.out.println(newFilePath);
+        logger.info(newFilePath);
         return result;
     }
 

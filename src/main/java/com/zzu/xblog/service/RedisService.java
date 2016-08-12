@@ -5,6 +5,8 @@ import com.zzu.xblog.dao.ArticleDao;
 import com.zzu.xblog.dao.UserDao;
 import com.zzu.xblog.model.Category;
 import com.zzu.xblog.model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class RedisService {
     private ArticleDao articleDao;
     @Resource
     private UserDao userDao;
+    private final Logger logger = LogManager.getLogger(getClass());
     private long lastTime = System.currentTimeMillis();
     private long lastSyncUserRankMinute = System.currentTimeMillis() / (1000 * 60);
 
@@ -38,7 +41,7 @@ public class RedisService {
             num = (Integer) temp;
         }
 
-        System.out.println(id + "----" + num);
+        logger.info(id + "----" + num);
 
         redisTemplate.boundHashOps("viewCount").put(id + "", num + 1);
         long gap = (System.currentTimeMillis() - lastTime) / 1000;
@@ -139,7 +142,7 @@ public class RedisService {
      * @param categoryList
      */
     public void syncCategory(List<Category> categoryList) {
-        System.out.println("---------------syncCategory----------------");
+        logger.debug("---------------syncCategory----------------");
         for (Category category : categoryList) {
             redisTemplate.boundListOps("category").leftPushAll(category);
         }
@@ -166,7 +169,7 @@ public class RedisService {
      * 同步用户排行
      */
     private void syncUserRank() {
-        System.out.println("------------------syncUserRank---------------------");
+        logger.debug("------------------syncUserRank---------------------");
         List<User> users = userDao.getUserRank(Common.DEFAULT_ITEM_COUNT);
 
         if (users != null) {

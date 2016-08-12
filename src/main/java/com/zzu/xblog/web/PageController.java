@@ -4,6 +4,8 @@ import com.zzu.xblog.common.Common;
 import com.zzu.xblog.model.*;
 import com.zzu.xblog.service.*;
 import com.zzu.xblog.util.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +34,7 @@ public class PageController {
     private CommentService commentService;
     @Resource
     private RedisService redisService;
+    private final Logger logger = LogManager.getLogger(getClass());
 
     /* 主页 */
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -45,7 +48,7 @@ public class PageController {
         model.addAttribute("list", list);
 
         List<Object> userRank = redisService.getUserRank();
-        System.out.println(userRank);
+        // logger.info(userRank);
         model.addAttribute("userRank", userRank);
         return "index";
     }
@@ -229,8 +232,8 @@ public class PageController {
     /* error页面 */
     @RequestMapping(value = "/error", method = RequestMethod.GET)
     public String error(HttpServletRequest request) {
-        System.out.println(request.getAttribute("javax.servlet.error.status_code"));
-        System.out.println(request.getAttribute("javax.servlet.error.message"));
+        logger.error(request.getAttribute("javax.servlet.error.status_code"));
+        logger.error(request.getAttribute("javax.servlet.error.message"));
         return "common/404";
     }
 
