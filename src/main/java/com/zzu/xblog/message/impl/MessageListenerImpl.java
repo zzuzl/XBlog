@@ -1,13 +1,9 @@
 package com.zzu.xblog.message.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zzu.xblog.common.Common;
-import com.zzu.xblog.common.enums.MessageState;
-import com.zzu.xblog.common.enums.MessageType;
 import com.zzu.xblog.message.MessageListener;
 import com.zzu.xblog.model.*;
-import com.zzu.xblog.model.message.ArticleMessage;
 import com.zzu.xblog.model.message.NewArticleMessage;
 import com.zzu.xblog.service.DynamicService;
 import com.zzu.xblog.service.MailService;
@@ -16,16 +12,10 @@ import com.zzu.xblog.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
-import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
-
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -108,7 +108,7 @@
                                     </a>
                                 </c:if>
                             </div>
-                            <%-- ng-bind-html 用于解析html --%>
+                                <%-- ng-bind-html 用于解析html --%>
                             <p ng-bind-html="item.content | trustHtml"></p>
                         </div>
 
@@ -122,6 +122,62 @@
                     </c:if>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-10 col-xs-offset-1">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th width="30px"></th>
+                    <th width="20px"></th>
+                    <th width="60%">标题</th>
+                    <th width="20%">时间</th>
+                    <th width="*">类型</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><input type="checkbox" name="ids"/></td>
+                    <td></td>
+                    <td>恭喜你注册成功</td>
+                    <td>2016-10-29</td>
+                    <td>系统消息</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="ids"/></td>
+                    <td></td>
+                    <td>恭喜你注册成功</td>
+                    <td>2016-10-29</td>
+                    <td>系统消息</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="ids"/></td>
+                    <td></td>
+                    <td>恭喜你注册成功</td>
+                    <td>2016-10-29</td>
+                    <td>系统消息</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="ids"/></td>
+                    <td></td>
+                    <td>恭喜你注册成功</td>
+                    <td>2016-10-29</td>
+                    <td>系统消息</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th colspan="2">
+                        <input type="checkbox"/>
+                    </th>
+                    <th colspan="2">
+                        <button type="button" class="btn btn-default">删除</button>
+                        <button type="button" class="btn btn-default">标记为已读</button>
+                    </th>
+                </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
 </div>
