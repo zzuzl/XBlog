@@ -1,49 +1,60 @@
 package com.zzu.xblog.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 分类实体类
  */
-public class Category {
-	private int cateId;
-	private String title;
-	private Category parent;
-	private List<Category> children;
+public class Category implements Serializable {
+    private int cateId;
+    private String title;
+    private Category parent;
+    private List<Category> children;
 
-	public List<Category> getChildren() {
-		if(children == null) {
-			children = new ArrayList<Category>();
-		}
-		return children;
-	}
+    public List<Category> getChildren() {
+        if (children == null) {
+            children = new ArrayList<Category>();
+        }
+        return children;
+    }
 
-	public void setChildren(List<Category> children) {
-		this.children = children;
-	}
+    public Category(int cateId, String title, Category parent, List<Category> children) {
+        this.cateId = cateId;
+        this.title = title;
+        this.parent = parent;
+        this.children = children;
+    }
 
-	public int getCateId() {
-		return cateId;
-	}
+    public Category() {
+    }
 
-	public void setCateId(int cateId) {
-		this.cateId = cateId;
-	}
+    public void setChildren(List<Category> children) {
+        this.children = children;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public int getCateId() {
+        return cateId;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setCateId(int cateId) {
+        this.cateId = cateId;
+    }
 
-	public Category getParent() {
-		return parent;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setParent(Category parent) {
-		this.parent = parent;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Category getParent() {
+        return parent;
+    }
+
+    public void setParent(Category parent) {
+        this.parent = parent;
+    }
 }

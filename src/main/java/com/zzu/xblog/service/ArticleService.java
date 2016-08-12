@@ -1,5 +1,8 @@
 package com.zzu.xblog.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONWrappedObject;
 import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dao.ArticleDao;
 import com.zzu.xblog.dao.DynamicDao;
@@ -8,8 +11,10 @@ import com.zzu.xblog.dao.UserDao;
 import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.message.PubSub;
 import com.zzu.xblog.model.*;
+import com.zzu.xblog.model.message.ArticleMessage;
 import com.zzu.xblog.model.message.NewArticleMessage;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -80,7 +85,7 @@ public class ArticleService {
      * @param request
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor={Exception.class})
     public Result insertArticle(Article article, HttpServletRequest request) {
         Result result = article.valid();
 
@@ -94,17 +99,26 @@ public class ArticleService {
                     article.setUser(user);
 
                     // 发送message
-                    NewArticleMessage message = new NewArticleMessage("新博客发表",
-                            article.getArticleId(),
-                            article.getTitle(),
-                            user.getUserId(),
-                            user.getUrl(),
-                            user.getNickname(),
-                            new Date());
-                    pubSub.sendMessage(Common.NEW_ARTICLE_TOPIC, message);
+                    ObjectMapper mapper = new ObjectMapper();
 
-                    Dynamic dynamic = new Dynamic(user, article, Common.POST_OPERATOR, article.getDescription());
-                    dynamicDao.insertDynamic(dynamic);
+                    NewArticleMessage message = new NewArticleMessage(article.getArticleId(),
+                            user.getUserId(),
+                            article.getTitle(),
+                            article.getDescription(),
+                            user.getUrl(),
+                            user.getNickname());
+
+                    try {
+                        // 内容设置为空，减小存储空间
+                        article.setContent(null);
+                        String json = mapper.writeValueAsString(message);
+                        pubSub.sendMessage(Common.NEW_ARTICLE_TOPIC, json);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+
+                    /*Dynamic dynamic = new Dynamic(user, article, Common.POST_OPERATOR, article.getDescription());
+                    dynamicDao.insertDynamic(dynamic);*/
                 }
             } else {
                 result.setSuccess(false);

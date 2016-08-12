@@ -41,13 +41,28 @@
     </select>
 
     <insert id="addUser" useGeneratedKeys="true" keyProperty="userId">
-        INSERT IGNORE INTO t_user (email, `hash`, salt, nickname, motto, interest, url) VALUES
-            (#{email}, #{hash}, #{salt}, #{nickname}, #{motto}, #{interest}, #{url});
+        INSERT IGNORE INTO
+        t_user
+        (email,
+        `hash`,
+        salt,
+        nickname,
+        motto,
+        interest,
+        url) VALUES(
+        #{email},
+        #{hash},
+        #{salt},
+        #{nickname},
+        #{motto},
+        #{interest},
+        #{url});
     </insert>
 
     <update id="changePwd">
         UPDATE t_user
-        SET salt = #{salt}, `hash` = #{hash}
+        SET salt = #{salt},
+        `hash` = #{hash}
         WHERE user_id = #{userId}
     </update>
 
@@ -83,7 +98,9 @@
             f.photo_src AS "from.photoSrc",
             f.url       AS "from.url"
         FROM t_attention a, t_user f, t_user t
-        WHERE a.from = f.user_id AND a.to = t.user_id AND t.user_id = #{userId}
+        WHERE a.from = f.user_id
+        AND a.to = t.user_id
+        AND t.user_id = #{userId}
         ORDER BY a.create_time DESC
     </select>
 
@@ -96,7 +113,9 @@
             t.photo_src AS "to.photoSrc",
             t.url       AS "to.url"
         FROM t_attention a, t_user f, t_user t
-        WHERE a.from = f.user_id AND a.to = t.user_id AND f.user_id = #{userId}
+        WHERE a.from = f.user_id
+        AND a.to = t.user_id
+        AND f.user_id = #{userId}
         ORDER BY a.create_time DESC
     </select>
 

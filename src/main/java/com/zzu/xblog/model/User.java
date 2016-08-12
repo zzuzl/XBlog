@@ -23,6 +23,24 @@ public class User {
     private String sex;
     private String url;
 
+    public User() {}
+
+    public User(int userId, String email, String hash, String salt, String nickname, Date regTime, int fansCount, int attentionCount, String photoSrc, String motto, String interest, String sex, String url) {
+        this.userId = userId;
+        this.email = email;
+        this.hash = hash;
+        this.salt = salt;
+        this.nickname = nickname;
+        this.regTime = regTime;
+        this.fansCount = fansCount;
+        this.attentionCount = attentionCount;
+        this.photoSrc = photoSrc;
+        this.motto = motto;
+        this.interest = interest;
+        this.sex = sex;
+        this.url = url;
+    }
+
     private static final int MAX_EMAIL_LENGTH = 45;
     private static final int MIN_PWD_LENGTH = 6;
     private static final int MAX_PWD_LENGTH = 30;

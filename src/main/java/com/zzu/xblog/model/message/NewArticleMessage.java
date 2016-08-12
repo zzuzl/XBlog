@@ -1,43 +1,23 @@
 package com.zzu.xblog.model.message;
 
-import java.io.Serializable;
-import java.util.Date;
-
-public class NewArticleMessage implements Serializable {
-    private String messageTitle;
+public class NewArticleMessage {
     private int articleId;
-    private String articleTitle;
     private int userId;
+    private String articleTitle;
+    private String description;
     private String userUrl;
     private String nickname;
-    private Date postTime;
 
-    public NewArticleMessage(String messageTitle, int articleId, String articleTitle,int userId, String userUrl, String nickname, Date postTime) {
-        this.messageTitle = messageTitle;
+    public NewArticleMessage(int articleId, int userId, String articleTitle, String description, String userUrl, String nickname) {
         this.articleId = articleId;
-        this.articleTitle = articleTitle;
         this.userId = userId;
+        this.articleTitle = articleTitle;
+        this.description = description;
         this.userUrl = userUrl;
         this.nickname = nickname;
-        this.postTime = postTime;
     }
 
-    public NewArticleMessage() {}
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getMessageTitle() {
-        return messageTitle;
-    }
-
-    public void setMessageTitle(String messageTitle) {
-        this.messageTitle = messageTitle;
+    public NewArticleMessage() {
     }
 
     public int getArticleId() {
@@ -48,12 +28,28 @@ public class NewArticleMessage implements Serializable {
         this.articleId = articleId;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     public String getArticleTitle() {
         return articleTitle;
     }
 
     public void setArticleTitle(String articleTitle) {
         this.articleTitle = articleTitle;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getUserUrl() {
@@ -70,13 +66,5 @@ public class NewArticleMessage implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public Date getPostTime() {
-        return postTime;
-    }
-
-    public void setPostTime(Date postTime) {
-        this.postTime = postTime;
     }
 }

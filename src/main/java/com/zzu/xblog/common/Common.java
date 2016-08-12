@@ -38,4 +38,7 @@ public class Common {
 	// redis发布订阅常量
 	public static final String NEW_ARTICLE_TOPIC = "newArticle";
 
+	// 权限码
+	public static final String AUTH_USER_LOGIN = "auth_user_login";
+
 }

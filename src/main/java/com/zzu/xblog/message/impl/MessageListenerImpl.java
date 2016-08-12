@@ -1,28 +1,49 @@
 package com.zzu.xblog.message.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zzu.xblog.common.Common;
+import com.zzu.xblog.common.enums.MessageState;
+import com.zzu.xblog.common.enums.MessageType;
 import com.zzu.xblog.message.MessageListener;
-import com.zzu.xblog.model.Attention;
-import com.zzu.xblog.model.User;
+import com.zzu.xblog.model.*;
+import com.zzu.xblog.model.message.ArticleMessage;
 import com.zzu.xblog.model.message.NewArticleMessage;
+import com.zzu.xblog.service.DynamicService;
 import com.zzu.xblog.service.MailService;
+import com.zzu.xblog.service.MessageService;
 import com.zzu.xblog.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.velocity.VelocityEngineUtils;
+
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component("messageListener")
+@Component("myMessageListener")
 public class MessageListenerImpl implements MessageListener {
     @Resource
     private MailService mailService;
     @Resource
     private UserService userService;
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    @Resource
+    private DynamicService dynamicService;
+    @Resource
+    private MessageService messageService;
+    @Resource
+    private VelocityEngine velocityEngine;
+
+    private Logger logger = LogManager.getLogger(getClass());
 
     public void handleMessage(String message) {
         if (message == null) {
@@ -30,27 +51,41 @@ public class MessageListenerImpl implements MessageListener {
         } else {
             logger.info(message);
             ObjectMapper mapper = new ObjectMapper();
-            NewArticleMessage newArticleMessage = null;
+            NewArticleMessage articleMessage = null;
             try {
-                newArticleMessage = mapper.readValue(message,NewArticleMessage.class);
+                articleMessage = mapper.readValue(message, NewArticleMessage.class);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            if(newArticleMessage != null) {
-                List<Attention> attentionList = userService.getAllFans(newArticleMessage.getUserId());
+            if (articleMessage != null) {
+                User user = new User();
+                user.setUserId(articleMessage.getUserId());
+
+                Article article = new Article();
+                article.setArticleId(articleMessage.getArticleId());
+
+                // 插入动态
+                Dynamic dynamic = new Dynamic(user, article, Common.POST_OPERATOR, articleMessage.getDescription());
+                dynamicService.insertDynamic(dynamic);
+
+                // 给粉丝发站内消息
+                List<Attention> attentionList = userService.getAllFans(articleMessage.getUserId());
                 for (Attention attention : attentionList) {
                     User from = attention.getFrom();
 
                     Map<String, Object> model = new HashMap<String, Object>();
-                    model.put("articleId", newArticleMessage.getArticleId());
-                    model.put("nickname", newArticleMessage.getNickname());
-                    model.put("title", newArticleMessage.getArticleTitle());
-                    mailService.sendEmailToFans(from.getEmail(), model, null);
+                    model.put("url", "http://xblog.zzuzl.cn/p/" + articleMessage.getArticleId());
+                    model.put("nickname", articleMessage.getNickname());
+                    model.put("title", articleMessage.getArticleTitle());
+
+                    String title = articleMessage.getNickname() + "发表了新博客";
+                    String content = VelocityEngineUtils.mergeTemplateIntoString(
+                            velocityEngine, "fans.vm", "utf-8", model);
+                    messageService.sendNewArticle(from, title, content);
                 }
-                logger.info("发送fans邮件完毕！");
-            } else {
-                logger.error("newArticleMessage is null");
+
+                logger.info("发送fans站内消息！");
             }
         }
     }

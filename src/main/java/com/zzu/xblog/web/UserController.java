@@ -38,6 +38,8 @@ public class UserController {
     private CaptchaService captchaService;
     @Resource
     private DynamicService dynamicService;
+    @Resource
+    private MessageService messageService;
     private final Logger logger = LogManager.getLogger(getClass());
 
     /* 用户登录 */
@@ -99,6 +101,8 @@ public class UserController {
                 String hash = Utils.MD5(user.getEmail());
                 mailService.sendRegisterEmail(hash, user, request);
                 redisService.addUser(hash, user, password);
+
+                messageService.sendRegSuccess(user);
             }
         }
         return result;
@@ -156,6 +160,9 @@ public class UserController {
                     userService.changePwd(user.getUserId(), password);
                     result.setSuccess(true);
                     redisService.deleteLink(hash);
+
+                    // 发送修改密码成功的站内信
+                    messageService.sendChangePwdMsg(user);
                 }
             }
         }

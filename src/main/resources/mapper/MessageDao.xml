@@ -1,0 +1,92 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzu.xblog.dao.MessageDao">
+    <sql id="msgSql">
+
+    </sql>
+
+    <select id="searchMessage" resultType="com.zzu.xblog.model.Message">
+        select
+        id,
+        `from` as "from.id",
+        `to` as "to.id",
+        `type`,
+        `state`,
+        send_time as "sendTime",
+        title,
+        content
+        from
+        t_message
+        where 1
+        <if test="from &gt;= 0">
+            and `from`=#{from}
+        </if>
+        <if test="to &gt;= 0">
+            and `to`=#{to}
+        </if>
+        <if test="type &gt; 0">
+            and `type`=#{type}
+        </if>
+        <if test="state &gt; 0">
+            and `state`=#{state}
+        </if>
+        order by send_time desc
+        <if test="count &gt; 0">
+            limit ${start},${count}
+        </if>
+    </select>
+
+    <select id="getCount" resultType="int">
+        select
+        count(*) as num
+        from
+        t_message
+        where 1
+        <if test="from &gt;= 0">
+            and `from`=#{from}
+        </if>
+        <if test="to &gt;= 0">
+            and `to`=#{to}
+        </if>
+        <if test="type &gt; 0">
+            and `type`=#{type}
+        </if>
+        <if test="state &gt; 0">
+            and `state`=#{state}
+        </if>
+    </select>
+
+    <insert id="addMessage">
+        insert into t_message(
+        `from`,
+        `to`,
+        `type`,
+        `state`,
+        `title`,
+        `content`
+        )values(
+        #{from.id},
+        #{to.id},
+        #{type},
+        #{state},
+        #{title},
+        #{content}
+        )
+    </insert>
+
+    <delete id="deleteMessage">
+        delete from t_message
+        where
+        id=#{id}
+    </delete>
+
+    <update id="updateState">
+        update t_message
+        set
+        state=#{state}
+        where
+        id=#{id}
+    </update>
+
+</mapper>

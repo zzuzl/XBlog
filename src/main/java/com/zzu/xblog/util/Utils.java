@@ -222,6 +222,8 @@ public class Utils {
         return matcher.find();
     }
 
+    // 返回一个系统消息实例
+
     public static void main(String[] args) {
         logger.info(isMatch("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
                 ".*text/html.*"));

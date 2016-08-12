@@ -6,6 +6,8 @@ package com.zzu.xblog.model;
 
 import com.zzu.xblog.dto.Result;
 import com.zzu.xblog.util.Utils;
+
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -25,6 +27,24 @@ public class Article {
     private String tag;
     private Article pre;
     private Article next;
+
+    public Article() {}
+
+    public Article(int articleId, Category category, String title, String content, String description, Date postTime, int viewCount, int commentCount, int likeCount, User user, String tag, Article pre, Article next) {
+        this.articleId = articleId;
+        this.category = category;
+        this.title = title;
+        this.content = content;
+        this.description = description;
+        this.postTime = postTime;
+        this.viewCount = viewCount;
+        this.commentCount = commentCount;
+        this.likeCount = likeCount;
+        this.user = user;
+        this.tag = tag;
+        this.pre = pre;
+        this.next = next;
+    }
 
     @Override
     public String toString() {
