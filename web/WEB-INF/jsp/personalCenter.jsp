@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-xs-3 col-xs-offset-1">
             <a href="javascript:void(0)" class="thumbnail" id="photo-thumbnail">
-                <img src="/${requestScope.user.photoSrc}" alt="暂无"/>
+                <img src="${requestScope.user.photoSrc}" alt="暂无"/>
             </a>
         </div>
         <div class="col-xs-7">
@@ -95,7 +95,7 @@
                     <c:if test="${sessionScope.user != null}">
                         <div class="col-xs-10 col-xs-offset-1 dynamic-item" ng-repeat="item in vm.data">
                             <a href="/{{item.user.url}}" class="thumbnail" target="_blank">
-                                <img src="/{{item.user.photoSrc}}" alt="暂无">
+                                <img src="{{item.user.photoSrc}}" alt="暂无">
                             </a>
                             <div class="dynamic-content">
                                 <a href="/u/{{item.user.url}}" data-ng-bind="item.user.nickname"></a>

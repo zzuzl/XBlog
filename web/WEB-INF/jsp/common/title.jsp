@@ -23,12 +23,12 @@
                 <c:choose>
                     <c:when test="${sessionScope.user != null}">
                         <div class="photo-div">
-                            <img src="/${sessionScope.user.photoSrc}" width="32" height="32" id="photo_img">
+                            <img src="${sessionScope.user.photoSrc}" width="32" height="32" id="photo_img">
                             <s></s>
                         </div>
                         <div class="user-div">
                             <div class="top-div">
-                                <img src="/${sessionScope.user.photoSrc}" width="100" height="100"/>
+                                <img src="${sessionScope.user.photoSrc}" width="100" height="100"/>
                                 <div class="user-info">
                                     <h5><a href="/u/${sessionScope.user.url}">${sessionScope.user.nickname}</a>
                                     </h5>

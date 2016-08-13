@@ -39,7 +39,6 @@ public class FileController {
     @Resource
     private UserService userService;
 
-    /* 文件上传controller */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
     public Map<String,Object> upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
@@ -99,15 +98,7 @@ public class FileController {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(Common.USER);
         Result result = fileService.cropper(filename, x, y, width, height, request);
-        if (user != null) {
-            if (result.isSuccess()) {
-                result = userService.changePhoto(filename, user.getUserId());
-                if (result.isSuccess()) {
-                    user.setPhotoSrc(filename);
-                    request.getSession().setAttribute(Common.USER, user);
-                }
-            }
-        } else {
+        if (user == null) {
             result.setSuccess(false);
             result.setMsg("用户未登录");
         }

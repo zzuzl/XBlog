@@ -131,6 +131,25 @@ public class UserController {
         return result;
     }
 
+    @RequestMapping(value = "/modifyPhotoSrc",method = RequestMethod.POST)
+    @ResponseBody
+    public Result modifyPhotoSrc(@RequestParam("src") String src,HttpSession session) {
+        Result result = new Result(true);
+        User user = (User) session.getAttribute(Common.USER);
+        if(user == null) {
+            result.setSuccess(false);
+            result.setMsg("未登陆");
+        } else {
+            result = userService.changePhoto(src, user.getUserId());
+            if (result.isSuccess()) {
+                user.setPhotoSrc(src);
+                session.setAttribute(Common.USER, user);
+            }
+        }
+
+        return result;
+    }
+
     /* 重置密码 */
     @RequestMapping(value = "/resetPwd", method = RequestMethod.PUT)
     @ResponseBody
