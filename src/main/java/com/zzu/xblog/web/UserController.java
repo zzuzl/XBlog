@@ -2,10 +2,7 @@ package com.zzu.xblog.web;
 
 import com.zzu.xblog.common.Common;
 import com.zzu.xblog.dto.Result;
-import com.zzu.xblog.model.Attention;
-import com.zzu.xblog.model.Dynamic;
-import com.zzu.xblog.model.Pager;
-import com.zzu.xblog.model.User;
+import com.zzu.xblog.model.*;
 import com.zzu.xblog.service.*;
 import com.zzu.xblog.util.Utils;
 import org.apache.logging.log4j.LogManager;
@@ -271,4 +268,22 @@ public class UserController {
 
         return result;
     }
+
+    @RequestMapping("/messages")
+    @ResponseBody
+    public Result<Message> searchMessages(@RequestParam(value = "type",required = false,defaultValue = "0") Integer type,
+                                          @RequestParam(value = "state",required = false,defaultValue = "1") Integer state,
+                                          @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
+                                          @RequestParam(value = "pageSize",required = false,defaultValue = "10") Integer pageSize,
+                                          HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute(Common.USER);
+
+        Result<Message> result = new Result<Message>(false);
+        if(user != null) {
+            result = messageService.searchMessages(user.getUserId(),type,state,page,pageSize);
+        }
+
+        return result;
+    }
+
 }

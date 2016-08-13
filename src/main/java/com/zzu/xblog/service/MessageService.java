@@ -51,4 +51,17 @@ public class MessageService {
                 content, title);
         addMessage(message);
     }
+
+    public Result<Message> searchMessages(int userId, int type, int state, int page, int pageSize) {
+        Result<Message> result = new Result<Message>(page, pageSize);
+        result.setSuccess(true);
+        if(pageSize < 1) {
+            result.setSuccess(false);
+            result.setMsg("页数错误");
+        } else {
+            result.setList(messageDao.searchMessage(0,userId,type,state,(page-1)*pageSize,pageSize));
+            result.setTotalItem(messageDao.getCount(0,userId,type,state));
+        }
+        return result;
+    }
 }

@@ -9,8 +9,8 @@
     <select id="searchMessage" resultType="com.zzu.xblog.model.Message">
         select
         id,
-        `from` as "from.id",
-        `to` as "to.id",
+        `from` as "from.userId",
+        `to` as "to.userId",
         `type`,
         `state`,
         send_time as "sendTime",
@@ -66,8 +66,13 @@
         `title`,
         `content`
         )values(
-        #{from.id},
-        #{to.id},
+        <if test="from != null">
+            #{from.userId},
+        </if>
+        <if test="from == null">
+            0,
+        </if>
+        #{to.userId},
         #{type},
         #{state},
         #{title},

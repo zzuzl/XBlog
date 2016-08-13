@@ -125,7 +125,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-10 col-xs-offset-1">
+        <h3 align="center">我的消息</h3>
+        <div class="col-xs-10 col-xs-offset-1" ng-controller="MessageCtrl as vm">
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -137,33 +138,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
+                <tr ng-repeat="item in vm.data">
                     <td><input type="checkbox" name="ids"/></td>
                     <td></td>
-                    <td>恭喜你注册成功</td>
-                    <td>2016-10-29</td>
-                    <td>系统消息</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" name="ids"/></td>
-                    <td></td>
-                    <td>恭喜你注册成功</td>
-                    <td>2016-10-29</td>
-                    <td>系统消息</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" name="ids"/></td>
-                    <td></td>
-                    <td>恭喜你注册成功</td>
-                    <td>2016-10-29</td>
-                    <td>系统消息</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" name="ids"/></td>
-                    <td></td>
-                    <td>恭喜你注册成功</td>
-                    <td>2016-10-29</td>
-                    <td>系统消息</td>
+                    <td>{{item.title}}</td>
+                    <td>{{item.send_time | date:'yyyy-MM-dd'}}</td>
+                    <td>{{item.type}}</td>
                 </tr>
                 </tbody>
                 <tfoot>
@@ -178,6 +158,8 @@
                 </tr>
                 </tfoot>
             </table>
+            <xl-page pageSize="10" n="5" method="load" cla="pagination-sm" ng-show="vm.totalPage>1"
+                     data="list" totalItem="totalItem" totalPage="totalPage"></xl-page>
         </div>
     </div>
 </div>
@@ -255,13 +237,14 @@
     });
 
     /**
-     * 最新动态
+     * 最新动态,站内信
      */
     (function () {
         'use strict';
 
         angular.module('app', [])
-                .controller('DynamicCtrl', DynamicCtrl);
+                .controller('DynamicCtrl', DynamicCtrl)
+                .controller('MessageCtrl', MessageCtrl);
 
         DynamicCtrl.$inject = ['$http'];
 
@@ -290,6 +273,52 @@
             vm.deleteDynamic = function (id) {
                 if (id) {
                     var r = confirm("确认删除该动态吗?");
+                    if (r === true) {
+                        $http.delete('/user/dynamics/' + id)
+                                .then(function (res) {
+                                    if (res.data.success) {
+                                        for (var i = 0; i < vm.data.length; i++) {
+                                            if (vm.data[i].dynamicId === id) {
+                                                vm.data.splice(i, 1);
+                                            }
+                                        }
+                                    } else {
+                                        alert(res.data.msg);
+                                    }
+                                });
+                    }
+                }
+            };
+        }
+
+        MessageCtrl.$inject = ['$http'];
+
+        function MessageCtrl($http) {
+            var vm = this;
+            vm.init = false;
+
+            // 加载消息
+            vm.load = function (params, callback) {
+                var url = "/user/messages" + '?page=' + params.page;
+
+                $http.get(url).then(function (res) {
+                    if (callback) {
+                        callback(res.data);
+                        if (!vm.init) {
+                            vm.init = true;
+                        }
+                    } else {
+                        vm.data = res.list;
+                        vm.total = res.totalItem;
+                        vm.totalPage = res.totalPage;
+                    }
+                });
+            };
+
+            // 删除消息
+            vm.deleteDynamic = function (id) {
+                if (id) {
+                    var r = confirm("确认删除这些消息吗?");
                     if (r === true) {
                         $http.delete('/user/dynamics/' + id)
                                 .then(function (res) {
