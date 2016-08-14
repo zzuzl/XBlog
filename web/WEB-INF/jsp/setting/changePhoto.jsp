@@ -129,11 +129,12 @@
             var xhr = new XMLHttpRequest();
             xhr.open('GET', '/' + filename, true);
             xhr.responseType = 'blob';
+            var contentType = obj.getContentType(filename);
 
             xhr.onload = function (e) {
                 if (this.status == 200) {
                     // 组装成blob对象
-                    var blob = new Blob([this.response], {type: 'image/jpeg'});
+                    var blob = new Blob([this.response], {type: contentType});
                     // firebase api 存储真正的图片
                     console.log(blob);
                     obj.uploadToFirebase(blob);
@@ -142,17 +143,13 @@
             xhr.send();
         },
         uploadToFirebase: function (blob) {
-            // File or Blob named mountains.jpg
             var file = blob;
             var metadata = {
-                contentType: 'image/jpeg'
+                contentType: blob.type
             };
 
             var path = "images/headPhotos/${sessionScope.user.userId}.jpg";
-
-            // Create a root reference
             var storageRef = firebase.storage().ref();
-            // Upload file and metadata to the object 'images/mountains.jpg'
             var uploadTask = storageRef.child(path).put(file, metadata);
 
             // Listen for state changes, errors, and completion of the upload.
@@ -185,6 +182,18 @@
             $('#process').attr('aria-valuenow', process);
             $('#process').text(process + '%');
             $('#process').css('width', process + '%');
+        },
+        getContentType : function (filename) {
+            var contentType = 'image/jpeg';
+            var type = filename.substr(filename.lastIndexOf('.') + 1);
+            if(type == 'gif' || type == 'GIF') {
+                contentType = 'image/gif';
+            } else if(type == 'png' || type == 'PNG') {
+                contentType = 'image/png';
+            } else if(type == 'bmp' || type == 'bmp') {
+                contentType = 'image/bmp';
+            }
+            return contentType;
         }
     };
 
