@@ -25,4 +25,6 @@ public interface MessageDao {
                     @Param("state") int state);
 
     Message getById(@Param("id") int id);
+
+    int getUnreadMsgCount(@Param("id") int id);
 }

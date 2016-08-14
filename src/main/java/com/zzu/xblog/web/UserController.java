@@ -52,12 +52,19 @@ public class UserController {
             } else {
                 logger.debug("------------filed   filed  filed  -------------");
             }
+            logger.debug("---------------重新设置未读消息的数量---------------");
+            resetUnreadMsgCount(session, user.getUserId());
             session.setAttribute(Common.USER, userService.getUserById(user.getUserId()));
         } else {
             result.setSuccess(false);
             result.setMsg("用户名或密码错误");
         }
         return result;
+    }
+
+    private void resetUnreadMsgCount(HttpSession session, int id) {
+        int count = messageService.getUnreadMsgCount(id);
+        session.setAttribute(Common.UNREAD_MSG_COUNT, count);
     }
 
     /* 查询Email是否已经注册,返回200 表示可以注册，返回411表示不可以注册 */

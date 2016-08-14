@@ -15,6 +15,7 @@ public class Common {
 	public static final String USER = "user";
 	public static final String FILENAME = "filename";
 	public static final String ARTICLE_ARRAY = "articleArray";
+	public static final String UNREAD_MSG_COUNT = "unreadMsgCount";
 
 	// 错误页面
 	public static final String PAGE_404 = "common/404";

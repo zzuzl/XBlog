@@ -42,7 +42,7 @@
                                             发表博客
                                         </a>
                                     </h6>
-                                    <a href="#">5条新消息</a>
+                                    <a href="/u/${sessionScope.user.url}#msg">${sessionScope.unreadMsgCount}条新消息</a>
                                 </div>
                             </div>
                             <div class="bottom-div">

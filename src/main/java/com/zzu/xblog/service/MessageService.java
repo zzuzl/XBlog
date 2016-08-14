@@ -84,4 +84,8 @@ public class MessageService {
         }
         return result;
     }
+
+    public int getUnreadMsgCount(int id) {
+        return messageDao.getUnreadMsgCount(id);
+    }
 }

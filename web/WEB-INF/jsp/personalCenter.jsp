@@ -127,8 +127,8 @@
     </div>
     <div class="row">
         <h3 align="center">我的站内消息</h3>
+        <a id="msg"></a>
         <div class="col-xs-10 col-xs-offset-1" ng-controller="MessageCtrl as vm">
-            {{vm.ids}}
             <table class="table table-hover">
                 <thead>
                 <tr>

@@ -40,10 +40,6 @@ public class PageController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         List<Object> list = redisService.getAllCategory();
-        if (list == null) {
-            redisService.syncCategory(categoryService.listCategory());
-            list = redisService.getAllCategory();
-        }
 
         model.addAttribute("list", list);
 
@@ -99,10 +95,6 @@ public class PageController {
     @RequestMapping(value = "/setting/editArticle", method = RequestMethod.GET)
     public String editArticle(Model model) {
         List<Object> list = redisService.getAllCategory();
-        if (list == null) {
-            redisService.syncCategory(categoryService.listCategory());
-            list = redisService.getAllCategory();
-        }
         model.addAttribute("list", list);
         return "setting/editArticle";
     }

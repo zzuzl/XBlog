@@ -7,6 +7,7 @@ import com.zzu.xblog.model.Category;
 import com.zzu.xblog.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,13 @@ import java.util.*;
  * redis存储service
  */
 @Service
-public class RedisService {
+public class RedisService implements InitializingBean {
     @Resource
     private RedisTemplate<Object, Object> redisTemplate;
     @Resource
     private ArticleDao articleDao;
+    @Resource
+    private CategoryService categoryService;
     @Resource
     private UserDao userDao;
     private final Logger logger = LogManager.getLogger(getClass());
@@ -139,12 +142,16 @@ public class RedisService {
     /**
      * 把mysql的分类信息同步到redis
      *
-     * @param categoryList
      */
-    public void syncCategory(List<Category> categoryList) {
+    public void syncCategory() {
         logger.debug("---------------syncCategory----------------");
-        for (Category category : categoryList) {
-            redisTemplate.boundListOps("category").leftPushAll(category);
+        List<Category> categoryList = categoryService.listCategory();
+        redisTemplate.delete("category");
+
+        if(categoryList != null) {
+            for (Category category : categoryList) {
+                redisTemplate.boundListOps("category").leftPushAll(category);
+            }
         }
     }
 
@@ -157,7 +164,8 @@ public class RedisService {
         List<Object> categories = null;
         BoundListOperations<Object, Object> listOperations = redisTemplate.boundListOps("category");
         if (listOperations == null || listOperations.size() < 1) {
-            return null;
+            syncCategory();
+            categories = getAllCategory();
         } else {
             categories = listOperations.range(0, listOperations.size());
         }
@@ -172,6 +180,7 @@ public class RedisService {
         logger.debug("------------------syncUserRank---------------------");
         List<User> users = userDao.getUserRank(Common.DEFAULT_ITEM_COUNT);
 
+        redisTemplate.delete("userRank");
         if (users != null) {
             for (User user : users) {
                 redisTemplate.boundListOps("userRank").leftPushAll(user);
@@ -201,5 +210,10 @@ public class RedisService {
             users = userRank.range(0, userRank.size());
         }
         return users;
+    }
+
+    public void afterPropertiesSet() throws Exception {
+        syncCategory();
+        syncUserRank();
     }
 }

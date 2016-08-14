@@ -111,4 +111,14 @@
         where id=#{id}
     </select>
 
+    <select id="getUnreadMsgCount" resultType="int">
+        select
+        count(*) as num
+        from
+        t_message
+        where
+        `to`=#{id}
+        and state=1
+    </select>
+
 </mapper>
