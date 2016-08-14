@@ -27,7 +27,7 @@
                     <label for="url">博客地址</label>
                     <p class="form-control-static" id="url">
                         <a href="/${sessionScope.user.url}" target="_blank">
-                            http://${requestScope.host}:8888/XBlog/${sessionScope.user.url}
+                            http:/xblog.zzuzl.cn/${sessionScope.user.url}
                         </a>
                     </p>
                 </div>

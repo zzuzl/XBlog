@@ -19,6 +19,7 @@
         from
         t_message
         where 1
+        and state != 3
         <if test="from &gt;= 0">
             and `from`=#{from}
         </if>
@@ -43,6 +44,7 @@
         from
         t_message
         where 1
+        and state != 3
         <if test="from &gt;= 0">
             and `from`=#{from}
         </if>
@@ -93,5 +95,20 @@
         where
         id=#{id}
     </update>
+
+    <select id="getById" resultType="com.zzu.xblog.model.Message">
+        select
+        id,
+        `from` as "from.userId",
+        `to` as "to.userId",
+        `type`,
+        `state`,
+        send_time as "sendTime",
+        title,
+        content
+        from
+        t_message
+        where id=#{id}
+    </select>
 
 </mapper>

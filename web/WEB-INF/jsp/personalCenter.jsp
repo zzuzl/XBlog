@@ -7,6 +7,7 @@
     <%@include file="common/head.jsp" %>
     <link rel="stylesheet" href="/resource/css/index.css">
     <link rel="stylesheet" href="/resource/css/pc.css">
+    <script src="/resource/layer/layer.js"></script>
     <script src="/resource/angular-1.4.8/angular.min.js"></script>
 </head>
 <body>
@@ -23,8 +24,8 @@
             <h3>${requestScope.user.nickname}</h3>
             <h4 id="age">博龄：2年</h4>
             <h5>博客：
-                <a href="http://${requestScope.host}:8888/${requestScope.user.url}">
-                    http://${requestScope.host}:8888/${requestScope.user.url}
+                <a href="http://xblog.zzuzl.cn/${requestScope.user.url}">
+                    http://xblog.zzuzl.cn/${requestScope.user.url}
                 </a>
             </h5>
             <h4>${requestScope.user.motto}</h4>
@@ -70,7 +71,7 @@
                         <c:forEach items="${requestScope.attentions}" var="item">
                             <li class="user-li">
                                 <a href="/u/${item.to.url}" class="thumbnail" target="_blank">
-                                    <img src="/${item.to.photoSrc}" alt="暂无">
+                                    <img src="${item.to.photoSrc}" alt="暂无">
                                 </a>
                                 <div class="nickname-div">
                                     <a href="/u/${item.to.url}" target="_blank">${item.to.nickname}</a>
@@ -83,7 +84,7 @@
                     <c:forEach items="${requestScope.fans}" var="item">
                         <li class="user-li">
                             <a href="/u/${item.from.url}" class="thumbnail" target="_blank">
-                                <img src="/${item.from.photoSrc}" alt="暂无">
+                                <img src="${item.from.photoSrc}" alt="暂无">
                             </a>
                             <div class="nickname-div">
                                 <a href="/u/${item.from.url}" target="_blank">${item.from.nickname}</a>
@@ -95,12 +96,12 @@
                     <c:if test="${sessionScope.user != null}">
                         <div class="col-xs-10 col-xs-offset-1 dynamic-item" ng-repeat="item in vm.data">
                             <a href="/{{item.user.url}}" class="thumbnail" target="_blank">
-                                <img src="{{item.user.photoSrc}}" alt="暂无">
+                                <img ng-src="{{item.user.photoSrc}}" alt="暂无"/>
                             </a>
                             <div class="dynamic-content">
                                 <a href="/u/{{item.user.url}}" data-ng-bind="item.user.nickname"></a>
                                 <span data-ng-bind="item.operator"></span>
-                                <a href="/p/{{item.article.articleId}}" data-ng-bind="item.article.title"></a>
+                                <a href="/p/{{item.article.articleId}}">《{{item.article.title}}》</a>
                                 <span data-ng-bind="item.createTime | dateFormat"></span>
                                 <c:if test="${sessionScope.user.userId == requestScope.user.userId}">
                                     <a href="javascript:void(0)" ng-click="vm.deleteDynamic(item.dynamicId)">
@@ -125,12 +126,13 @@
         </div>
     </div>
     <div class="row">
-        <h3 align="center">我的消息</h3>
+        <h3 align="center">我的站内消息</h3>
         <div class="col-xs-10 col-xs-offset-1" ng-controller="MessageCtrl as vm">
+            {{vm.ids}}
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th width="30px"></th>
+                    <th width="30px"><input type="checkbox" ng-model="vm.selectAll" ng-change="vm.all()"/></th>
                     <th width="20px"></th>
                     <th width="60%">标题</th>
                     <th width="20%">时间</th>
@@ -139,18 +141,16 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="item in vm.data">
-                    <td><input type="checkbox" name="ids"/></td>
-                    <td></td>
-                    <td>{{item.title}}</td>
-                    <td>{{item.send_time | date:'yyyy-MM-dd'}}</td>
-                    <td>{{item.type}}</td>
+                    <td><input type="checkbox" name="ids" ng-model="vm.ids[$index]" ng-change="vm.checkAll()"/></td>
+                    <td><span class="state-unread" ng-if="item.state===1">●</span></td>
+                    <td><a href="javascript:void(0)" ng-click="vm.openDlg(item)" data-ng-bind="item.title"></a></td>
+                    <td data-ng-bind="item.sendTime | date:'yyyy-MM-dd'"></td>
+                    <td data-ng-bind="item.type | msgType"></td>
                 </tr>
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th colspan="2">
-                        <input type="checkbox"/>
-                    </th>
+                    <th colspan="2"></th>
                     <th colspan="2">
                         <button type="button" class="btn btn-default">删除</button>
                         <button type="button" class="btn btn-default">标记为已读</button>
@@ -296,6 +296,7 @@
         function MessageCtrl($http) {
             var vm = this;
             vm.init = false;
+            vm.selectAll = false;
 
             // 加载消息
             vm.load = function (params, callback) {
@@ -303,6 +304,7 @@
 
                 $http.get(url).then(function (res) {
                     if (callback) {
+                        vm.ids = new Array(res.data.list.length);
                         callback(res.data);
                         if (!vm.init) {
                             vm.init = true;
@@ -315,24 +317,105 @@
                 });
             };
 
+            // 消息信息
+            vm.openDlg = function (item) {
+                console.log(item);
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-rim', //加上边框
+                    area: ['500px', '300px'], //宽高
+                    content: item.content
+                });
+
+                if (item.state === 1) {
+                    // ajax
+                    $http.post('/user/updateMsgState?id=' + item.id + '&state=2').then(function (res) {
+                        if (res.data.success) {
+                            item.state = 2;
+                        } else {
+                            alert(res.data.msg);
+                        }
+                    });
+                }
+            };
+
+            // 全选或全不选消息
+            vm.all = function () {
+                if (vm.selectAll) {
+                    vm.ids.fill(true);
+                } else {
+                    vm.ids.fill(false);
+                }
+            };
+
+            // 检查是否全选
+            vm.checkAll = function () {
+                var on = 0, off = 0;
+                for (var i = 0; i < vm.ids.length; i++) {
+                    if (vm.ids[i] === true) {
+                        on++;
+                    } else {
+                        off++;
+                    }
+                }
+
+                if (on === vm.ids.length) {
+                    vm.selectAll = true;
+                } else {
+                    vm.selectAll = false;
+                }
+            };
+
+            // 获取选中的id
+            vm.getSelected = function () {
+                var arr = [];
+                for (var i = 0; i < vm.ids.length; i++) {
+                    if (vm.ids[i] === true) {
+                        arr.push(vm.data[i].id);
+                    }
+                }
+
+                return arr;
+            };
+
+            // TODO
             // 删除消息
-            vm.deleteDynamic = function (id) {
-                if (id) {
+            vm.deleteMsg = function () {
+                var selected = vm.getSelected();
+                if (selected.length > 0) {
                     var r = confirm("确认删除这些消息吗?");
                     if (r === true) {
-                        $http.delete('/user/dynamics/' + id)
-                                .then(function (res) {
-                                    if (res.data.success) {
-                                        for (var i = 0; i < vm.data.length; i++) {
-                                            if (vm.data[i].dynamicId === id) {
-                                                vm.data.splice(i, 1);
-                                            }
-                                        }
-                                    } else {
-                                        alert(res.data.msg);
+                        $http.delete('/user/dynamics/' + id).then(function (res) {
+                            if (res.data.success) {
+                                for (var i = 0; i < vm.data.length; i++) {
+                                    if (vm.data[i].dynamicId === id) {
+                                        vm.data.splice(i, 1);
                                     }
-                                });
+                                }
+                            } else {
+                                alert(res.data.msg);
+                            }
+                        });
                     }
+                }
+            };
+
+            // TODO
+            // 标记为已读
+            vm.asReaded = function () {
+                var selected = vm.getSelected();
+                if (selected.length > 0) {
+                    $http.delete('/user/dynamics/' + id).then(function (res) {
+                        if (res.data.success) {
+                            for (var i = 0; i < vm.data.length; i++) {
+                                if (vm.data[i].dynamicId === id) {
+                                    vm.data.splice(i, 1);
+                                }
+                            }
+                        } else {
+                            alert(res.data.msg);
+                        }
+                    });
                 }
             };
         }

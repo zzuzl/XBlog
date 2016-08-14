@@ -131,12 +131,12 @@ public class UserController {
         return result;
     }
 
-    @RequestMapping(value = "/modifyPhotoSrc",method = RequestMethod.POST)
+    @RequestMapping(value = "/modifyPhotoSrc", method = RequestMethod.POST)
     @ResponseBody
-    public Result modifyPhotoSrc(@RequestParam("src") String src,HttpSession session) {
+    public Result modifyPhotoSrc(@RequestParam("src") String src, HttpSession session) {
         Result result = new Result(true);
         User user = (User) session.getAttribute(Common.USER);
-        if(user == null) {
+        if (user == null) {
             result.setSuccess(false);
             result.setMsg("未登陆");
         } else {
@@ -290,16 +290,35 @@ public class UserController {
 
     @RequestMapping("/messages")
     @ResponseBody
-    public Result<Message> searchMessages(@RequestParam(value = "type",required = false,defaultValue = "0") Integer type,
-                                          @RequestParam(value = "state",required = false,defaultValue = "1") Integer state,
-                                          @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
-                                          @RequestParam(value = "pageSize",required = false,defaultValue = "10") Integer pageSize,
+    public Result<Message> searchMessages(@RequestParam(value = "type", required = false, defaultValue = "-1") Integer type,
+                                          @RequestParam(value = "state", required = false, defaultValue = "-1") Integer state,
+                                          @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                          @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
                                           HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute(Common.USER);
 
         Result<Message> result = new Result<Message>(false);
-        if(user != null) {
-            result = messageService.searchMessages(user.getUserId(),type,state,page,pageSize);
+        if (user != null) {
+            result = messageService.searchMessages(user.getUserId(), type, state, page, pageSize);
+        }
+
+        return result;
+    }
+
+    @RequestMapping("/updateMsgState")
+    @ResponseBody
+    public Result updateMsgState(@RequestParam(value = "id", required = false, defaultValue = "0") Integer id,
+                                 @RequestParam(value = "state", required = false, defaultValue = "1") Integer state,
+                                 HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute(Common.USER);
+
+        Message message = messageService.getById(id);
+
+        Result result = new Result<Message>(false);
+        if (user != null && message != null && message.getTo().getUserId() == user.getUserId()) {
+            result = messageService.updateMsgState(id, state);
+        } else {
+            result.setMsg("用户未授权或消息错误");
         }
 
         return result;

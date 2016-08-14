@@ -8,6 +8,7 @@
     <script src="/resource/bower_components/bootstrap/js/collapse.js"></script>
     <script src="/resource/angular-1.4.8/angular.min.js"></script>
     <script src="/resource/js/app.js"></script>
+    <script src="/resource/js/moment-with-locales.js"></script>
 </head>
 <body>
 <%@include file="common/title.jsp" %>
@@ -111,6 +112,7 @@
 <%@include file="common/footer.jsp" %>
 
 <script type="application/javascript">
+    moment.locale('zh-CN');
 
     /* 手风琴效果 */
     $(function () {

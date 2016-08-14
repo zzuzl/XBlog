@@ -8,34 +8,7 @@
         .filter('dateFormat', function () {
             return function (input) {
                 input = input || '';
-                var date = input;
-                var now = new Date().getTime();
-
-                var out = "";
-                var gapSeconds = Math.round((now - date) / 1000);
-                if (gapSeconds < 60) {
-                    out = gapSeconds + "秒前";
-                } else {
-                    var gapMinutes = Math.round(gapSeconds / 60);
-                    if (gapMinutes < 60) {
-                        out = gapMinutes + "分钟前";
-                    } else {
-                        var gapHours = Math.round(gapMinutes / 60);
-                        if (gapHours < 24) {
-                            out = gapHours + "小时前";
-                        } else {
-                            var gapDays = Math.round(gapHours / 30);
-                            if (gapDays < 30) {
-                                out = gapDays + "天前";
-                            } else {
-                                out = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay() + " " +
-                                    date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-                            }
-                        }
-                    }
-                }
-
-                return out;
+                return moment(input).fromNow();
             };
         });
 })();
@@ -50,6 +23,32 @@
         .filter('trustHtml', function ($sce) {
             return function (input) {
                 return $sce.trustAsHtml(input);
+            }
+        });
+})();
+
+/**
+ * 消息类型过滤
+ */
+(function () {
+    'use strict';
+
+    angular.module('app')
+        .filter('msgType', function () {
+            return function (input) {
+                var result = "系统消息";
+                switch(input) {
+                    case 1:
+                        result = "系统消息";
+                        break;
+                    case 2:
+                        result = "关注人消息";
+                        break;
+                    case 3:
+                        result = "活动消息";
+                        break;
+                }
+                return result;
             }
         });
 })();

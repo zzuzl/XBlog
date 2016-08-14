@@ -23,4 +23,6 @@ public interface MessageDao {
 
     int updateState(@Param("id") int id,
                     @Param("state") int state);
+
+    Message getById(@Param("id") int id);
 }

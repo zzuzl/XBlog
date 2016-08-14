@@ -55,12 +55,32 @@ public class MessageService {
     public Result<Message> searchMessages(int userId, int type, int state, int page, int pageSize) {
         Result<Message> result = new Result<Message>(page, pageSize);
         result.setSuccess(true);
-        if(pageSize < 1) {
+        if (pageSize < 1) {
             result.setSuccess(false);
             result.setMsg("页数错误");
         } else {
-            result.setList(messageDao.searchMessage(0,userId,type,state,(page-1)*pageSize,pageSize));
-            result.setTotalItem(messageDao.getCount(0,userId,type,state));
+            result.setList(messageDao.searchMessage(0, userId, type, state, (page - 1) * pageSize, pageSize));
+            result.setTotalItem(messageDao.getCount(0, userId, type, state));
+        }
+        return result;
+    }
+
+    public Message getById(int id) {
+        return messageDao.getById(id);
+    }
+
+    public Result updateMsgState(int id, int state) {
+        Result result = new Result(true);
+        if (state == MessageState.UNREAD.getValue() ||
+                state == MessageState.READ.getValue() ||
+                state == MessageState.DELETED.getValue()) {
+            if(messageDao.updateState(id,state) < 1) {
+                result.setSuccess(false);
+                result.setMsg("更新状态失败");
+            }
+        } else {
+            result.setSuccess(false);
+            result.setMsg("状态不合法");
         }
         return result;
     }
