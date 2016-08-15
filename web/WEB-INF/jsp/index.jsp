@@ -13,7 +13,7 @@
 <body>
 <%@include file="common/title.jsp" %>
 
-<div class="container" ng-controller="IndexCtrl as vm" id="container">
+<div class="container-fluid" ng-controller="IndexCtrl as vm" id="container">
     <div class="jumbotron" style="margin-top: 60px">
         <h1>欢迎来到XBlog!</h1>
         <p>

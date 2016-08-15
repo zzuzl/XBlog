@@ -44,7 +44,7 @@
         </ul>
     </div>
 </div>
-<div class="container" style="margin-top: 60px" id="container">
+<div class="container-fluid" style="margin-top: 60px" id="container">
     <div class="row">
         <div class="col-xs-9">
             <div class="row">
@@ -79,18 +79,16 @@
                                     <c:if test="${requestScope.article.user.userId != sessionScope.user.userId}">
                                         <a type="button" href="javascript:void(0)" class="btn btn-danger gz"
                                            id="add-btn" onclick="obj.addOrCancelAttention()">
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                            关注
+                                            <i class="fa fa-plus" aria-hidden="true"></i>关注
                                         </a>
                                         <a type="button" href="javascript:void(0)" class="btn btn-danger gz"
                                            id="cancel-btn" onclick="obj.addOrCancelAttention()">
                                             取消关注
                                         </a>
                                     </c:if>
-                                    <a type="button" href="javascript:void(0)" class="btn btn-info gz" id="like-btn"
-                                       onclick="obj.like()">
-                                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-                                        ${requestScope.article.likeCount}
+                                    <a type="button" href="javascript:void(0)" class="btn btn-info gz"
+                                       id="like-btn" onclick="obj.like()">
+                                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>${requestScope.article.likeCount}
                                     </a>
                                 </div>
                             </div>

@@ -6,7 +6,7 @@
     <%@include file="../common/head.jsp" %>
     <link href="/resource/kindeditor/themes/default/default.css" rel="stylesheet"/>
     <link href="/resource/kindeditor/themes/simple/simple.css" rel="stylesheet"/>
-    <script src="/resource/kindeditor/kindeditor-all-min-custom.js"></script>
+    <script src="/resource/kindeditor/kindeditor-all.js"></script>
     <script src="/resource/kindeditor/lang/zh-CN.js"></script>
     <script src="/resource/js/validator.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/3.2.1/firebase.js"></script>

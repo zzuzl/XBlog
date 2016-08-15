@@ -36,6 +36,8 @@
 
 .gz {
     border-radius: 20px;
+    display: block;
+    width: 70px;
 }
 
 #like-btn {

@@ -13,7 +13,7 @@
 <body>
 <%@include file="common/title.jsp" %>
 
-<div class="container" style="margin-top: 100px" id="container">
+<div class="container-fluid" style="margin-top: 100px" id="container">
     <div class="row">
         <div class="col-xs-3 col-xs-offset-1">
             <a href="javascript:void(0)" class="thumbnail" id="photo-thumbnail">
@@ -125,43 +125,45 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <h3 align="center">我的站内消息</h3>
-        <a id="msg"></a>
-        <div class="col-xs-10 col-xs-offset-1" ng-controller="MessageCtrl as vm">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th width="30px"><input type="checkbox" ng-model="vm.selectAll" ng-change="vm.all()"/></th>
-                    <th width="20px"></th>
-                    <th width="60%">标题</th>
-                    <th width="20%">时间</th>
-                    <th width="*">类型</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="item in vm.data">
-                    <td><input type="checkbox" name="ids" ng-model="vm.ids[$index]" ng-change="vm.checkAll()"/></td>
-                    <td><span class="state-unread" ng-if="item.state===1">●</span></td>
-                    <td><a href="javascript:void(0)" ng-click="vm.openDlg(item)" data-ng-bind="item.title"></a></td>
-                    <td data-ng-bind="item.sendTime | date:'yyyy-MM-dd'"></td>
-                    <td data-ng-bind="item.type | msgType"></td>
-                </tr>
-                </tbody>
-                <tfoot>
-                <tr>
-                    <th colspan="2"></th>
-                    <th colspan="2">
-                        <button type="button" class="btn btn-default">删除</button>
-                        <button type="button" class="btn btn-default">标记为已读</button>
-                    </th>
-                </tr>
-                </tfoot>
-            </table>
-            <xl-page pageSize="10" n="5" method="load" cla="pagination-sm" ng-show="vm.totalPage>1"
-                     data="list" totalItem="totalItem" totalPage="totalPage"></xl-page>
+    <c:if test="${sessionScope.user.userId == requestScope.user.userId}">
+        <div class="row">
+            <h3 align="center">我的站内消息</h3>
+            <a id="msg"></a>
+            <div class="col-xs-10 col-xs-offset-1" ng-controller="MessageCtrl as vm">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th width="30px"><input type="checkbox" ng-model="vm.selectAll" ng-change="vm.all()"/></th>
+                        <th width="20px"></th>
+                        <th width="60%">标题</th>
+                        <th width="20%">时间</th>
+                        <th width="*">类型</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in vm.data">
+                        <td><input type="checkbox" name="ids" ng-model="vm.ids[$index]" ng-change="vm.checkAll()"/></td>
+                        <td><span class="state-unread" ng-if="item.state===1">●</span></td>
+                        <td><a href="javascript:void(0)" ng-click="vm.openDlg(item)" data-ng-bind="item.title"></a></td>
+                        <td data-ng-bind="item.sendTime | date:'yyyy-MM-dd'"></td>
+                        <td data-ng-bind="item.type | msgType"></td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="2"></th>
+                        <th colspan="2">
+                            <button type="button" class="btn btn-default">删除</button>
+                            <button type="button" class="btn btn-default">标记为已读</button>
+                        </th>
+                    </tr>
+                    </tfoot>
+                </table>
+                <xl-page pageSize="10" n="5" method="load" cla="pagination-sm" ng-show="vm.totalPage>1"
+                         data="list" totalItem="totalItem" totalPage="totalPage"></xl-page>
+            </div>
         </div>
-    </div>
+    </c:if>
 </div>
 
 <%@include file="common/footer.jsp" %>
@@ -243,6 +245,19 @@
         'use strict';
 
         angular.module('app', [])
+                .config(function ($httpProvider) {
+                    $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+                    $httpProvider.defaults.transformRequest = function (obj) {
+                        var str = [];
+                        for (var p in obj) {
+                            str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+                        }
+                        return str.join("&");
+                    };
+                    $httpProvider.defaults.headers.post = {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    };
+                })
                 .controller('DynamicCtrl', DynamicCtrl)
                 .controller('MessageCtrl', MessageCtrl);
 
@@ -405,12 +420,13 @@
             vm.asReaded = function () {
                 var selected = vm.getSelected();
                 if (selected.length > 0) {
-                    $http.delete('/user/dynamics/' + id).then(function (res) {
+                    $http.post('/user/updateMsgState', {
+                        ids: selected,
+                        state: 2
+                    }).then(function (res) {
                         if (res.data.success) {
-                            for (var i = 0; i < vm.data.length; i++) {
-                                if (vm.data[i].dynamicId === id) {
-                                    vm.data.splice(i, 1);
-                                }
+                            for(var i=0;i<selected.length;i++) {
+                                vm.data[i].state = 2;
                             }
                         } else {
                             alert(res.data.msg);
