@@ -6,11 +6,11 @@
     <%@include file="../common/head.jsp" %>
     <link href="/resource/kindeditor/themes/default/default.css" rel="stylesheet"/>
     <link href="/resource/kindeditor/themes/simple/simple.css" rel="stylesheet"/>
-    <script src="/resource/kindeditor/kindeditor-all.js"></script>
+    <script src="/resource/kindeditor/kindeditor-all-min.js"></script>
     <script src="/resource/kindeditor/lang/zh-CN.js"></script>
     <script src="/resource/js/validator.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/3.2.1/firebase.js"></script>
-    <script>
+    <%--<script>
         // Initialize Firebase
         var config = {
             apiKey: "AIzaSyCe0MCq1tfz7QHszSy0xJs_a-U4JWV1Qkc",
@@ -19,7 +19,7 @@
             storageBucket: "xblog-90664.appspot.com"
         };
         firebase.initializeApp(config);
-    </script>
+    </script>--%>
     <script>
         var editorConfig = {
             width: '100%',
@@ -32,13 +32,12 @@
                 'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
                 'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
                 'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
-                'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', //'multiimage',
+                'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'multiimage',
                 'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
                 'anchor', 'link', 'unlink', '|', 'about'
             ],
             langType: 'zh-CN',
             themeType: 'simple',
-            // 改为上传文件到firebase
             uploadJson: '/file/uploadInArticle',
             afterChange: function () {
                 var allCount = this.count();
@@ -50,15 +49,6 @@
             window.editor = K.create('#editor_id', editorConfig);
         });
     </script>
-
-    <style>
-        .ke-icon-hello {
-            background: red;
-            background-position: 0px -672px;
-            width: 16px;
-            height: 16px;
-        }
-    </style>
     <link rel="stylesheet" href="/resource/css/info.css">
 </head>
 <body>

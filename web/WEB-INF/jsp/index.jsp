@@ -57,7 +57,7 @@
                             ${index.index + 1}.
                         </div>
                         <a href="/${item.url}" class="thumbnail" title="${item.nickname}" target="_blank">
-                            <img src="${item.photoSrc}"/>
+                            <img src="/${item.photoSrc}"/>
                         </a>
                         <%--<a href="/u/${item.url}" class="nickname" title="${item.nickname}" target="_blank">
                             ${item.nickname}
@@ -70,7 +70,7 @@
             <div class="list-item row" ng-repeat="item in vm.data">
                 <div class="col-xs-1 head-photo">
                     <a href="/{{item.user.url}}" target="_blank" class="thumbnail">
-                        <img src="{{item.user.photoSrc}}" alt="暂无"
+                        <img src="/{{item.user.photoSrc}}" alt="暂无"
                              onerror="this.src='/resource/images/default-head-photo.png'"/>
                     </a>
                 </div>

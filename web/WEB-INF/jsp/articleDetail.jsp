@@ -61,7 +61,7 @@
                             <div class="row">
                                 <div class="col-xs-2">
                                     <a href="/u/${requestScope.article.user.url}" class="thumbnail">
-                                        <img src="${requestScope.article.user.photoSrc}" alt="暂无">
+                                        <img src="/${requestScope.article.user.photoSrc}" alt="暂无">
                                     </a>
                                 </div>
                                 <div class="col-xs-2">
