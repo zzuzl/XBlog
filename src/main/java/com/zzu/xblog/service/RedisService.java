@@ -38,19 +38,11 @@ public class RedisService implements InitializingBean {
      * @param id
      */
     public void updateViewCount(int id) {
-        Object temp = redisTemplate.boundHashOps("viewCount").get(id + "");
-        int num = 0;
-        if (temp != null) {
-            num = (Integer) temp;
-        }
+        redisTemplate.opsForHash().increment("viewCount", id + "", 1);
 
-        logger.info(id + "----" + num);
-
-        redisTemplate.boundHashOps("viewCount").put(id + "", num + 1);
         long gap = (System.currentTimeMillis() - lastTime) / 1000;
         lastTime = System.currentTimeMillis();
-
-        if (num > 5 || gap > 60) {
+        if (gap > 60) {
             backupData();
         }
     }
@@ -58,7 +50,7 @@ public class RedisService implements InitializingBean {
     /**
      * 备份redis到mysql
      */
-    private void backupData() {
+    private synchronized void backupData() {
         Map<Object, Object> map = redisTemplate.boundHashOps("viewCount").entries();
         for (Map.Entry<Object, Object> entry : map.entrySet()) {
             int articleId = Integer.parseInt((String) entry.getKey());
@@ -141,14 +133,13 @@ public class RedisService implements InitializingBean {
 
     /**
      * 把mysql的分类信息同步到redis
-     *
      */
     public void syncCategory() {
         logger.debug("---------------syncCategory----------------");
         List<Category> categoryList = categoryService.listCategory();
         redisTemplate.delete("category");
 
-        if(categoryList != null) {
+        if (categoryList != null) {
             for (Category category : categoryList) {
                 redisTemplate.boundListOps("category").leftPushAll(category);
             }

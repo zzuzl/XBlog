@@ -125,7 +125,7 @@
                                         <div class="comment-item row">
                                             <div class="col-xs-2">
                                                 <a href="/${item.user.url}" class="thumbnail">
-                                                    <img src="${item.user.photoSrc}"/>
+                                                    <img src="/${item.user.photoSrc}"/>
                                                 </a>
                                             </div>
                                             <div class="col-xs-10">
