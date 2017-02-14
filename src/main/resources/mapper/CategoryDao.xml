@@ -1,7 +1,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zzu.xblog.dao.CategoryDao">
+<mapper namespace="cn.zzuzl.xblog.dao.CategoryDao">
     <select id="listCategory" resultType="Category">
         SELECT c.cate_id,c.title,p.cate_id as "parent.cate_id",p.title as "parent.title"
         from t_category p,t_category c

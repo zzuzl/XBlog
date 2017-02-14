@@ -1,12 +1,12 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zzu.xblog.dao.MessageDao">
+<mapper namespace="cn.zzuzl.xblog.dao.MessageDao">
     <sql id="msgSql">
 
     </sql>
 
-    <select id="searchMessage" resultType="com.zzu.xblog.model.Message">
+    <select id="searchMessage" resultType="cn.zzuzl.xblog.model.Message">
         select
         id,
         `from` as "from.userId",
@@ -96,7 +96,7 @@
         id=#{id}
     </update>
 
-    <select id="getById" resultType="com.zzu.xblog.model.Message">
+    <select id="getById" resultType="cn.zzuzl.xblog.model.Message">
         select
         id,
         `from` as "from.userId",

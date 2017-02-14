@@ -40,12 +40,12 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/setting/*"/>
-            <bean class="com.zzu.xblog.interceptor.RequestInterceptor"/>
+            <bean class="cn.zzuzl.xblog.interceptor.RequestInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/user/attention"/>
             <mvc:mapping path="/article"/>
-            <bean class="com.zzu.xblog.interceptor.AuthInterceptor"/>
+            <bean class="cn.zzuzl.xblog.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 

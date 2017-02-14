@@ -1,7 +1,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zzu.xblog.dao.CommentDao">
+<mapper namespace="cn.zzuzl.xblog.dao.CommentDao">
     <select id="listArticleComments" resultType="Comment">
         SELECT
             c.comment_id,

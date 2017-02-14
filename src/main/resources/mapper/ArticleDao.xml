@@ -1,7 +1,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zzu.xblog.dao.ArticleDao">
+<mapper namespace="cn.zzuzl.xblog.dao.ArticleDao">
     <select id="listArticle" resultType="Article">
         select a.article_id,a.title,a.description,a.post_time,a.view_count,a.comment_count,a.like_count,a.tag,
         u.nickname as "user.nickname",u.user_id as "user.user_id",u.photo_src as "user.photo_src",u.url as "user.url"
