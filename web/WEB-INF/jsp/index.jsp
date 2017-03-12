@@ -59,9 +59,6 @@
                         <a href="/${item.url}" class="thumbnail" title="${item.nickname}" target="_blank">
                             <img src="/${item.photoSrc}"/>
                         </a>
-                        <%--<a href="/u/${item.url}" class="nickname" title="${item.nickname}" target="_blank">
-                            ${item.nickname}
-                        </a>--%>
                     </li>
                 </c:forEach>
             </ol>

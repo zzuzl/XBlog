@@ -66,7 +66,7 @@
             <form class="navbar-form navbar-right" role="search" id="searchForm" action="/search" method="get">
                 <div class="input-group">
                     <input type="text" class="form-control" name="keyword"
-                           placeholder="Search for..." value="${requestScope.keyword}">
+                           placeholder="输入搜索内容" value="${requestScope.keyword}">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="submit">搜索</button>
                     </span>

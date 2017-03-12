@@ -12,18 +12,9 @@
 
     <!-- 注解驱动,扫描包 -->
     <context:annotation-config/>
-    <context:component-scan base-package="com.zzu.xblog">
+    <context:component-scan base-package="cn.zzuzl.xblog">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
-
-    <!-- 加载配置文件 -->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:jdbc.properties</value>
-            </list>
-        </property>
-    </bean>
 
     <!-- 配置文件上传 -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -33,9 +24,9 @@
 
     <!-- 邮件发送方配置bean -->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="smtp.163.com"/>
-        <property name="username" value="m15617536860@163.com"/>
-        <property name="password" value="didiaozuoren31"/>
+        <property name="host" value="${mail.smtp.host}"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.smtp.auth">true</prop>

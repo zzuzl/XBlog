@@ -25,7 +25,7 @@
         <Root level="debug">
             <AppenderRef ref="Console"/>
         </Root>
-        <logger name="com.zzu" level="debug" additivity="false">
+        <logger name="cn.zzuzl" level="debug" additivity="false">
             <appender-ref ref="Console"/>
         </logger>
     </Loggers>

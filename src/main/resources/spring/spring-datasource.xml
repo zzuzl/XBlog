@@ -33,7 +33,7 @@
         <!-- 注入mybatis的配置文件 -->
         <property name="configLocation" value="classpath:mybatis.config.xml"/>
         <!-- 扫描model包使用别名 -->
-        <property name="typeAliasesPackage" value="com.zzu.xblog.model"/>
+        <property name="typeAliasesPackage" value="cn.zzuzl.xblog.model"/>
         <!-- 扫描sql配置文件mapper所需的xml文件 -->
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
     </bean>
@@ -44,7 +44,7 @@
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
 
         <!-- 给出需要扫描Dao接口的包 -->
-        <property name="basePackage" value="com.zzu.xblog.dao"/>
+        <property name="basePackage" value="cn.zzuzl.xblog.dao"/>
     </bean>
 
     <!-- 配置事务 annotation -->
@@ -63,6 +63,9 @@
     <bean id="jedisConnFactory"
           class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <property name="usePool" value="true"/>
+        <property name="hostName" value="${redis.host}"/>
+        <property name="port" value="${redis.port}"/>
+        <property name="password" value="${redis.password}"/>
     </bean>
 
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
@@ -86,11 +89,7 @@
 
     <bean id="domain" class="java.lang.String"/>
 
-    <bean id="messageListener" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
-        <constructor-arg>
-            <ref bean="myMessageListener"/>
-        </constructor-arg>
-    </bean>
+    <bean id="messageListener" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter"/>
 
     <bean id="redisContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
         <property name="connectionFactory" ref="jedisConnFactory"/>
@@ -110,7 +109,4 @@
         <!-- the method attribute can be skipped as the default method name is "handleMessage" -->
         <redis:listener ref="messageListener" method="handleMessage" topic="newArticle"/>
     </redis:listener-container>
-
-    <!-- 引入其他模块配置文件 -->
-    <import resource="classpath:spring/spring-mvc.xml"/>
 </beans>
