@@ -9,17 +9,7 @@
     <script src="/resource/kindeditor/kindeditor-all-min.js"></script>
     <script src="/resource/kindeditor/lang/zh-CN.js"></script>
     <script src="/resource/js/validator.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.2.1/firebase.js"></script>
-    <%--<script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyCe0MCq1tfz7QHszSy0xJs_a-U4JWV1Qkc",
-            authDomain: "xblog-90664.firebaseapp.com",
-            databaseURL: "https://xblog-90664.firebaseio.com",
-            storageBucket: "xblog-90664.appspot.com"
-        };
-        firebase.initializeApp(config);
-    </script>--%>
+
     <script>
         var editorConfig = {
             width: '100%',
@@ -39,6 +29,7 @@
             langType: 'zh-CN',
             themeType: 'simple',
             uploadJson: '/file/uploadInArticle',
+            emoticonsPath: 'http://xblog-mis.oss-cn-shanghai.aliyuncs.com/xblog/images/',
             afterChange: function () {
                 var allCount = this.count();
                 $("#contentLength").text("字数：" + allCount + "/" + 30000);

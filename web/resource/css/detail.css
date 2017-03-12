@@ -79,7 +79,3 @@
 #add-btn, #cancel-btn {
     display: none;
 }
-
-#content-body img {
-    max-width: 800px;
-}

@@ -58,16 +58,7 @@ public class FileController {
     public Map<String, Object> uploadInArticle(@RequestParam("imgFile") MultipartFile imgFile,
                                                @RequestParam("dir") final String dir,
                                                HttpServletRequest request) throws IOException {
-        UploadType uploadType = null;
-        if (dir.equals(UploadType.FILE.getType())) {
-            uploadType = UploadType.FILE;
-        } else if (dir.equals(UploadType.FLASH.getType())) {
-            uploadType = UploadType.FLASH;
-        } else if (dir.equals(UploadType.MEDIA.getType())) {
-            uploadType = UploadType.MEDIA;
-        } else if (dir.equals(UploadType.IMAGE.getType())) {
-            uploadType = UploadType.IMAGE;
-        }
+        UploadType uploadType = UploadType.valueOf(dir);
         Map<String, Object> result = new HashMap<String, Object>();
 
         if (imgFile.isEmpty()) {

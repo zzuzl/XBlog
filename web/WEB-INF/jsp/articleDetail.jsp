@@ -23,7 +23,8 @@
                 'insertunorderedlist', '|', 'emoticons', 'link'
             ],
             langType: 'zh-CN',
-            themeType: 'simple'
+            themeType: 'simple',
+            emoticonsPath: 'http://xblog-mis.oss-cn-shanghai.aliyuncs.com/xblog/images/'
         };
 
         KindEditor.ready(function (K) {
@@ -348,6 +349,10 @@
             $('#like-btn').css('color', 'black');
         }
     };
+
+    $(function () {
+        $('#content-body img').addClass('img-responsive');
+    });
 </script>
 </body>
 </html>

@@ -8,14 +8,12 @@
 <script src="/resource/js/respond.min.js"></script>
 <![endif]-->
 
-<link rel="stylesheet" href="/resource/bower_components/bootstrap/dist/css/bootstrap.css">
-<link rel="stylesheet" href="/resource/bower_components/bootstrap/dist/css/bootstrap-theme.css">
-<link rel="stylesheet" href="/resource/bower_components/font-awesome/css/font-awesome.css">
+<link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="/resource/css/common.css">
 <link rel="stylesheet" href="/resource/css/index.css">
-<script type="application/javascript" src="/resource/bower_components/jquery/dist/jquery.js"></script>
-<script type="application/javascript" src="/resource/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-
+<script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="application/javascript">
     // 适配页面高度
     $(function () {
