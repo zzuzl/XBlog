@@ -52,7 +52,7 @@
     <div class="media">
         <div class="media-left">
             <a href="#">
-                <img class="media-object" src="/resource/images/default-head-photo.png" alt="...">
+                <img class="media-object" src="resource/images/default-head-photo.png" alt="...">
             </a>
         </div>
         <div class="media-body">

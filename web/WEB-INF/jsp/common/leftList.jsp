@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <div class="user-info-2">
-    <img src="/${sessionScope.user.photoSrc}" width="80" height="80">
+    <img src="${sessionScope.user.photoSrc}" width="80" height="80">
     <div class="user-detail">
         ${sessionScope.user.email}
         ${sessionScope.user.nickname}

@@ -40,8 +40,8 @@ public class FileController {
     /* 文件上传controller */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
-        Map<String,Object> result = new HashMap<String, Object>();
+    public Map<String, Object> upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put(Common.SUCCESS, true);
         if (!file.isEmpty()) {
             result = fileService.uploadPhoto(file, request);
@@ -55,9 +55,9 @@ public class FileController {
     /* 编辑器文件上传controller */
     @RequestMapping(value = "/uploadInArticle", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> uploadInArticle(@RequestParam("imgFile") MultipartFile imgFile,
-                                      @RequestParam("dir") final String dir,
-                                      HttpServletRequest request) throws IOException {
+    public Map<String, Object> uploadInArticle(@RequestParam("imgFile") MultipartFile imgFile,
+                                               @RequestParam("dir") final String dir,
+                                               HttpServletRequest request) throws IOException {
         UploadType uploadType = null;
         if (dir.equals(UploadType.FILE.getType())) {
             uploadType = UploadType.FILE;
@@ -68,7 +68,7 @@ public class FileController {
         } else if (dir.equals(UploadType.IMAGE.getType())) {
             uploadType = UploadType.IMAGE;
         }
-        Map<String,Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<String, Object>();
 
         if (imgFile.isEmpty()) {
             result.put("error", 1);
@@ -76,7 +76,7 @@ public class FileController {
         } else {
             if (uploadType != null) {
                 result = fileService.uploadFiles(imgFile, uploadType, request);
-                if ((Integer)result.get("error") == 0 && uploadType == UploadType.IMAGE) {
+                if ((Integer) result.get("error") == 0 && uploadType == UploadType.IMAGE) {
                     // 对上传的图片进行缩放处理
                     zoomPicture(request.getSession().getServletContext().getRealPath("/") + result.get(Common.FILENAME));
                 }
@@ -99,10 +99,15 @@ public class FileController {
         Result result = fileService.cropper(filename, x, y, width, height, request);
         if (user != null) {
             if (result.isSuccess()) {
-                result = userService.changePhoto(filename, user.getUserId());
+                String path = request.getSession().getServletContext().getRealPath("/");
+                String str = user.getUserId() + filename.substring(filename.lastIndexOf("."));
+                result = fileService.uploadToOSS(new File(path + filename), str);
                 if (result.isSuccess()) {
-                    user.setPhotoSrc(filename);
-                    request.getSession().setAttribute(Common.USER, user);
+                    result = userService.changePhoto(result.getMsg(), user.getUserId());
+                    if (result.isSuccess()) {
+                        user.setPhotoSrc(result.getMsg());
+                        request.getSession().setAttribute(Common.USER, user);
+                    }
                 }
             }
         } else {

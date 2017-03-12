@@ -4,6 +4,10 @@ import cn.zzuzl.xblog.common.Common;
 import cn.zzuzl.xblog.dto.Result;
 import cn.zzuzl.xblog.model.UploadType;
 import cn.zzuzl.xblog.util.Utils;
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.OSSObject;
+import com.aliyun.oss.model.PutObjectRequest;
+import com.aliyun.oss.model.PutObjectResult;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +27,11 @@ import java.util.Map;
 @Service
 public class FileService {
     private final Logger logger = LogManager.getLogger(getClass());
+    private static final String endpoint = "http://oss-cn-shanghai.aliyuncs.com";
+    private static final String accessKeyId = "LTAIt4St90z5n4ZK";
+    private static final String accessKeySecret = "hEm0M3TDbqmZv77Vvhxwx2qU5GReM6";
+    private static final String bucketName = "xblog-mis";
+    private static final String PRE_XBLOG_PHOTO_KEY = "xblog/photo-pic/";
 
     /**
      * 上传头像图片
@@ -141,6 +150,48 @@ public class FileService {
         result.put(Common.FILENAME, newFileName);
 
         logger.info(newFilePath);
+        return result;
+    }
+
+    /**
+     * 上传到OSS
+     *
+     * @param file
+     * @param fileName
+     * @return
+     */
+    public Result uploadToOSS(File file, String fileName) {
+        Result result = new Result();
+        result.setSuccess(true);
+        OSSClient ossClient = null;
+        String key = PRE_XBLOG_PHOTO_KEY + fileName;
+
+        try {
+            ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+            if (ossClient.doesBucketExist(bucketName)) {
+                System.out.println("开始上传。。。");
+                ossClient.putObject(new PutObjectRequest(bucketName, key, file));
+                System.out.println("上传成功。。。");
+                OSSObject object = ossClient.getObject(bucketName, key);
+                if (object != null) {
+                    result.setMsg(object.getResponse().getUri());
+                } else {
+                    result.setMsg("");
+                }
+            } else {
+                result.setSuccess(false);
+                result.setMsg("上传失败：文件系统不存在");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setSuccess(false);
+            result.setMsg("上传失败：内部错误");
+        } finally {
+            if (ossClient != null) {
+                ossClient.shutdown();
+            }
+        }
+
         return result;
     }
 
