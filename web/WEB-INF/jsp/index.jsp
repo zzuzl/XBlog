@@ -5,10 +5,10 @@
     <title>XBlog</title>
     <%@include file="common/head.jsp" %>
     <link rel="stylesheet" href="/resource/css/index.css">
-    <script src="/resource/bower_components/bootstrap/js/collapse.js"></script>
-    <script src="/resource/angular-1.4.8/angular.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.2.0/js/collapse.min.js"></script>
+    <script src="//cdn.bootcss.com/angular.js/1.5.11/angular.min.js"></script>
     <script src="/resource/js/app.js"></script>
-    <script src="/resource/js/moment-with-locales.js"></script>
+    <script src="//cdn.bootcss.com/moment.js/2.17.1/moment-with-locales.min.js"></script>
 </head>
 <body>
 <%@include file="common/title.jsp" %>

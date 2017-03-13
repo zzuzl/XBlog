@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<link rel="stylesheet" href="/resource/font-awesome-4.6.3/css/font-awesome.min.css">
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
