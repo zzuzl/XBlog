@@ -8,7 +8,6 @@
     <link href="/resource/cropper-master/dist/cropper.min.css" rel="stylesheet">
     <script src="/resource/cropper-master/dist/cropper.min.js"></script>
     <script src="/resource/js/ajaxfileupload.js"></script>
-    <link rel="stylesheet" href="/resource/font-awesome-4.6.3/css/font-awesome.css">
     <style>
         img {
             max-width: 100%;

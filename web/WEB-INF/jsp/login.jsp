@@ -5,7 +5,6 @@
     <title>XBlog登录</title>
     <%@include file="common/head.jsp" %>
     <script src="/resource/js/validator.min.js"></script>
-    <link rel="stylesheet" href="/resource/font-awesome-4.6.3/css/font-awesome.min.css">
     <style type="text/css">
         #login-btn {
             width: 100%;

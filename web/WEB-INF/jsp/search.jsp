@@ -5,10 +5,7 @@
     <title>${requestScope.keyword} - 搜索结果</title>
     <%@include file="common/head.jsp" %>
     <link rel="stylesheet" href="/resource/css/index.css">
-    <script src="/resource/angular-1.4.8/angular.min.js"></script>
-    <style>
-
-    </style>
+    <script src="//cdn.bootcss.com/angular.js/1.5.11/angular.min.js"></script>
 </head>
 <body>
 <%@include file="common/title.jsp" %>
