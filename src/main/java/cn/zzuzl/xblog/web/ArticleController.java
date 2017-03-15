@@ -1,7 +1,7 @@
 package cn.zzuzl.xblog.web;
 
 import cn.zzuzl.xblog.common.Common;
-import cn.zzuzl.xblog.dto.Result;
+import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.Article;
 import cn.zzuzl.xblog.model.Pager;
 import cn.zzuzl.xblog.model.User;

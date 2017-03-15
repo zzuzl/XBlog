@@ -1,6 +1,6 @@
 package cn.zzuzl.xblog.web;
 
-import cn.zzuzl.xblog.dto.Result;
+import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.UploadType;
 import cn.zzuzl.xblog.service.FileService;
 import cn.zzuzl.xblog.common.Common;

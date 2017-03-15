@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cn.zzuzl.xblog.common.Common;
 import cn.zzuzl.xblog.dao.DynamicDao;
 import cn.zzuzl.xblog.dao.UserDao;
-import cn.zzuzl.xblog.dto.Result;
+import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.message.NewArticleMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

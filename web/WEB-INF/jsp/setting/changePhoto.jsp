@@ -5,9 +5,9 @@
     <title>修改头像照片</title>
     <%@include file="../common/head.jsp" %>
     <link rel="stylesheet" href="/resource/css/info.css">
-    <link href="/resource/cropper-master/dist/cropper.min.css" rel="stylesheet">
-    <script src="/resource/cropper-master/dist/cropper.min.js"></script>
-    <script src="/resource/js/ajaxfileupload.js"></script>
+    <link href="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/cropper-master/dist/cropper.min.css" rel="stylesheet">
+    <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/cropper-master/dist/cropper.min.js"></script>
+    <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/ajaxfileupload.js"></script>
     <style>
         img {
             max-width: 100%;

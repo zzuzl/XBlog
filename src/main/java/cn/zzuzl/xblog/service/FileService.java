@@ -1,13 +1,12 @@
 package cn.zzuzl.xblog.service;
 
 import cn.zzuzl.xblog.common.Common;
-import cn.zzuzl.xblog.dto.Result;
+import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.UploadType;
 import cn.zzuzl.xblog.util.Utils;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.PutObjectRequest;
-import com.aliyun.oss.model.PutObjectResult;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

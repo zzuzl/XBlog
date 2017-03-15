@@ -4,7 +4,7 @@ package cn.zzuzl.xblog.model;
  * Created by Administrator on 2016/6/1.
  */
 
-import cn.zzuzl.xblog.dto.Result;
+import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.util.Utils;
 
 import java.util.Date;

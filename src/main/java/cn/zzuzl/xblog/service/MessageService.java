@@ -3,7 +3,7 @@ package cn.zzuzl.xblog.service;
 import cn.zzuzl.xblog.common.enums.MessageState;
 import cn.zzuzl.xblog.common.enums.MessageType;
 import cn.zzuzl.xblog.dao.MessageDao;
-import cn.zzuzl.xblog.dto.Result;
+import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.Message;
 import cn.zzuzl.xblog.model.User;
 import org.springframework.stereotype.Service;

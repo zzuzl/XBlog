@@ -1,7 +1,7 @@
 package cn.zzuzl.xblog.service;
 
 import cn.zzuzl.xblog.dao.UserDao;
-import cn.zzuzl.xblog.dto.Result;
+import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.exception.DataException;
 import cn.zzuzl.xblog.model.Attention;
 import cn.zzuzl.xblog.model.User;

@@ -4,10 +4,9 @@
 <head>
     <title>编辑文章</title>
     <%@include file="../common/head.jsp" %>
-    <link href="/resource/kindeditor/themes/default/default.css" rel="stylesheet"/>
-    <link href="/resource/kindeditor/themes/simple/simple.css" rel="stylesheet"/>
-    <script src="/resource/kindeditor/kindeditor-all-min.js"></script>
-    <script src="/resource/kindeditor/lang/zh-CN.js"></script>
+    <link href="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/themes/default/default.css" rel="stylesheet"/>
+    <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/kindeditor-all-min.js"></script>
+    <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/lang/zh-CN.js"></script>
     <script src="/resource/js/validator.min.js"></script>
 
     <script>
@@ -29,7 +28,6 @@
             langType: 'zh-CN',
             themeType: 'simple',
             uploadJson: '/file/uploadInArticle',
-            emoticonsPath: 'http://xblog-mis.oss-cn-shanghai.aliyuncs.com/xblog/images/',
             afterChange: function () {
                 var allCount = this.count();
                 $("#contentLength").text("字数：" + allCount + "/" + 30000);

@@ -1,6 +1,6 @@
 package cn.zzuzl.xblog.web;
 
-import cn.zzuzl.xblog.dto.Result;
+import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.service.CommentService;
 import cn.zzuzl.xblog.model.Comment;
 import org.springframework.stereotype.Controller;

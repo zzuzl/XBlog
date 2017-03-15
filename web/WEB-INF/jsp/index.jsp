@@ -67,8 +67,7 @@
             <div class="list-item row" ng-repeat="item in vm.data">
                 <div class="col-xs-1 head-photo">
                     <a href="/{{item.user.url}}" target="_blank" class="thumbnail">
-                        <img src="{{item.user.photoSrc}}" alt="暂无"
-                             onerror="this.src='/resource/images/default-head-photo.png'"/>
+                        <img src="{{item.user.photoSrc}}" alt="暂无"/>
                     </a>
                 </div>
                 <div class="col-xs-11">

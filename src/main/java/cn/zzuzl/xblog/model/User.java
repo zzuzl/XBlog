@@ -1,6 +1,6 @@
 package cn.zzuzl.xblog.model;
 
-import cn.zzuzl.xblog.dto.Result;
+import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.util.Utils;
 
 import java.util.Date;

@@ -1,4 +1,4 @@
-package cn.zzuzl.xblog.dto;
+package cn.zzuzl.xblog.model.vo;
 
 import cn.zzuzl.xblog.common.Common;
 

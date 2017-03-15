@@ -2,7 +2,7 @@ package cn.zzuzl.xblog.service;
 
 import cn.zzuzl.xblog.common.Common;
 import cn.zzuzl.xblog.dao.DynamicDao;
-import cn.zzuzl.xblog.dto.Result;
+import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.Pager;
 import cn.zzuzl.xblog.model.Dynamic;
 import org.springframework.stereotype.Service;
