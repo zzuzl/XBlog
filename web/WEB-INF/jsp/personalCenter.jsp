@@ -168,8 +168,7 @@
 
 <%@include file="common/footer.jsp" %>
 
-<script src="/resource/js/moment.js"></script>
-<script src="/resource/js/moment-with-locales.js"></script>
+<script src="//cdn.bootcss.com/moment.js/2.17.1/moment-with-locales.min.js"></script>
 <script type="application/javascript">
     var obj = {
         attention: ${requestScope.attention != null},

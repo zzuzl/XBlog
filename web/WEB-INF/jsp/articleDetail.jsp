@@ -5,11 +5,10 @@
 <head>
     <title>${requestScope.article.title} - XBlog</title>
     <%@include file="common/head.jsp" %>
-    <link href="/resource/kindeditor/themes/default/default.css" rel="stylesheet"/>
-    <link href="/resource/kindeditor/themes/simple/simple.css" rel="stylesheet"/>
-    <script src="/resource/kindeditor/kindeditor-all-min.js"></script>
-    <script src="/resource/kindeditor/lang/zh-CN.js"></script>
-    <link rel="stylesheet" href="/resource/css/blog.css">
+    <link href="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/themes/default/default.css" rel="stylesheet"/>
+    <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/kindeditor-all-min.js"></script>
+    <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/lang/zh-CN.js"></script>
+    <link href="/resource/css/blog.css" rel="stylesheet" >
     <link href="/resource/css/index.css" rel="stylesheet"/>
     <link href="/resource/css/detail.css" rel="stylesheet"/>
     <script>
@@ -207,8 +206,7 @@
 
 <%@include file="common/footer.jsp" %>
 
-<script src="/resource/js/moment.js"></script>
-<script src="/resource/js/moment-with-locales.js"></script>
+<script src="//cdn.bootcss.com/moment.js/2.17.1/moment-with-locales.min.js"></script>
 <script type="application/javascript">
     $(function () {
         moment.locale('zh-CN');

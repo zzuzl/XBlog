@@ -7,7 +7,7 @@
     <bean id="mailTaskExecutor" class="cn.zzuzl.xblog.worker.MailTaskExecutor"/>
 
     <task:scheduled-tasks scheduler="myScheduler">
-        <task:scheduled ref="mailTaskExecutor" method="test" fixed-delay="600000"/>
+        <task:scheduled ref="mailTaskExecutor" method="test" fixed-delay="#{10*60000}"/>
     </task:scheduled-tasks>
 
     <task:scheduler id="myScheduler" pool-size="10"/>
