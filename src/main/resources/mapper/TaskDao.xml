@@ -14,4 +14,13 @@
             </foreach>
         </if>
     </select>
+
+    <update id="updateTaskStatus">
+        update t_task set updateTime=now(),taskStatus=#{taskStatus} where id=#{id}
+    </update>
+
+    <insert id="insertTask" parameterType="Task">
+        insert into t_task(taskType,taskData,taskStatus,createTime,updateTime)
+        values(#{taskType},#{taskData},#{taskStatus},now(),now())
+    </insert>
 </mapper>

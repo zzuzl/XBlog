@@ -1,22 +1,20 @@
 package cn.zzuzl.xblog.service;
 
-import cn.zzuzl.xblog.dao.ArticleDao;
-import cn.zzuzl.xblog.dao.LuceneDao;
-import cn.zzuzl.xblog.message.PubSub;
-import cn.zzuzl.xblog.model.Article;
-import cn.zzuzl.xblog.model.Like;
-import cn.zzuzl.xblog.model.Pager;
-import cn.zzuzl.xblog.model.User;
+import cn.zzuzl.xblog.common.enums.TaskTypeEnum;
+import cn.zzuzl.xblog.dao.*;
+import cn.zzuzl.xblog.model.*;
+import cn.zzuzl.xblog.model.task.Task;
+import cn.zzuzl.xblog.util.TaskFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cn.zzuzl.xblog.common.Common;
-import cn.zzuzl.xblog.dao.DynamicDao;
-import cn.zzuzl.xblog.dao.UserDao;
 import cn.zzuzl.xblog.model.vo.Result;
-import cn.zzuzl.xblog.model.message.NewArticleMessage;
+import cn.zzuzl.xblog.model.vo.NewArticleVO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -35,7 +33,9 @@ public class ArticleService {
     @Resource
     private DynamicDao dynamicDao;
     @Resource
-    private PubSub pubSub;
+    private TaskDao taskDao;
+
+    private Logger logger = LogManager.getLogger(getClass());
 
     /**
      * 获取第page页文章列表
@@ -84,7 +84,7 @@ public class ArticleService {
      * @param request
      * @return
      */
-    @Transactional(rollbackFor={Exception.class})
+    @Transactional(rollbackFor = {Exception.class})
     public Result insertArticle(Article article, HttpServletRequest request) {
         Result result = article.valid();
 
@@ -97,27 +97,22 @@ public class ArticleService {
                     User user = userDao.getUserById(article.getUser().getUserId());
                     article.setUser(user);
 
-                    // 发送message
-                    ObjectMapper mapper = new ObjectMapper();
-
-                    NewArticleMessage message = new NewArticleMessage(article.getArticleId(),
-                            user.getUserId(),
-                            article.getTitle(),
-                            article.getDescription(),
-                            user.getUrl(),
-                            user.getNickname());
-
+                    String taskData = null;
                     try {
-                        // 内容设置为空，减小存储空间
-                        article.setContent(null);
-                        String json = mapper.writeValueAsString(message);
-                        pubSub.sendMessage(Common.NEW_ARTICLE_TOPIC, json);
+                        taskData = buildTaskData(article);
                     } catch (JsonProcessingException e) {
+                        logger.error(e);
                         e.printStackTrace();
                     }
 
-                    /*Dynamic dynamic = new Dynamic(user, article, Common.POST_OPERATOR, article.getDescription());
-                    dynamicDao.insertDynamic(dynamic);*/
+                    if (!StringUtils.isEmpty(taskData)) {
+                        Task task = TaskFactory.newTask(TaskTypeEnum.MAIL_TASK.getValue());
+                        task.setTaskData(taskData);
+                        taskDao.insertTask(task);
+                    }
+
+                    Dynamic dynamic = new Dynamic(user, article, Common.POST_OPERATOR, article.getDescription());
+                    dynamicDao.insertDynamic(dynamic);
                 }
             } else {
                 result.setSuccess(false);
@@ -237,5 +232,30 @@ public class ArticleService {
      */
     public Pager<Article> searchArticle(int page, int count, String keyword) {
         return luceneDao.searchArticle(page, count, keyword);
+    }
+
+    public String buildTaskData(Article article) throws JsonProcessingException {
+        String taskData = "";
+        if (article != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            int userId = 0;
+            String url = "";
+            String nickName = "";
+            if (article.getUser() != null) {
+                userId = article.getUser().getUserId();
+                url = article.getUser().getUrl();
+                nickName = article.getUser().getNickname();
+            }
+            NewArticleVO newArticleVO = new NewArticleVO(
+                    article.getArticleId(),
+                    userId,
+                    article.getTitle(),
+                    article.getDescription(),
+                    url,
+                    nickName);
+            taskData += mapper.writeValueAsString(newArticleVO);
+        }
+
+        return taskData;
     }
 }

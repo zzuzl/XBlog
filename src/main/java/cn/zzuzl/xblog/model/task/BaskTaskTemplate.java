@@ -9,10 +9,10 @@ import java.util.concurrent.*;
 
 public abstract class BaskTaskTemplate<T extends BaseTask> {
     private ThreadPoolExecutor threadPool;
-    private int corePoolSize = 2;
-    private int maximumPoolSize = 10;
-    private long keepAliveTime = 3;
-    private int queueCapacity = 5000;
+    private static final int corePoolSize = 2;
+    private static final int maximumPoolSize = 10;
+    private static final long keepAliveTime = 3;
+    private static final int queueCapacity = 5000;
     private Logger logger = LogManager.getLogger(getClass());
 
     public abstract List<T> getTasks();
@@ -26,8 +26,10 @@ public abstract class BaskTaskTemplate<T extends BaseTask> {
         final List<T> tasks = getTasks();
 
         if (tasks == null || tasks.isEmpty()) {
+            logger.info("tasks is empty!");
             return;
         }
+        logger.info("tasks's size is " + tasks.size());
 
         if (threadPool == null) {
             threadPool = new ThreadPoolExecutor(corePoolSize,
@@ -38,7 +40,7 @@ public abstract class BaskTaskTemplate<T extends BaseTask> {
         }
 
         List<Future<?>> futures = new ArrayList<Future<?>>();
-        for(final T task : tasks) {
+        for (final T task : tasks) {
             Future<?> future = threadPool.submit(new Runnable() {
                 public void run() {
                     try {
@@ -47,13 +49,14 @@ public abstract class BaskTaskTemplate<T extends BaseTask> {
                         task.success();
                     } catch (Exception e) {
                         task.fail();
+                        logger.error(e);
                     }
                 }
             });
             futures.add(future);
         }
 
-        for(Future<?> future : futures) {
+        for (Future<?> future : futures) {
             try {
                 future.get();
             } catch (InterruptedException e) {

@@ -1,11 +1,19 @@
-package cn.zzuzl.xblog.model;
+package cn.zzuzl.xblog.model.task;
+
+import cn.zzuzl.xblog.common.enums.TaskStatusEnum;
+import cn.zzuzl.xblog.dao.TaskDao;
+import cn.zzuzl.xblog.util.SpringContextUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import java.util.Date;
 
 /**
  * Created by Administrator on 2017/3/15.
  */
-public class Task {
+public class Task implements BaseTask {
+    private Logger logger = LogManager.getLogger(getClass());
     private Long id;
     private Integer taskType;
     private String taskData;
@@ -13,6 +21,12 @@ public class Task {
     private Integer taskStatus;
     private Date createTime;
     private Date updateTime;
+
+    private TaskDao taskDao;
+
+    public Task() {
+        taskDao = (TaskDao) SpringContextUtil.getContext().getBean(TaskDao.class);
+    }
 
     public Long getId() {
         return id;
@@ -68,5 +82,20 @@ public class Task {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public void lock() {
+        logger.info("lock...");
+        taskDao.updateTaskStatus(id, TaskStatusEnum.LOCK_TASK_STATUS.getValue());
+    }
+
+    public void success() {
+        logger.info("success...");
+        taskDao.updateTaskStatus(id, TaskStatusEnum.SUCCESS_TASK_STATUS.getValue());
+    }
+
+    public void fail() {
+        logger.info("fail...");
+        taskDao.updateTaskStatus(id, TaskStatusEnum.FAIL_TASK_STATUS.getValue());
     }
 }

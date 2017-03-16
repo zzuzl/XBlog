@@ -1,6 +1,6 @@
-package cn.zzuzl.xblog.model.message;
+package cn.zzuzl.xblog.model.vo;
 
-public class NewArticleMessage {
+public class NewArticleVO {
     private int articleId;
     private int userId;
     private String articleTitle;
@@ -8,7 +8,7 @@ public class NewArticleMessage {
     private String userUrl;
     private String nickname;
 
-    public NewArticleMessage(int articleId, int userId, String articleTitle, String description, String userUrl, String nickname) {
+    public NewArticleVO(int articleId, int userId, String articleTitle, String description, String userUrl, String nickname) {
         this.articleId = articleId;
         this.userId = userId;
         this.articleTitle = articleTitle;
@@ -17,7 +17,7 @@ public class NewArticleMessage {
         this.nickname = nickname;
     }
 
-    public NewArticleMessage() {
+    public NewArticleVO() {
     }
 
     public int getArticleId() {

@@ -4,10 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-    <bean id="mailTaskExecutor" class="cn.zzuzl.xblog.worker.MailTaskExecutor"/>
-
     <task:scheduled-tasks scheduler="myScheduler">
-        <task:scheduled ref="mailTaskExecutor" method="test" fixed-delay="#{10*60000}"/>
+        <task:scheduled ref="mailTaskExecutor" method="batchExecute" fixed-delay="#{10*60000}"/>
     </task:scheduled-tasks>
 
     <task:scheduler id="myScheduler" pool-size="10"/>
