@@ -3,6 +3,7 @@ package cn.zzuzl.xblog.service;
 import cn.zzuzl.xblog.model.User;
 import cn.zzuzl.xblog.util.Utils;
 import org.apache.velocity.app.VelocityEngine;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -23,7 +24,7 @@ public class MailService {
     private JavaMailSender mailSender;
     @Resource
     private VelocityEngine velocityEngine;
-    @Resource
+    @Value("#{props['domain']}")
     private String domain;
     private static final String FROM = "m15617536860@163.com";
 
@@ -31,13 +32,10 @@ public class MailService {
      * 发送重置密码邮件
      *
      * @param email
-     * @param request
      * @param hash
      */
-    public void sendResetPwdEmail(final String email, HttpServletRequest request, String hash) {
-        String rootPath = Utils.getRootPath(request);
-        rootPath += "/verify/resetPwd?hash=" + hash;
-
+    public void sendResetPwdEmail(final String email, String hash) {
+        String rootPath = "http://" + domain + "/verify/resetPwd?hash=" + hash;
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("url", rootPath);
         sendEmail(email, "tpl/common.vm", "重置密码", model);
@@ -51,8 +49,7 @@ public class MailService {
      * @param request
      */
     public void sendRegisterEmail(final String hash, User user, HttpServletRequest request) {
-        String rootPath = Utils.getRootPath(request);
-        rootPath += "/verify/register?hash=" + hash;
+        String rootPath = "http://" + domain + "/verify/register?hash=" + hash;
 
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("url", rootPath);
@@ -64,13 +61,10 @@ public class MailService {
      *
      * @param email
      * @param model
-     * @param request
      */
-    public void sendEmailToFans(final String email, Map<String, Object> model, HttpServletRequest request) {
-        String rootPath = "http://" + domain;
-        rootPath += "/p/" + model.get("articleId");
+    public void sendEmailToFans(final String email, Map<String, Object> model) {
+        String rootPath = "http://" + domain + "/p/" + model.get("articleId");
         model.put("url", rootPath);
-
         sendEmail(email, "tpl/fans.vm", "关注动态", model);
     }
 

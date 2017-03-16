@@ -5,11 +5,10 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!-- 加载配置文件 -->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <bean id="props" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:jdbc.properties</value>
-                <value>classpath:important.properties</value>
+                <value>classpath:props/*.properties</value>
             </list>
         </property>
     </bean>
