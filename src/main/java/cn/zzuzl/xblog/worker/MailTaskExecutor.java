@@ -14,11 +14,8 @@ import cn.zzuzl.xblog.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.velocity.app.VelocityEngine;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.util.StringUtils;
-
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.HashMap;

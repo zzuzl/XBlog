@@ -4,6 +4,17 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <!-- webAppRootKey -->
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>xblog</param-value>
+    </context-param>
+
+    <!-- 获取项目根路径 -->
+    <listener>
+        <listener-class>org.springframework.web.util.WebAppRootListener</listener-class>
+    </listener>
+
     <!-- 加载spring配置文件 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -76,14 +87,9 @@
         <param-value>classpath:log4j2.xml</param-value>
     </context-param>
 
-    <!-- webAppRootKey -->
-    <context-param>
-        <param-name>webAppRootKey</param-name>
-        <param-value>xblog</param-value>
-    </context-param>
-
     <!-- 异常处理页面 -->
-    <!--<error-page>
-        <location>/error</location>
-    </error-page>-->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/common/404.jsp</location>
+    </error-page>
 </web-app>

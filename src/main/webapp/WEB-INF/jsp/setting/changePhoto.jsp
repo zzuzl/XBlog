@@ -73,22 +73,38 @@
             $('#okBtn').removeAttr('disabled');
         },
         uploadFile: function () {
-            $.ajaxFileUpload({
-                url: '/file/upload',
-                secureuri: false,
-                fileElementId: 'file',
-                dataType: 'json',
-                success: function (data) {
-                    if (data.success) {
-                        obj.changeSrc(data.filename);
-                    } else {
-                        alert(data.msg);
-                    }
-                },
-                error: function (data, status, e) {
-                    alert('文件上传失败！' + e);
+            var f = document.getElementById("file").files;
+            //名称
+            alert(f[0].name);
+            //大小
+            alert(f[0].size);
+            //类型
+            alert(f[0].type);
+
+            if (f[0].type.length > 0 && f[0].type.indexOf('image') >= 0) {
+                if (f[0].size > 1024 * 1024) {
+                    alert('文件过大，不能超过1M');
+                } else {
+                    $.ajaxFileUpload({
+                        url: '/file/upload',
+                        secureuri: false,
+                        fileElementId: 'file',
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.success) {
+                                obj.changeSrc(data.filename);
+                            } else {
+                                alert(data.msg);
+                            }
+                        },
+                        error: function (data, status, e) {
+                            alert('文件上传失败！' + e);
+                        }
+                    })
                 }
-            })
+            } else {
+                alert('请上传图片!');
+            }
         },
         savePhoto: function () {
             var data = $('#image').cropper('getData');

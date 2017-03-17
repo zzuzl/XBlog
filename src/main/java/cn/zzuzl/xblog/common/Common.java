@@ -42,4 +42,7 @@ public class Common {
 	// 权限码
 	public static final String AUTH_USER_LOGIN = "auth_user_login";
 
+	// 项目名称
+	public static final String APP_NAME = "xblog";
+
 }

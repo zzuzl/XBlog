@@ -36,10 +36,9 @@ public class FileService {
      * 上传头像图片
      *
      * @param file
-     * @param request
      * @return
      */
-    public Map<String, Object> uploadPhoto(MultipartFile file, HttpServletRequest request) {
+    public Map<String, Object> uploadPhoto(MultipartFile file) {
 
         Map<String, Object> result = new HashMap<String, Object>();
         result.put(Common.SUCCESS, false);
@@ -54,7 +53,7 @@ public class FileService {
             return result;
         }
 
-        return uploadFileCore(file, request, "images");
+        return uploadFileCore(file, "images");
     }
 
     /**
@@ -62,10 +61,9 @@ public class FileService {
      *
      * @param file
      * @param uploadType
-     * @param request
      * @return
      */
-    public Map<String, Object> uploadFiles(MultipartFile file, UploadType uploadType, HttpServletRequest request) {
+    public Map<String, Object> uploadFiles(MultipartFile file, UploadType uploadType) {
         String fileName = file.getOriginalFilename();
         String fileFormat = fileName.substring(fileName.lastIndexOf(".") + 1);
         Map<String, Object> result = new HashMap<String, Object>();
@@ -77,10 +75,10 @@ public class FileService {
         } else if (!Arrays.asList(uploadType.getFormats()).contains(fileFormat)) {
             result.put("message", "文件格式错误，支持的格式：" + Arrays.toString(uploadType.getFormats()));
         } else {
-            result = uploadFileCore(file, request, uploadType.getFolder());
+            result = uploadFileCore(file, uploadType.getFolder());
             if ((Boolean) result.get(Common.SUCCESS)) {
                 result.put("error", 0);
-                result.put("url", request.getContextPath() + "/" + result.get(Common.FILENAME));
+                result.put("url", System.getProperty(Common.APP_NAME) + result.get(Common.FILENAME));
             } else {
                 result.put("message", result.get(Common.MSG));
             }
@@ -122,13 +120,12 @@ public class FileService {
      * 上传文件核心方法
      *
      * @param file
-     * @param request
      * @param childPath
      * @return
      */
-    private Map<String, Object> uploadFileCore(MultipartFile file, HttpServletRequest request, String childPath) {
+    private Map<String, Object> uploadFileCore(MultipartFile file, String childPath) {
         Map<String, Object> result = new HashMap<String, Object>();
-        String path = request.getSession().getServletContext().getRealPath("/");
+        String path = System.getProperty(Common.APP_NAME);
         File folder = new File(path + childPath);
         if (!folder.exists()) {
             folder.mkdirs();

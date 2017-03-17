@@ -44,7 +44,7 @@ public class FileController {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put(Common.SUCCESS, true);
         if (!file.isEmpty()) {
-            result = fileService.uploadPhoto(file, request);
+            result = fileService.uploadPhoto(file);
         } else {
             result.put(Common.SUCCESS, false);
             result.put(Common.MSG, "文件不能为空");
@@ -66,7 +66,7 @@ public class FileController {
             result.put("message", "请选择文件");
         } else {
             if (uploadType != null) {
-                result = fileService.uploadFiles(imgFile, uploadType, request);
+                result = fileService.uploadFiles(imgFile, uploadType);
                 if ((Integer) result.get("error") == 0 && uploadType == UploadType.IMAGE) {
                     // 对上传的图片进行缩放处理
                     zoomPicture(request.getSession().getServletContext().getRealPath("/") + result.get(Common.FILENAME));
@@ -92,12 +92,19 @@ public class FileController {
             if (result.isSuccess()) {
                 String path = request.getSession().getServletContext().getRealPath("/");
                 String str = user.getUserId() + filename.substring(filename.lastIndexOf("."));
-                result = fileService.uploadToOSS(new File(path + filename), str);
-                if (result.isSuccess()) {
-                    result = userService.changePhoto(result.getMsg(), user.getUserId());
+                File file = new File(path + filename);
+                // 如果文件不存在，返回失败
+                if(!file.exists()) {
+                    result.setSuccess(false);
+                    result.setMsg("文件不存在，请重新上传!");
+                } else {
+                    result = fileService.uploadToOSS(file, str);
                     if (result.isSuccess()) {
-                        user.setPhotoSrc(result.getMsg());
-                        request.getSession().setAttribute(Common.USER, user);
+                        result = userService.changePhoto(result.getMsg(), user.getUserId());
+                        if (result.isSuccess()) {
+                            user.setPhotoSrc(result.getMsg());
+                            request.getSession().setAttribute(Common.USER, user);
+                        }
                     }
                 }
             }
