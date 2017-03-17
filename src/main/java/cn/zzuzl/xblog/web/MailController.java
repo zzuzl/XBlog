@@ -8,8 +8,11 @@ import cn.zzuzl.xblog.service.MailService;
 import cn.zzuzl.xblog.service.RedisService;
 import cn.zzuzl.xblog.service.UserService;
 import cn.zzuzl.xblog.util.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,6 +30,7 @@ public class MailController {
     private CaptchaService captchaService;
     @Resource
     private UserService userService;
+    private Logger logger = LogManager.getLogger(getClass());
 
     /**
      * 发送邮件
@@ -44,26 +48,39 @@ public class MailController {
                             @RequestParam("captcha") String captcha,
                             HttpServletRequest request) {
         Result result = new Result();
-        String key = captchaService.getGeneratedKey(request);
-        if (!captcha.equalsIgnoreCase(key)) {
-            result.setMsg("验证码错误!");
-        } else {
-            User user = userService.searchUserByEmail(email);
-
-            if (user == null) {
-                result.setMsg("您当前不是我们的用户，请先注册!");
+        try {
+            String key = captchaService.getGeneratedKey(request);
+            if (!captcha.equalsIgnoreCase(key)) {
+                result.setMsg("验证码错误!");
             } else {
-                if (Common.OPERATE_RESET_PWD.equalsIgnoreCase(operate)) {
-                    String hash = Utils.MD5(email);
-                    mailService.sendResetPwdEmail(email, request, hash);
-                    redisService.addLink(email, hash);
+                User user = userService.searchUserByEmail(email);
 
-                    result.setSuccess(true);
-                    result.setMsg("邮件已成功发送至" + email + ",请注意查收!");
+                if (user == null) {
+                    result.setMsg("您当前不是我们的用户，请先注册!");
                 } else {
-                    result.setMsg("操作错误!");
+                    if (Common.OPERATE_RESET_PWD.equalsIgnoreCase(operate)) {
+                        String hash = Utils.MD5(email);
+                        mailService.sendResetPwdEmail(email, hash);
+                        redisService.addLink(email, hash);
+
+                        result.setSuccess(true);
+                        result.setMsg("邮件已成功发送至" + email + ",请注意查收!");
+                    } else {
+                        result.setMsg("操作错误!");
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setSuccess(false);
+            result.setMsg("邮件发送失败");
+            logger.error(e);
+        }
+
+        if (result.isSuccess()) {
+            logger.info("邮件发送成功!");
+        } else {
+            logger.error("邮件发送失败:" + result.getMsg());
         }
 
         return result;

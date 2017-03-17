@@ -103,7 +103,7 @@ public class UserController {
                 result.setMsg("该邮箱已被注册");
             } else {
                 String hash = Utils.MD5(user.getEmail());
-                mailService.sendRegisterEmail(hash, user, request);
+                mailService.sendRegisterEmail(hash, user);
                 redisService.addUser(hash, user, password);
 
                 messageService.sendRegSuccess(user);

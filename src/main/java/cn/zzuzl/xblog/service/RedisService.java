@@ -39,6 +39,9 @@ public class RedisService implements InitializingBean {
      */
     public void updateViewCount(int id) {
         Integer oldCount = (Integer) redisTemplate.boundHashOps("viewCount").get(String.valueOf(id));
+        if (oldCount == null) {
+            oldCount = 0;
+        }
         redisTemplate.boundHashOps("viewCount").put(String.valueOf(id), oldCount + 1);
 
         long gap = (System.currentTimeMillis() - lastTime) / 1000;

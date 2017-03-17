@@ -124,4 +124,8 @@
         SET `view_count` = view_count + #{count}
         WHERE article_id = #{articleId}
     </update>
+
+    <select id="getViewCount" resultType="int">
+        select view_count from t_article where article_id=#{articleId}
+    </select>
 </mapper>

@@ -2,6 +2,7 @@ package cn.zzuzl.xblog.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -153,20 +154,6 @@ public class Utils {
             }
         }
         return result;
-    }
-
-    /**
-     * 获取项目根路径
-     *
-     * @param request
-     * @return
-     */
-    public static String getRootPath(HttpServletRequest request) {
-        String serverName = request.getServerName();
-        int port = request.getServerPort();
-        String contextPath = request.getContextPath();
-
-        return "http://" + serverName + ":" + port + contextPath;
     }
 
     /**

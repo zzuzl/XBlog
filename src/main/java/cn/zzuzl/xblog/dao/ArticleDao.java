@@ -126,4 +126,11 @@ public interface ArticleDao {
      * @return
      */
     int getArticleCount(@Param("cate") int cate);
+
+    /**
+     * 获取文章浏览量
+     * @param articleId
+     * @return
+     */
+    int getViewCount(@Param("articleId") int articleId);
 }
