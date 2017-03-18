@@ -100,9 +100,10 @@ public class FileController {
                 } else {
                     result = fileService.uploadToOSS(file, str);
                     if (result.isSuccess()) {
+                        String newPath = result.getMsg();
                         result = userService.changePhoto(result.getMsg(), user.getUserId());
                         if (result.isSuccess()) {
-                            user.setPhotoSrc(result.getMsg());
+                            user.setPhotoSrc(newPath);
                             request.getSession().setAttribute(Common.USER, user);
                         }
                     }

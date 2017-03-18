@@ -77,10 +77,6 @@
             var f = document.getElementById("file").files;
             //名称
             alert(f[0].name);
-            //大小
-            alert(f[0].size);
-            //类型
-            alert(f[0].type);
 
             if (f[0].type.length > 0 && f[0].type.indexOf('image') >= 0) {
                 if (f[0].size > 1024 * 1024) {
