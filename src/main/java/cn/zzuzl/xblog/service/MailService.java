@@ -12,8 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,9 +81,10 @@ public class MailService {
     private void sendEmail(final String email, final String location, final String subject, final Map<String, Object> model) {
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
             public void prepare(MimeMessage mimeMessage) throws Exception {
+                final String nickname = MimeUtility.encodeText(configProperty.getUsername());
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                 message.setTo(email);
-                message.setFrom(configProperty.getFromAddress());
+                message.setFrom(new InternetAddress(nickname + "<" + configProperty.getFromAddress() + ">"));
                 message.setSubject(subject);
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
                         velocityEngine, location, "utf-8", model);

@@ -1,6 +1,7 @@
 package cn.zzuzl.xblog.worker;
 
 import cn.zzuzl.xblog.common.Common;
+import cn.zzuzl.xblog.util.FileUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,8 @@ public class FileCleanTask {
         try {
             // D:\idea\projects\XBlog\target\XBlog\
             String rootPath = System.getProperty(Common.APP_NAME);
+            int count = FileUtil.cleanFiles(rootPath);
+            logger.info("清理文件数:" + count);
         } catch (Exception e) {
             logger.error("文件清理发生错误:" + e.getMessage());
             e.printStackTrace();

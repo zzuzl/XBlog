@@ -14,11 +14,18 @@ public class ConfigProperty {
     @Value("${mail.from}")
     private String fromAddress;
 
+    @Value("${mail.username}")
+    private String username;
+
     public String getRoot() {
         return "http://" + domain;
     }
 
     public String getFromAddress() {
         return fromAddress;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
