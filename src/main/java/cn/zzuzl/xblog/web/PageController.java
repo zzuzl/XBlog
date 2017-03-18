@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,10 +83,14 @@ public class PageController {
 
     /* 用户个人信息 */
     @RequestMapping(value = "/setting/userInfo", method = RequestMethod.GET)
-    public String blog(HttpSession session, Model model) {
+    public String blog(HttpSession session, Model model, HttpServletResponse response) {
         User user = (User) session.getAttribute(Common.USER);
         if (user == null) {
-            return Common.PAGE_404;
+            try {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         model.addAttribute("host", Utils.getHostAddress());
@@ -141,7 +147,7 @@ public class PageController {
 
     /* 用户个人中心 */
     @RequestMapping(value = "/u/{url}", method = RequestMethod.GET)
-    public String personalCenter(@PathVariable("url") String url, Model model, HttpSession session) {
+    public String personalCenter(@PathVariable("url") String url, Model model, HttpSession session, HttpServletResponse response) {
         User user = userService.searchUserByUrl(url);
         User loginUser = (User) session.getAttribute(Common.USER);
         model.addAttribute("host", Utils.getHostAddress());
@@ -161,28 +167,36 @@ public class PageController {
                 }
             }
         } else {
-            return Common.PAGE_404;
+            try {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return "personalCenter";
     }
 
     /* 用户的博客 */
     @RequestMapping(value = "/{url}", method = RequestMethod.GET)
-    public String blog(@PathVariable("url") String url, Model model) {
+    public String blog(@PathVariable("url") String url, Model model, HttpServletResponse response) {
         User user = userService.searchUserByUrl(url);
         if (user != null) {
             List<Article> list = articleService.listMyArticle(1, 100, user.getUserId());
             model.addAttribute("list", list);
             model.addAttribute(Common.USER, user);
         } else {
-            return Common.PAGE_404;
+            try {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return "blog";
     }
 
     /* 文章详情 */
     @RequestMapping(value = "/p/{id}", method = RequestMethod.GET)
-    public String articleDetail(@PathVariable("id") Integer id, Model model, HttpSession session) {
+    public String articleDetail(@PathVariable("id") Integer id, Model model, HttpSession session, HttpServletResponse response) {
         Article article = articleService.detail(id);
         User user = (User) session.getAttribute(Common.USER);
         if (article != null) {
@@ -197,20 +211,25 @@ public class PageController {
 
                 model.addAttribute("attention", userService.getOneAttention(user.getUserId(), article.getUser().getUserId()));
             }
+
+            // 记录浏览量
+            List<Integer> array = (List<Integer>) session.getAttribute(Common.ARTICLE_ARRAY);
+            if (array == null) {
+                array = new ArrayList<Integer>();
+            }
+            if (!array.contains(id)) {
+                array.add(id);
+                redisService.updateViewCount(id);
+            }
+            session.setAttribute(Common.ARTICLE_ARRAY, array);
         } else {
-            return Common.PAGE_404;
+            try {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        // 记录浏览量
-        List<Integer> array = (List<Integer>) session.getAttribute(Common.ARTICLE_ARRAY);
-        if (array == null) {
-            array = new ArrayList<Integer>();
-        }
-        if (!array.contains(id)) {
-            array.add(id);
-            redisService.updateViewCount(id);
-        }
-        session.setAttribute(Common.ARTICLE_ARRAY, array);
         return "articleDetail";
     }
 
@@ -221,17 +240,4 @@ public class PageController {
         return "search";
     }
 
-    /* error页面 */
-    @RequestMapping(value = "/error", method = RequestMethod.GET)
-    public String error(HttpServletRequest request) {
-        logger.error(request.getAttribute("javax.servlet.error.status_code"));
-        logger.error(request.getAttribute("javax.servlet.error.message"));
-        return "common/404";
-    }
-
-    /* 404页面 */
-    @RequestMapping(value = "/notFound", method = RequestMethod.GET)
-    public String notFound() {
-        return "common/404";
-    }
 }
