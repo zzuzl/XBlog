@@ -165,9 +165,9 @@ public class FileService {
         try {
             ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
             if (ossClient.doesBucketExist(bucketName)) {
-                System.out.println("开始上传。。。");
+                logger.info("开始上传。。。");
                 ossClient.putObject(new PutObjectRequest(bucketName, key, file));
-                System.out.println("上传成功。。。");
+                logger.info("上传成功。。。");
                 OSSObject object = ossClient.getObject(bucketName, key);
                 if (object != null) {
                     result.setMsg(object.getResponse().getUri());

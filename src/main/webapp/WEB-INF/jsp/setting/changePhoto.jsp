@@ -33,6 +33,10 @@
             padding: 0;
             color: rebeccapurple;
         }
+
+        #label {
+            color: firebrick;
+        }
     </style>
 </head>
 <body>
@@ -51,6 +55,7 @@
         <div class="col-xs-3">
             <div id="preview" class="thumbnail"></div>
             <input type="file" id="file" name="file" onchange="obj.uploadFile()"/>
+            <label id="label"></label>
             <button type="button" id="okBtn" disabled onclick="obj.savePhoto()" class="btn btn-primary">确定修改</button>
             <ol>
                 <li>点击选择图片</li>
@@ -66,6 +71,14 @@
 <%@include file="../common/footer.jsp" %>
 
 <script type="application/javascript">
+    var lastPicName = "";
+    updateLabel(lastPicName);
+
+    // 更新label的值
+    function updateLabel(name) {
+        lastPicName = name;
+        $('#label').text('当前已选图片：' + lastPicName);
+    }
 
     var obj = {
         changeSrc: function (filename) {
@@ -75,13 +88,13 @@
         },
         uploadFile: function () {
             var f = document.getElementById("file").files;
-            //名称
-            alert(f[0].name);
 
             if (f[0].type.length > 0 && f[0].type.indexOf('image') >= 0) {
                 if (f[0].size > 1024 * 1024) {
                     layer.msg('文件过大，不能超过1M');
                 } else {
+                    updateLabel(f[0].name);
+
                     $.ajaxFileUpload({
                         url: '/file/upload',
                         secureuri: false,
