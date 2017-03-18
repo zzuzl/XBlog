@@ -3,12 +3,13 @@ package cn.zzuzl.xblog.model;
 import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.util.Utils;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 用户实体类
  */
-public class User {
+public class User implements Serializable {
     private int userId;
     private String email;
     private String hash;

@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -34,6 +35,8 @@ public class ArticleService {
     private DynamicDao dynamicDao;
     @Resource
     private TaskDao taskDao;
+    @Resource
+    private RedisService redisService;
 
     private Logger logger = LogManager.getLogger(getClass());
 
@@ -134,6 +137,9 @@ public class ArticleService {
             if (articleDao.updateArticle(article) < 1) {
                 result.setSuccess(false);
                 result.setMsg("数据操作错误");
+            } else {
+                // 删除文章缓存
+                redisService.deleteHashCache(Common.KEY_ARTICLEDETAIL, article.getArticleId());
             }
         }
         return result;
@@ -150,6 +156,8 @@ public class ArticleService {
         if (id < 1 || articleDao.deleteArticle(id) < 1) {
             result.setMsg("文章不存在");
         } else {
+            // 删除文章缓存
+            redisService.deleteHashCache(Common.KEY_ARTICLEDETAIL, id);
             result.setSuccess(true);
         }
         return result;
@@ -233,6 +241,13 @@ public class ArticleService {
         return luceneDao.searchArticle(page, count, keyword);
     }
 
+    /**
+     * 构建任务数据
+     *
+     * @param article
+     * @return
+     * @throws JsonProcessingException
+     */
     public String buildTaskData(Article article) throws JsonProcessingException {
         String taskData = "";
         if (article != null) {

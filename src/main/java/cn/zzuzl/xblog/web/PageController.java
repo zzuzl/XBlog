@@ -197,7 +197,7 @@ public class PageController {
     /* 文章详情 */
     @RequestMapping(value = "/p/{id}", method = RequestMethod.GET)
     public String articleDetail(@PathVariable("id") Integer id, Model model, HttpSession session, HttpServletResponse response) {
-        Article article = articleService.detail(id);
+        Article article = redisService.queryArticleFromCacheById(id);
         User user = (User) session.getAttribute(Common.USER);
         if (article != null) {
             model.addAttribute("article", article);

@@ -3,17 +3,21 @@ package cn.zzuzl.xblog.service;
 import cn.zzuzl.xblog.common.Common;
 import cn.zzuzl.xblog.dao.ArticleDao;
 import cn.zzuzl.xblog.dao.UserDao;
+import cn.zzuzl.xblog.model.Article;
 import cn.zzuzl.xblog.model.Category;
 import cn.zzuzl.xblog.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * redis存储service
@@ -31,6 +35,14 @@ public class RedisService implements InitializingBean {
     private final Logger logger = LogManager.getLogger(getClass());
     private long lastTime = System.currentTimeMillis();
     private long lastSyncUserRankMinute = System.currentTimeMillis() / (1000 * 60);
+
+    /**
+     * 初始化超时时间
+     */
+    private void initExpire() {
+        // 文章失效时间30分钟
+        redisTemplate.boundHashOps(Common.KEY_ARTICLEDETAIL).expire(30, TimeUnit.MINUTES);
+    }
 
     /**
      * 更新博客浏览量
@@ -91,8 +103,6 @@ public class RedisService implements InitializingBean {
         model.put("time", System.currentTimeMillis());
         model.put("password", password);
         model.put("user", user);
-
-        model.put("user", user);
         model.put("password", password);
         redisTemplate.boundHashOps(Common.REGISTER).put(hash, model);
     }
@@ -145,7 +155,7 @@ public class RedisService implements InitializingBean {
 
         if (categoryList != null) {
             for (Category category : categoryList) {
-                redisTemplate.boundListOps("category").leftPushAll(category);
+                redisTemplate.boundListOps(Common.KEY_CATEGORY).leftPushAll(category);
             }
         }
     }
@@ -157,7 +167,7 @@ public class RedisService implements InitializingBean {
      */
     public List<Object> getAllCategory() {
         List<Object> categories = null;
-        BoundListOperations<Object, Object> listOperations = redisTemplate.boundListOps("category");
+        BoundListOperations<Object, Object> listOperations = redisTemplate.boundListOps(Common.KEY_CATEGORY);
         if (listOperations == null || listOperations.size() < 1) {
             syncCategory();
             categories = getAllCategory();
@@ -175,10 +185,10 @@ public class RedisService implements InitializingBean {
         logger.debug("------------------syncUserRank---------------------");
         List<User> users = userDao.getUserRank(Common.DEFAULT_ITEM_COUNT);
 
-        redisTemplate.delete("userRank");
+        redisTemplate.delete(Common.KEY_USERRANK);
         if (users != null) {
             for (User user : users) {
-                redisTemplate.boundListOps("userRank").leftPushAll(user);
+                redisTemplate.boundListOps(Common.KEY_USERRANK).leftPushAll(user);
             }
         }
     }
@@ -197,7 +207,7 @@ public class RedisService implements InitializingBean {
         }
 
         List<Object> users = null;
-        BoundListOperations<Object, Object> userRank = redisTemplate.boundListOps("userRank");
+        BoundListOperations<Object, Object> userRank = redisTemplate.boundListOps(Common.KEY_USERRANK);
         if (userRank == null || userRank.size() < 1) {
             syncUserRank();
             users = getUserRank();
@@ -208,7 +218,44 @@ public class RedisService implements InitializingBean {
     }
 
     public void afterPropertiesSet() throws Exception {
+        initExpire();
         syncCategory();
         syncUserRank();
+    }
+
+    /**
+     * 缓存中查文章，不存在则查库
+     *
+     * @param id
+     * @return
+     */
+    public Article queryArticleFromCacheById(Integer id) {
+        if (id == null) {
+            return null;
+        }
+        Article article = (Article) redisTemplate.boundHashOps(Common.KEY_ARTICLEDETAIL).get(String.valueOf(id));
+        if (article == null) {
+            article = articleDao.detail(id);
+            if (article != null) {
+                redisTemplate.boundHashOps(Common.KEY_ARTICLEDETAIL).put(String.valueOf(id), article);
+            }
+        }
+        return article;
+    }
+
+    /**
+     * 删除缓存
+     *
+     * @param key
+     * @param hashKey
+     */
+    public void deleteHashCache(Object key, Object hashKey) {
+        if (StringUtils.isEmpty(key) || StringUtils.isEmpty(hashKey)) {
+            return;
+        }
+        BoundHashOperations<Object, Object, Object> ops = redisTemplate.boundHashOps(String.valueOf(key));
+        if (ops != null) {
+            ops.delete(String.valueOf(hashKey));
+        }
     }
 }

@@ -7,12 +7,13 @@ package cn.zzuzl.xblog.model;
 import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.util.Utils;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 文章实体类
  */
-public class Article {
+public class Article implements Serializable {
     private int articleId;
     private Category category;
     private String title;
@@ -27,7 +28,8 @@ public class Article {
     private Article pre;
     private Article next;
 
-    public Article() {}
+    public Article() {
+    }
 
     public Article(int articleId, Category category, String title, String content, String description, Date postTime, int viewCount, int commentCount, int likeCount, User user, String tag, Article pre, Article next) {
         this.articleId = articleId;
