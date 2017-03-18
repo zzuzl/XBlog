@@ -8,6 +8,7 @@
     <link href="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/themes/default/default.css" rel="stylesheet"/>
     <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/kindeditor-all-min.js"></script>
     <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/lang/zh-CN.js"></script>
+    <script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
     <link href="/resource/css/blog.css" rel="stylesheet" >
     <link href="/resource/css/index.css" rel="stylesheet"/>
     <link href="/resource/css/detail.css" rel="stylesheet"/>
@@ -258,7 +259,7 @@
                 }, 500);
                 window.editor.html("");
             } else {
-                alert(data.msg);
+                layer.msg(data.msg);
             }
         },
         reply: function (nickname, pId) {
@@ -283,11 +284,11 @@
                         $('#like-btn').html("<i class='fa fa-thumbs-up' aria-hidden='true'></i>${requestScope.article.likeCount+1}");
                         window.obj.changeLikeBtnState();
                     } else {
-                        alert(data.msg);
+                        layer.msg(data.msg);
                     }
                 }, 'JSON')
             } else {
-                alert('请先登录！');
+                layer.msg('请先登录！');
                 window.location = '/login';
             }
         },
@@ -300,7 +301,7 @@
                 }
                 this.updateAttentionButton();
             } else {
-                alert('请先登录');
+                layer.msg('请先登录');
                 window.location = '/login';
             }
         },
@@ -313,7 +314,7 @@
                     window.obj.attention = true;
                     window.obj.updateAttentionButton();
                 } else {
-                    alert(data.msg);
+                    layer.msg(data.msg);
                 }
             }, 'JSON')
         },
@@ -327,7 +328,7 @@
                         window.obj.attention = false;
                         window.obj.updateAttentionButton();
                     } else {
-                        alert(data.msg);
+                        layer.msg(data.msg);
                     }
                 }
             });

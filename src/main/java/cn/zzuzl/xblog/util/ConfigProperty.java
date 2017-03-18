@@ -17,6 +17,9 @@ public class ConfigProperty {
     @Value("${mail.username}")
     private String username;
 
+    @Value("${clean.photo.folder}")
+    private String photoFolder;
+
     public String getRoot() {
         return "http://" + domain;
     }
@@ -27,5 +30,9 @@ public class ConfigProperty {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getPhotoFolder() {
+        return photoFolder;
     }
 }

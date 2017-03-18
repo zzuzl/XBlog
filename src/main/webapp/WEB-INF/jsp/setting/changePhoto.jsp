@@ -8,6 +8,7 @@
     <link href="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/cropper-master/dist/cropper.min.css" rel="stylesheet">
     <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/cropper-master/dist/cropper.min.js"></script>
     <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/ajaxfileupload.js"></script>
+    <script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
     <style>
         img {
             max-width: 100%;
@@ -83,7 +84,7 @@
 
             if (f[0].type.length > 0 && f[0].type.indexOf('image') >= 0) {
                 if (f[0].size > 1024 * 1024) {
-                    alert('文件过大，不能超过1M');
+                    layer.msg('文件过大，不能超过1M');
                 } else {
                     $.ajaxFileUpload({
                         url: '/file/upload',
@@ -94,16 +95,16 @@
                             if (data.success) {
                                 obj.changeSrc(data.filename);
                             } else {
-                                alert(data.msg);
+                                layer.msg(data.msg);
                             }
                         },
                         error: function (data, status, e) {
-                            alert('文件上传失败！' + e);
+                            layer.msg('文件上传失败！' + e);
                         }
                     })
                 }
             } else {
-                alert('请上传图片!');
+                layer.msg('请上传图片!');
             }
         },
         savePhoto: function () {
@@ -118,10 +119,10 @@
         },
         handleResult: function (data) {
             if (data.success) {
-                alert('头像保存成功');
+                layer.msg('头像保存成功');
                 window.location.reload();
             } else {
-                alert(data.msg);
+                layer.msg(data.msg);
             }
         }
     };

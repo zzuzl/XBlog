@@ -7,6 +7,7 @@
     <%@include file="../common/head.jsp" %>
     <link rel="stylesheet" href="/resource/css/info.css">
     <script src="/resource/js/validator.min.js"></script>
+    <script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
     <style>
         .list-item {
             width: 100%;
@@ -113,7 +114,7 @@
                         if (data.success) {
                             window.location.reload();
                         } else {
-                            alert(data.msg);
+                            layer.msg(data.msg);
                         }
                     }
                 });

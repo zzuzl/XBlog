@@ -25,6 +25,7 @@ public class FileUtil {
             if (!rootFolder.isDirectory()) {
                 rootFolder.deleteOnExit();
                 logger.info("清理:" + rootFolder.getAbsolutePath());
+                count ++;
             } else {
                 File[] files = rootFolder.listFiles();
                 if (files != null && files.length > 0) {

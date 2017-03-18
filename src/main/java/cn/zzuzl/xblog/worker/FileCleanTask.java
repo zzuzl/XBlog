@@ -1,10 +1,12 @@
 package cn.zzuzl.xblog.worker;
 
 import cn.zzuzl.xblog.common.Common;
+import cn.zzuzl.xblog.util.ConfigProperty;
 import cn.zzuzl.xblog.util.FileUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
+import javax.annotation.Resource;
 
 /**
  * 定时清理文件
@@ -12,13 +14,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class FileCleanTask {
     private Logger logger = LogManager.getLogger(getClass());
+    @Resource
+    private ConfigProperty configProperty;
 
     public void execute() {
         logger.info("文件清理worker执行start...");
         try {
             // D:\idea\projects\XBlog\target\XBlog\
             String rootPath = System.getProperty(Common.APP_NAME);
-            int count = FileUtil.cleanFiles(rootPath);
+            String photoFolderPath = rootPath + configProperty.getPhotoFolder();
+            int count = 0;
+            count += FileUtil.cleanFiles(photoFolderPath);
             logger.info("清理文件数:" + count);
         } catch (Exception e) {
             logger.error("文件清理发生错误:" + e.getMessage());

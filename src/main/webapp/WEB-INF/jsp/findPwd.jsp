@@ -5,6 +5,7 @@
     <title>找回密码</title>
     <%@include file="common/head.jsp" %>
     <script src="/resource/js/validator.min.js"></script>
+    <script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
     <style type="text/css">
         #panel {
             width: 500px;
@@ -172,7 +173,7 @@
                 type: 'PUT',
                 success: function (data) {
                     if (data.success) {
-                        alert('密码重置成功');
+                        layer.msg('密码重置成功');
                         window.location = '/login';
                     } else {
                         $('#error').show();

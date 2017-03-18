@@ -9,6 +9,7 @@
     <script src="//cdn.bootcss.com/angular.js/1.5.11/angular.min.js"></script>
     <script src="/resource/js/app.js"></script>
     <script src="//cdn.bootcss.com/moment.js/2.17.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
 </head>
 <body>
 <%@include file="common/title.jsp" %>
@@ -183,7 +184,7 @@
                         item.currentClass = 'clicked';
                         item.likeCount++;
                     }, function (text) {
-                        alert(text);
+                        layer.msg(text);
                     });
                 }
             };
@@ -202,7 +203,7 @@
                         }
                     });
                 } else {
-                    alert('登录后可评论和赞');
+                    layer.msg('登录后可评论和赞');
                     window.location = '/login';
                 }
             };

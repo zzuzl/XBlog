@@ -184,7 +184,7 @@
                 }
                 this.updateAttentionButton();
             } else {
-                alert('请先登录');
+                layer.msg('请先登录');
                 window.location = '/login';
             }
         },
@@ -197,7 +197,7 @@
                     window.obj.attention = true;
                     window.obj.updateAttentionButton();
                 } else {
-                    alert(data.msg);
+                    layer.msg(data.msg);
                 }
             }, 'JSON')
         },
@@ -211,7 +211,7 @@
                         window.obj.attention = false;
                         window.obj.updateAttentionButton();
                     } else {
-                        alert(data.msg);
+                        layer.msg(data.msg);
                     }
                 }
             });
@@ -297,7 +297,7 @@
                                             }
                                         }
                                     } else {
-                                        alert(res.data.msg);
+                                        layer.msg(res.data.msg);
                                     }
                                 });
                     }
@@ -347,7 +347,7 @@
                         if (res.data.success) {
                             item.state = 2;
                         } else {
-                            alert(res.data.msg);
+                            layer.msg(res.data.msg);
                         }
                     });
                 }
@@ -407,7 +407,7 @@
                                     }
                                 }
                             } else {
-                                alert(res.data.msg);
+                                layer.msg(res.data.msg);
                             }
                         });
                     }
@@ -428,7 +428,7 @@
                                 vm.data[i].state = 2;
                             }
                         } else {
-                            alert(res.data.msg);
+                            layer.msg(res.data.msg);
                         }
                     });
                 }
