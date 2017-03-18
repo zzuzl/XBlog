@@ -4,6 +4,7 @@ package cn.zzuzl.xblog.dao;
 import cn.zzuzl.xblog.model.task.Task;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public interface TaskDao {
                         @Param("taskStatusList") List<Integer> taskStatusList);
 
     int updateTaskStatus(@Param("id") Long id,
-                     @Param("id") Integer taskStatus);
+                         @Param("taskStatus") Integer taskStatus);
 
     int insertTask(Task task);
 

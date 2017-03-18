@@ -81,11 +81,10 @@ public class ArticleService {
      * 发表文章
      *
      * @param article
-     * @param request
      * @return
      */
     @Transactional(rollbackFor = {Exception.class})
-    public Result insertArticle(Article article, HttpServletRequest request) {
+    public Result insertArticle(Article article) {
         Result result = article.valid();
 
         if (result.isSuccess()) {

@@ -22,11 +22,14 @@ public class FileUtil {
 
         if (rootFolder.exists()) {
             if (!rootFolder.isDirectory()) {
-                // 删除30分钟之前的文件
+                // 删除10分钟之前的文件
                 if (System.currentTimeMillis() - rootFolder.lastModified() > timeGap) {
-                    rootFolder.deleteOnExit();
-                    logger.info("清理:" + rootFolder.getAbsolutePath());
-                    count++;
+                    if (rootFolder.delete()) {
+                        logger.info("清理:" + rootFolder.getAbsolutePath());
+                        count++;
+                    } else {
+                        logger.error("文件删除失败");
+                    }
                 }
             } else {
                 File[] files = rootFolder.listFiles();

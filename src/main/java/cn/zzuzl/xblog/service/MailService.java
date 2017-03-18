@@ -82,9 +82,10 @@ public class MailService {
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
             public void prepare(MimeMessage mimeMessage) throws Exception {
                 final String nickname = MimeUtility.encodeText(configProperty.getUsername());
+                final String from = nickname + "<" + configProperty.getFromAddress() + ">";
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                 message.setTo(email);
-                message.setFrom(new InternetAddress(nickname + "<" + configProperty.getFromAddress() + ">"));
+                message.setFrom(new InternetAddress(from));
                 message.setSubject(subject);
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
                         velocityEngine, location, "utf-8", model);

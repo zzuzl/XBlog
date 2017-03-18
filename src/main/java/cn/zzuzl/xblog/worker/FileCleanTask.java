@@ -15,14 +15,13 @@ import javax.annotation.Resource;
 @Component
 public class FileCleanTask {
     private Logger logger = LogManager.getLogger(getClass());
-    private static final long timeGap = 30 * 60 * 1000;
+    private static final long timeGap = 10 * 60 * 1000;
     @Resource
     private ConfigProperty configProperty;
 
     public void execute() {
         logger.info("文件清理worker执行start...");
         try {
-            // D:\idea\projects\XBlog\target\XBlog\
             String rootPath = System.getProperty(Common.APP_NAME);
             String photoFolderPath = rootPath + configProperty.getPhotoFolder();
             int count = 0;

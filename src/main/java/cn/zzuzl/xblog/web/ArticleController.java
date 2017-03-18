@@ -55,9 +55,8 @@ public class ArticleController {
     /* 发表文章 */
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public Result postArticle(@Valid @ModelAttribute("article") Article article,
-                              BindingResult bindingResult, HttpServletRequest request) {
-        return articleService.insertArticle(article, request);
+    public Result postArticle(@Valid @ModelAttribute("article") Article article, BindingResult bindingResult) {
+        return articleService.insertArticle(article);
     }
 
     /* 修改文章 */

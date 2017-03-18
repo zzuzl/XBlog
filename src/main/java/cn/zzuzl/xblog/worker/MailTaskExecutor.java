@@ -17,10 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class MailTaskExecutor extends BaskTaskTemplate<Task> {
@@ -35,7 +32,7 @@ public class MailTaskExecutor extends BaskTaskTemplate<Task> {
 
     public List<Task> getTasks() {
         logger.info("list MailTask...");
-        List<Integer> taskStatusList = Collections.emptyList();
+        List<Integer> taskStatusList = new ArrayList<Integer>();
         taskStatusList.add(TaskStatusEnum.INIT_TASK_STATUS.getValue());
         taskStatusList.add(TaskStatusEnum.FAIL_TASK_STATUS.getValue());
         return taskService.listTask(TaskTypeEnum.MAIL_TASK.getValue(), taskStatusList);

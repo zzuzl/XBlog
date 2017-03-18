@@ -25,7 +25,7 @@
     <!-- 邮件发送方配置bean -->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="${mail.smtp.host}"/>
-        <property name="username" value="${mail.username}"/>
+        <property name="username" value="${mail.from}"/>
         <property name="password" value="${mail.password}"/>
         <property name="javaMailProperties">
             <props>
