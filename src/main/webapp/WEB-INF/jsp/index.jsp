@@ -60,6 +60,7 @@
                         <a href="/${item.url}" class="thumbnail" title="${item.nickname}" target="_blank">
                             <img src="${item.photoSrc}"/>
                         </a>
+                        <a href="/${item.url}" target="_blank" class="nickname">${item.nickname}</a>
                     </li>
                 </c:forEach>
             </ol>
@@ -68,7 +69,7 @@
             <div class="list-item row" ng-repeat="item in vm.data">
                 <div class="col-xs-1 head-photo">
                     <a href="/{{item.user.url}}" target="_blank" class="thumbnail">
-                        <img src="{{item.user.photoSrc}}" alt="暂无"/>
+                        <img ng-src="{{item.user.photoSrc}}" alt="暂无"/>
                     </a>
                 </div>
                 <div class="col-xs-11">
