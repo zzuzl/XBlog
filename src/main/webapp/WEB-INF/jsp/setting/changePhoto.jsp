@@ -95,12 +95,14 @@
                 } else {
                     updateLabel(f[0].name);
 
+                    layer.load(2, {shade: false});
                     $.ajaxFileUpload({
                         url: '/file/upload',
                         secureuri: false,
                         fileElementId: 'file',
                         dataType: 'json',
                         success: function (data) {
+                            layer.closeAll('loading');
                             if (data.success) {
                                 obj.changeSrc(data.filename);
                             } else {
@@ -108,6 +110,7 @@
                             }
                         },
                         error: function (data, status, e) {
+                            layer.closeAll('loading');
                             layer.msg('文件上传失败！' + e);
                         }
                     })

@@ -137,7 +137,7 @@
                                                     <fmt:formatDate value="${item.postTime}"
                                                                     pattern="yyyy-MM-dd HH:mm"/>
                                                 </span>
-                                                <span class="name">
+                                                    <span class="name">
                                                     <a href="/u/${item.user.url}">${item.user.nickname}</a>
                                                 </span>
                                                 </div>

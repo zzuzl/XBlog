@@ -23,6 +23,7 @@ public class User implements Serializable {
     private String interest;
     private String sex;
     private String url;
+    private int rankScore;
 
     public User() {}
 
@@ -204,5 +205,13 @@ public class User implements Serializable {
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public int getRankScore() {
+        return rankScore;
+    }
+
+    public void setRankScore(int rankScore) {
+        this.rankScore = rankScore;
     }
 }

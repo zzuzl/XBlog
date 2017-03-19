@@ -55,7 +55,7 @@
                 <c:forEach items="${requestScope.userRank}" var="item" varStatus="index">
                     <li>
                         <div class="index-order">
-                            ${index.index + 1}.
+                                ${index.index + 1}.
                         </div>
                         <a href="/${item.url}" class="thumbnail" title="${item.nickname}" target="_blank">
                             <img src="${item.photoSrc}"/>
@@ -65,7 +65,7 @@
                 </c:forEach>
             </ol>
         </div>
-        <div class="col-xs-9">
+        <div class="col-xs-9 showArea" id="dataArea">
             <div class="list-item row" ng-repeat="item in vm.data">
                 <div class="col-xs-1 head-photo">
                     <a href="/{{item.user.url}}" target="_blank" class="thumbnail">
@@ -141,13 +141,24 @@
         'use strict';
 
         angular.module('app')
-                .controller('IndexCtrl', IndexCtrl);
+            .controller('IndexCtrl', IndexCtrl);
 
         IndexCtrl.$inject = ['$http'];
 
         function IndexCtrl($http) {
             var vm = this;
             vm.init = false;
+
+            // 显示加载中
+            vm.showLoading = function () {
+                layer.load(0, {shade: false});
+            };
+
+            // 隐藏加载中
+            vm.hideLoading = function () {
+                layer.closeAll('loading');
+                angular.element('#dataArea').removeClass('showArea');
+            };
 
             // 加载文章数据
             vm.load = function (params, callback) {
@@ -159,8 +170,11 @@
                 }
                 url += '?cate=' + vm.cate;
 
+                vm.showLoading();
+
                 $http.get(url).then(function (res) {
-                    if(res.data.itemList) {
+
+                    if (res.data.itemList) {
                         for (var i = 0; i < res.data.itemList.length; i++) {
                             res.data.itemList[i].currentClass = 'unClicked';
                         }
@@ -174,6 +188,8 @@
                         vm.data = res.data.itemList;
                         vm.total = res.data.totalItem;
                     }
+
+                    vm.hideLoading();
                     window.scrollTop = 0;
                 });
             };

@@ -6,6 +6,7 @@
     <%@include file="../common/head.jsp" %>
     <link rel="stylesheet" href="/resource/css/info.css">
     <script src="/resource/js/validator.min.js"></script>
+    <script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
 </head>
 <body>
 <%@include file="../common/title.jsp" %>

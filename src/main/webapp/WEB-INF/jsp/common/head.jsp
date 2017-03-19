@@ -21,5 +21,14 @@
         var height = window.innerHeight;
 
         $('#container').css('min-height', height + 'px');
+
+        // ajax开始
+        $(document).ajaxStart(function () {
+            layer.load(2, {shade: false});
+        });
+        // ajax结束
+        $(document).ajaxComplete(function () {
+            layer.closeAll('loading');
+        });
     });
 </script>

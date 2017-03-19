@@ -176,7 +176,7 @@
     </update>
     <select id="getUserRank" resultType="User">
         SELECT
-            sum(a.view_count + a.like_count + a.comment_count) AS score,
+            sum(a.view_count + a.like_count + a.comment_count) AS rankScore,
             u.user_id,
             u.nickname,
             u.photo_src,
@@ -184,7 +184,7 @@
         FROM t_user u, t_article a
         WHERE a.user_id = u.user_id
         GROUP BY a.user_id
-        ORDER BY score ASC
+        ORDER BY rankScore ASC
         LIMIT 0, #{count};
     </select>
 </mapper>
