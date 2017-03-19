@@ -8,7 +8,6 @@
     <link href="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/themes/default/default.css" rel="stylesheet"/>
     <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/kindeditor-all-min.js"></script>
     <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/lang/zh-CN.js"></script>
-    <script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
     <link href="/resource/css/blog.css" rel="stylesheet">
     <link href="/resource/css/index.css" rel="stylesheet"/>
     <link href="/resource/css/detail.css" rel="stylesheet"/>

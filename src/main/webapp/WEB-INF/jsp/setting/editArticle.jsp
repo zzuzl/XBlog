@@ -8,7 +8,6 @@
     <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/kindeditor-all-min.js"></script>
     <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/lang/zh-CN.js"></script>
     <script src="/resource/js/validator.min.js"></script>
-    <script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
     <script>
         var editorConfig = {
             width: '100%',

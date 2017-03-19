@@ -5,7 +5,6 @@
     <title>找回密码</title>
     <%@include file="common/head.jsp" %>
     <script src="/resource/js/validator.min.js"></script>
-    <script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
     <style type="text/css">
         #panel {
             width: 500px;

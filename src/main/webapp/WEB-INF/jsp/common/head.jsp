@@ -14,19 +14,18 @@
 <link rel="stylesheet" href="/resource/css/index.css">
 <script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
 <script type="application/javascript">
-    // 适配页面高度
     $(function () {
-        //浏览器当前窗口可视区域高度
         var height = window.innerHeight;
 
         $('#container').css('min-height', height + 'px');
 
-        // ajax开始
-        $(document).ajaxStart(function () {
+        // ajax send
+        $(document).ajaxSend(function (evt, request, settings) {
             layer.load(2, {shade: false});
         });
-        // ajax结束
+        // ajax complete
         $(document).ajaxComplete(function () {
             layer.closeAll('loading');
         });

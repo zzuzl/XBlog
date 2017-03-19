@@ -8,7 +8,6 @@
     <link href="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/cropper-master/dist/cropper.min.css" rel="stylesheet">
     <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/cropper-master/dist/cropper.min.js"></script>
     <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/ajaxfileupload.js"></script>
-    <script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
     <style>
         img {
             max-width: 100%;
