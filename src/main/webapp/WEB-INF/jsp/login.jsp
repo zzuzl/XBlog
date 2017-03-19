@@ -93,6 +93,8 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" color="255,0,0" opacity='0.7' zIndex="-1" count="200"
+        src="//cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
 <script>
     /* 文档加载完后执行该函数 */
     $(function () {

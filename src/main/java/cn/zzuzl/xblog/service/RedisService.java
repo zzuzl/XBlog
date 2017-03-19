@@ -240,13 +240,10 @@ public class RedisService implements InitializingBean {
      * @param key
      * @param hashKey
      */
-    public void deleteHashCache(Object key, Object hashKey) {
+    public Long deleteHashCache(Object key, Object hashKey) {
         if (StringUtils.isEmpty(key) || StringUtils.isEmpty(hashKey)) {
-            return;
+            return null;
         }
-        BoundHashOperations<Object, Object, Object> ops = redisTemplate.boundHashOps(String.valueOf(key));
-        if (ops != null) {
-            ops.delete(String.valueOf(hashKey));
-        }
+        return redisTemplate.opsForHash().delete(String.valueOf(key), String.valueOf(hashKey));
     }
 }

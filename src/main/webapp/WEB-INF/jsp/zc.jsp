@@ -112,7 +112,8 @@
         <p><a href="/zc">请重新注册</a></p>
     </div>
 </div>
-
+<script type="text/javascript" color="255,0,0" opacity='0.7' zIndex="-1" count="200"
+        src="//cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
 </body>
 <script>
 
