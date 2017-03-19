@@ -17,23 +17,23 @@ public class ConfigProperty {
     @Value("${mail.username}")
     private String username;
 
-    @Value("${clean.photo.folder}")
-    private String photoFolder;
-
     @Value("${oss.photo-pic}")
     private String ossPhotoPic;
 
-    @Value("${oss.files.uploadMedia}")
-    private String ossFilesMedia;
+    @Value("${clean.photo.folder}")
+    private String photoFolder;
 
-    @Value("${oss.files.uploadFile}")
-    private String ossFilesFile;
+    @Value("${clean.uploadMedia.folder}")
+    private String uploadMediaFolder;
 
-    @Value("${oss.files.uploadImage}")
-    private String ossFilesImage;
+    @Value("${clean.uploadFile.folder}")
+    private String uploadFileFolder;
 
-    @Value("${oss.files.uploadFlash}")
-    private String ossFilesFlash;
+    @Value("${clean.uploadImage.folder}")
+    private String uploadImageFolder;
+
+    @Value("${clean.uploadFlash.folder}")
+    private String uploadFlashFolder;
 
     public String getRoot() {
         return "http://" + domain;
@@ -47,27 +47,27 @@ public class ConfigProperty {
         return username;
     }
 
-    public String getPhotoFolder() {
-        return photoFolder;
-    }
-
     public String getOssPhotoPic() {
         return ossPhotoPic;
     }
 
-    public String getOssFilesMedia() {
-        return ossFilesMedia;
+    public String getPhotoFolder() {
+        return photoFolder;
     }
 
-    public String getOssFilesFile() {
-        return ossFilesFile;
+    public String getUploadMediaFolder() {
+        return uploadMediaFolder;
     }
 
-    public String getOssFilesImage() {
-        return ossFilesImage;
+    public String getUploadFileFolder() {
+        return uploadFileFolder;
     }
 
-    public String getOssFilesFlash() {
-        return ossFilesFlash;
+    public String getUploadImageFolder() {
+        return uploadImageFolder;
+    }
+
+    public String getUploadFlashFolder() {
+        return uploadFlashFolder;
     }
 }

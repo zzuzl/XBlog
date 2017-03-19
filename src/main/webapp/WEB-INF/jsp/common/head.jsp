@@ -12,6 +12,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="/resource/css/common.css">
 <link rel="stylesheet" href="/resource/css/index.css">
+<link rel = "Shortcut Icon" href=/favicon.ico>
 <script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>

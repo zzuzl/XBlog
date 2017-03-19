@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 public class FileCleanTask {
     private Logger logger = LogManager.getLogger(getClass());
     private static final long timeGap = 10 * 60 * 1000;
+    private static final long fileTimeGap = 60 * 60 * 1000;
     @Resource
     private ConfigProperty configProperty;
 
@@ -23,9 +24,17 @@ public class FileCleanTask {
         logger.info("文件清理worker执行start...");
         try {
             String rootPath = System.getProperty(Common.APP_NAME);
-            String photoFolderPath = rootPath + configProperty.getPhotoFolder();
             int count = 0;
-            count += FileUtil.cleanFiles(photoFolderPath, timeGap);
+            // 清理上传头像的文件目录
+            count += FileUtil.cleanFiles(rootPath + configProperty.getPhotoFolder(), timeGap);
+            // 清理上传的媒体文件
+            count += FileUtil.cleanFiles(rootPath + configProperty.getUploadMediaFolder(), fileTimeGap);
+            // 清理上传的普通文件
+            count += FileUtil.cleanFiles(rootPath + configProperty.getUploadFileFolder(), fileTimeGap);
+            // 清理上传的图片文件
+            count += FileUtil.cleanFiles(rootPath + configProperty.getUploadImageFolder(), fileTimeGap);
+            // 清理上传的flash文件
+            count += FileUtil.cleanFiles(rootPath + configProperty.getUploadFlashFolder(), fileTimeGap);
             logger.info("清理文件数:" + count);
         } catch (Exception e) {
             logger.error("文件清理发生错误:" + e.getMessage());
