@@ -10,9 +10,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -177,12 +175,13 @@ public class Utils {
 
     /**
      * 判断一个字符串是否符合正则
+     *
      * @param input
      * @param pattern
      * @return
      */
-    public static boolean isMatch(String input,String pattern) {
-        if(input == null || pattern == null) {
+    public static boolean isMatch(String input, String pattern) {
+        if (input == null || pattern == null) {
             return false;
         }
 
@@ -191,10 +190,53 @@ public class Utils {
         return matcher.find();
     }
 
-    // 返回一个系统消息实例
+    /**
+     * 转换合适的文件大小文本
+     *
+     * @param size
+     * @return
+     */
+    public static String getSizeText(Long size) {
+        String result = "0B";
+        if (size != null && size > 0) {
+            Map<String, Integer> map = new HashMap<String, Integer>();
+            map.put("count", 0);
+            Long num = convertSize(size, map);
+            switch (map.get("count")) {
+                case 0:
+                    result = num + "B";
+                    break;
+                case 1:
+                    result = num + "KB";
+                    break;
+                case 2:
+                    result = num + "MB";
+                    break;
+                case 3:
+                    result = num + "GB";
+                    break;
+            }
+        }
+        return result;
+    }
 
+    private static Long convertSize(Long size, Map<String, Integer> map) {
+        if (size < 1024) {
+            return size;
+        } else {
+            Integer i = map.get("count");
+            if (i > 3) {
+                return size;
+            } else {
+                map.put("count", i + 1);
+                return convertSize(size / 1024, map);
+            }
+        }
+    }
+
+    // 返回一个系统消息实例
     public static void main(String[] args) {
-        logger.info(isMatch("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                ".*text/html.*"));
+        // logger.info(isMatch("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", ".*text/html.*"));
+        System.out.println(getSizeText(10240 * 1024 * 1024L));
     }
 }

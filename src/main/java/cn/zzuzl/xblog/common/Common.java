@@ -14,6 +14,8 @@ public class Common {
     public static final String DATA = "data";
     public static final String USER = "user";
     public static final String FILENAME = "filename";
+    public static final String SIMPLE_FILENAME = "simpleFilename";
+    public static final String FILEPATH = "filePath";
     public static final String ARTICLE_ARRAY = "articleArray";
     public static final String UNREAD_MSG_COUNT = "unreadMsgCount";
 

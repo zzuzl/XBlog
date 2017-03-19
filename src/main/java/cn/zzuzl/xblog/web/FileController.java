@@ -6,6 +6,7 @@ import cn.zzuzl.xblog.service.FileService;
 import cn.zzuzl.xblog.common.Common;
 import cn.zzuzl.xblog.model.User;
 import cn.zzuzl.xblog.service.UserService;
+import cn.zzuzl.xblog.util.ConfigProperty;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,8 @@ public class FileController {
     private FileService fileService;
     @Resource
     private UserService userService;
+    @Resource
+    private ConfigProperty configProperty;
 
     /* 文件上传controller */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -56,9 +59,8 @@ public class FileController {
     @RequestMapping(value = "/uploadInArticle", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> uploadInArticle(@RequestParam("imgFile") MultipartFile imgFile,
-                                               @RequestParam("dir") final String dir,
-                                               HttpServletRequest request) throws IOException {
-        UploadType uploadType = UploadType.valueOf(dir);
+                                               @RequestParam("dir") final String dir) throws IOException {
+        UploadType uploadType = UploadType.valueOfType(dir);
         Map<String, Object> result = new HashMap<String, Object>();
 
         if (imgFile.isEmpty()) {
@@ -67,10 +69,10 @@ public class FileController {
         } else {
             if (uploadType != null) {
                 result = fileService.uploadFiles(imgFile, uploadType);
-                if ((Integer) result.get("error") == 0 && uploadType == UploadType.IMAGE) {
+                /*if ((Integer) result.get("error") == 0 && uploadType == UploadType.IMAGE) {
                     // 对上传的图片进行缩放处理
                     zoomPicture(request.getSession().getServletContext().getRealPath("/") + result.get(Common.FILENAME));
-                }
+                }*/
             } else {
                 result.put("error", 1);
                 result.put("message", "文件类型错误");
@@ -94,11 +96,11 @@ public class FileController {
                 String str = user.getUserId() + filename.substring(filename.lastIndexOf("."));
                 File file = new File(path + filename);
                 // 如果文件不存在，返回失败
-                if(!file.exists()) {
+                if (!file.exists()) {
                     result.setSuccess(false);
                     result.setMsg("文件不存在，请重新上传!");
                 } else {
-                    result = fileService.uploadToOSS(file, str);
+                    result = fileService.uploadToOSS(file, configProperty.getOssPhotoPic() + str);
                     if (result.isSuccess()) {
                         String newPath = result.getMsg();
                         result = userService.changePhoto(result.getMsg(), user.getUserId());

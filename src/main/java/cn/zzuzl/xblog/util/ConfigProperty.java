@@ -20,6 +20,21 @@ public class ConfigProperty {
     @Value("${clean.photo.folder}")
     private String photoFolder;
 
+    @Value("${oss.photo-pic}")
+    private String ossPhotoPic;
+
+    @Value("${oss.files.uploadMedia}")
+    private String ossFilesMedia;
+
+    @Value("${oss.files.uploadFile}")
+    private String ossFilesFile;
+
+    @Value("${oss.files.uploadImage}")
+    private String ossFilesImage;
+
+    @Value("${oss.files.uploadFlash}")
+    private String ossFilesFlash;
+
     public String getRoot() {
         return "http://" + domain;
     }
@@ -34,5 +49,25 @@ public class ConfigProperty {
 
     public String getPhotoFolder() {
         return photoFolder;
+    }
+
+    public String getOssPhotoPic() {
+        return ossPhotoPic;
+    }
+
+    public String getOssFilesMedia() {
+        return ossFilesMedia;
+    }
+
+    public String getOssFilesFile() {
+        return ossFilesFile;
+    }
+
+    public String getOssFilesImage() {
+        return ossFilesImage;
+    }
+
+    public String getOssFilesFlash() {
+        return ossFilesFlash;
     }
 }

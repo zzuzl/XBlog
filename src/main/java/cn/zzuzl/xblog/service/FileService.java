@@ -3,6 +3,7 @@ package cn.zzuzl.xblog.service;
 import cn.zzuzl.xblog.common.Common;
 import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.UploadType;
+import cn.zzuzl.xblog.util.ConfigProperty;
 import cn.zzuzl.xblog.util.Utils;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.OSSObject;
@@ -13,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +32,8 @@ public class FileService {
     private static final String accessKeyId = "LTAIt4St90z5n4ZK";
     private static final String accessKeySecret = "hEm0M3TDbqmZv77Vvhxwx2qU5GReM6";
     private static final String bucketName = "xblog-mis";
-    private static final String PRE_XBLOG_PHOTO_KEY = "xblog/photo-pic/";
+    @Resource
+    private ConfigProperty configProperty;
 
     /**
      * 上传头像图片
@@ -70,15 +73,25 @@ public class FileService {
         result.put("error", 1);
 
         if (file.getSize() > uploadType.getMaxSize()) {
-            result.put("message", "文件过大：不超过" + uploadType.getMaxSize() / 1000 + "KB");
+            result.put("message", "文件过大：不超过" + Utils.getSizeText(uploadType.getMaxSize()));
             return result;
         } else if (!Arrays.asList(uploadType.getFormats()).contains(fileFormat)) {
             result.put("message", "文件格式错误，支持的格式：" + Arrays.toString(uploadType.getFormats()));
         } else {
             result = uploadFileCore(file, uploadType.getFolder());
             if ((Boolean) result.get(Common.SUCCESS)) {
-                result.put("error", 0);
-                result.put("url", System.getProperty(Common.APP_NAME) + result.get(Common.FILENAME));
+                String newFileName = (String) result.get(Common.SIMPLE_FILENAME);
+                String newFilePath = (String) result.get(Common.FILEPATH);
+                File localFile = new File(newFilePath);
+                Result _result = uploadToOSS(localFile, uploadType.getOssKey() + newFileName);
+                if (_result.isSuccess()) {
+                    result.put(Common.SUCCESS, true);
+                    result.put("error", 0);
+                    result.put("url", _result.getMsg());
+                } else {
+                    result.put(Common.SUCCESS, false);
+                    result.put(Common.MSG, _result.getMsg());
+                }
             } else {
                 result.put("message", result.get(Common.MSG));
             }
@@ -132,8 +145,8 @@ public class FileService {
         }
 
         String fileName = file.getOriginalFilename();
-        String newFileName = childPath + "/" + Utils.uuid() + fileName.substring(fileName.lastIndexOf("."));
-        String newFilePath = path + newFileName;
+        String newFileName = Utils.uuid() + fileName.substring(fileName.lastIndexOf("."));
+        String newFilePath = path + childPath + "/" + newFileName;
         try {
             file.transferTo(new File(newFilePath));
         } catch (IOException e) {
@@ -143,7 +156,9 @@ public class FileService {
             return result;
         }
         result.put(Common.SUCCESS, true);
-        result.put(Common.FILENAME, newFileName);
+        result.put(Common.SIMPLE_FILENAME, newFileName);
+        result.put(Common.FILENAME, childPath + "/" + newFileName);
+        result.put(Common.FILEPATH, newFilePath);
 
         logger.info(newFilePath);
         return result;
@@ -153,14 +168,13 @@ public class FileService {
      * 上传到OSS
      *
      * @param file
-     * @param fileName
+     * @param key
      * @return
      */
-    public Result uploadToOSS(File file, String fileName) {
+    public Result uploadToOSS(File file, String key) {
         Result result = new Result();
         result.setSuccess(true);
         OSSClient ossClient = null;
-        String key = PRE_XBLOG_PHOTO_KEY + fileName;
 
         try {
             ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
