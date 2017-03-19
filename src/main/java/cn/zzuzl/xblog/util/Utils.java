@@ -176,24 +176,6 @@ public class Utils {
     }
 
     /**
-     * 获取主机ip
-     *
-     * @return
-     */
-    public static String getHostAddress() {
-        InetAddress inetAddress = null;
-        try {
-            inetAddress = InetAddress.getLocalHost();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        if (inetAddress != null) {
-            return inetAddress.getHostAddress();
-        }
-        return "";
-    }
-
-    /**
      * 判断一个字符串是否符合正则
      * @param input
      * @param pattern

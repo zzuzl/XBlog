@@ -3,6 +3,7 @@ package cn.zzuzl.xblog.web;
 import cn.zzuzl.xblog.model.*;
 import cn.zzuzl.xblog.service.*;
 import cn.zzuzl.xblog.common.Common;
+import cn.zzuzl.xblog.util.ConfigProperty;
 import cn.zzuzl.xblog.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,17 +37,17 @@ public class PageController {
     private CommentService commentService;
     @Resource
     private RedisService redisService;
+    @Resource
+    private ConfigProperty configProperty;
     private final Logger logger = LogManager.getLogger(getClass());
 
     /* 主页 */
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
-        List<Object> list = redisService.getAllCategory();
-
+        List<Category> list = redisService.getAllCategory();
         model.addAttribute("list", list);
 
-        List<Object> userRank = redisService.getUserRank();
-        // logger.info(userRank);
+        List<User> userRank = redisService.getUserRank();
         model.addAttribute("userRank", userRank);
         return "index";
     }
@@ -93,14 +94,14 @@ public class PageController {
             }
         }
 
-        model.addAttribute("host", Utils.getHostAddress());
+        model.addAttribute("host", configProperty.getRoot());
         return "setting/info";
     }
 
     /* 发表文章 */
     @RequestMapping(value = "/setting/editArticle", method = RequestMethod.GET)
     public String editArticle(Model model) {
-        List<Object> list = redisService.getAllCategory();
+        List<Category> list = redisService.getAllCategory();
         model.addAttribute("list", list);
         return "setting/editArticle";
     }
@@ -150,7 +151,7 @@ public class PageController {
     public String personalCenter(@PathVariable("url") String url, Model model, HttpSession session, HttpServletResponse response) {
         User user = userService.searchUserByUrl(url);
         User loginUser = (User) session.getAttribute(Common.USER);
-        model.addAttribute("host", Utils.getHostAddress());
+        model.addAttribute("host", configProperty.getRoot());
 
         if (user != null) {
             List<Attention> fans = userService.getAllFans(user.getUserId());

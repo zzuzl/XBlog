@@ -24,8 +24,8 @@
             <h3>${requestScope.user.nickname}</h3>
             <h4 id="age">博龄：2年</h4>
             <h5>博客：
-                <a href="http://xblog.zzuzl.cn/${requestScope.user.url}">
-                    http://xblog.zzuzl.cn/${requestScope.user.url}
+                <a href="/${requestScope.user.url}">
+                    ${host}/${requestScope.user.url}
                 </a>
             </h5>
             <h4>${requestScope.user.motto}</h4>

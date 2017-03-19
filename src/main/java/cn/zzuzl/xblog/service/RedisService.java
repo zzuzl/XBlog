@@ -34,7 +34,6 @@ public class RedisService implements InitializingBean {
     private UserDao userDao;
     private final Logger logger = LogManager.getLogger(getClass());
     private long lastTime = System.currentTimeMillis();
-    private long lastSyncUserRankMinute = System.currentTimeMillis() / (1000 * 60);
 
     /**
      * 初始化超时时间
@@ -150,73 +149,58 @@ public class RedisService implements InitializingBean {
     }
 
     /**
-     * 把mysql的分类信息同步到redis
-     */
-    public void syncCategory() {
-        logger.info("---------------syncCategory----------------");
-        List<Category> categoryList = categoryService.listCategory();
-        redisTemplate.delete(Common.KEY_CATEGORY);
-
-        if (categoryList != null) {
-            for (Category category : categoryList) {
-                redisTemplate.boundListOps(Common.KEY_CATEGORY).leftPushAll(category);
-            }
-        }
-    }
-
-    /**
      * 获取所有的分类
      *
      * @return
      */
-    public List<Object> getAllCategory() {
-        List<Object> categories = null;
+    public List<Category> getAllCategory() {
+        List<Category> categories = new ArrayList<Category>();
         BoundListOperations<Object, Object> listOperations = redisTemplate.boundListOps(Common.KEY_CATEGORY);
         if (listOperations == null || listOperations.size() < 1) {
-            syncCategory();
-            categories = getAllCategory();
+            categories = categoryService.listCategory();
+            if (categories != null) {
+                for (Category category : categories) {
+                    redisTemplate.boundListOps(Common.KEY_CATEGORY).leftPushAll(category);
+                }
+            }
         } else {
-            categories = listOperations.range(0, listOperations.size());
+            List<Object> objects = listOperations.range(0, listOperations.size());
+            if (objects != null && objects.size() > 0) {
+                for (Object o : objects) {
+                    if (o instanceof Category) {
+                        categories.add((Category) o);
+                    }
+                }
+            }
         }
 
         return categories;
     }
 
     /**
-     * 同步用户排行
-     */
-    private void syncUserRank() {
-        logger.info("------------------syncUserRank---------------------");
-        List<User> users = userDao.getUserRank(Common.DEFAULT_ITEM_COUNT);
-
-        redisTemplate.delete(Common.KEY_USERRANK);
-        if (users != null) {
-            for (User user : users) {
-                redisTemplate.boundListOps(Common.KEY_USERRANK).leftPushAll(user);
-            }
-        }
-    }
-
-    /**
-     * 获取用户排行，每12小时更新
+     * 获取用户排行
      *
      * @return
      */
-    public List<Object> getUserRank() {
-        long current = System.currentTimeMillis() / (1000 * 60);
-
-        if ((current - lastSyncUserRankMinute) / 60 > 12) {
-            lastSyncUserRankMinute = current;
-            syncUserRank();
-        }
-
-        List<Object> users = null;
+    public List<User> getUserRank() {
+        List<User> users = new ArrayList<User>();
         BoundListOperations<Object, Object> userRank = redisTemplate.boundListOps(Common.KEY_USERRANK);
         if (userRank == null || userRank.size() < 1) {
-            syncUserRank();
-            users = getUserRank();
+            users = userDao.getUserRank(Common.DEFAULT_ITEM_COUNT);
+            if (users != null) {
+                for (User user : users) {
+                    redisTemplate.boundListOps(Common.KEY_USERRANK).leftPushAll(user);
+                }
+            }
         } else {
-            users = userRank.range(0, userRank.size());
+            List<Object> objects = userRank.range(0, userRank.size());
+            if (objects != null && objects.size() > 0) {
+                for (Object o : objects) {
+                    if (o instanceof User) {
+                        users.add((User) o);
+                    }
+                }
+            }
         }
         return users;
     }
