@@ -60,9 +60,9 @@
                 <div class="list-item">
                     <div class="row">
                         <div class="col-xs-3">
-                            <div class="dateTitle">
+                            <span class="label label-primary" style="padding-left: 30px;padding-right: 30px">
                                 <fmt:formatDate value="${item.postTime}" pattern="yyyy年MM月dd日"/>
-                            </div>
+                            </span>
                         </div>
                         <div class="col-xs-8 title">
                             <a href="/p/${item.articleId}">${item.title}</a>

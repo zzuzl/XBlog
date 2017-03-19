@@ -42,6 +42,10 @@ public class RedisService implements InitializingBean {
     private void initExpire() {
         // 文章失效时间30分钟
         redisTemplate.boundHashOps(Common.KEY_ARTICLEDETAIL).expire(30, TimeUnit.MINUTES);
+        // 用户排行超时时间10分钟
+        redisTemplate.boundListOps(Common.KEY_USERRANK).expire(10, TimeUnit.MINUTES);
+        // 同步分类缓存超时时间10分钟
+        redisTemplate.boundListOps(Common.KEY_CATEGORY).expire(10, TimeUnit.MINUTES);
     }
 
     /**
@@ -149,9 +153,9 @@ public class RedisService implements InitializingBean {
      * 把mysql的分类信息同步到redis
      */
     public void syncCategory() {
-        logger.debug("---------------syncCategory----------------");
+        logger.info("---------------syncCategory----------------");
         List<Category> categoryList = categoryService.listCategory();
-        redisTemplate.delete("category");
+        redisTemplate.delete(Common.KEY_CATEGORY);
 
         if (categoryList != null) {
             for (Category category : categoryList) {
@@ -182,7 +186,7 @@ public class RedisService implements InitializingBean {
      * 同步用户排行
      */
     private void syncUserRank() {
-        logger.debug("------------------syncUserRank---------------------");
+        logger.info("------------------syncUserRank---------------------");
         List<User> users = userDao.getUserRank(Common.DEFAULT_ITEM_COUNT);
 
         redisTemplate.delete(Common.KEY_USERRANK);
@@ -217,10 +221,13 @@ public class RedisService implements InitializingBean {
         return users;
     }
 
+    /**
+     * 属性设置完成后初始化缓存超时时间
+     *
+     * @throws Exception
+     */
     public void afterPropertiesSet() throws Exception {
         initExpire();
-        syncCategory();
-        syncUserRank();
     }
 
     /**

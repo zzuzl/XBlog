@@ -9,7 +9,7 @@
     <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/kindeditor-all-min.js"></script>
     <script src="http://xblog-mis.oss-cn-shanghai.aliyuncs.com/kindeditor/lang/zh-CN.js"></script>
     <script src="//cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
-    <link href="/resource/css/blog.css" rel="stylesheet" >
+    <link href="/resource/css/blog.css" rel="stylesheet">
     <link href="/resource/css/index.css" rel="stylesheet"/>
     <link href="/resource/css/detail.css" rel="stylesheet"/>
     <script>
@@ -57,8 +57,9 @@
                                 ${requestScope.article.content}
                             </div>
                             <h6 class="dash-h6"></h6>
+
                             <h4>分类：${requestScope.article.category.title}</h4>
-                            <h4>标签：${requestScope.article.tag}</h4>
+                            <h4>标签：<span class="label label-success">${requestScope.article.tag}</span></h4>
                             <div class="row">
                                 <div class="col-xs-2">
                                     <a href="/u/${requestScope.article.user.url}" class="thumbnail">
@@ -89,7 +90,8 @@
                                     </c:if>
                                     <a type="button" href="javascript:void(0)" class="btn btn-info gz"
                                        id="like-btn" onclick="obj.like()">
-                                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>${requestScope.article.likeCount}
+                                        <i class="fa fa-thumbs-up"
+                                           aria-hidden="true"></i>${requestScope.article.likeCount}
                                     </a>
                                 </div>
                             </div>
