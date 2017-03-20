@@ -6,28 +6,34 @@
     <%@include file="common/head.jsp" %>
     <script src="/resource/js/validator.min.js"></script>
     <style type="text/css">
+        body {
+            background: #dcdcdc;
+        }
+
         #login-btn {
             width: 100%;
         }
 
         .login-box {
-            width: 80%;
+            width: 50%;
             height: 400px;
             border: solid 1px #afd9ee;
             margin: 0 auto;
             margin-top: 50px;
             margin-bottom: 20px;
+            box-shadow: 10px 20px 40px #9b9b9d;
         }
 
         #form1 {
             width: 300px;
             margin: 0 auto;
-            margin-top: 50px;
         }
 
         .login-content {
             height: 300px;
             width: 100%;
+            padding-top: 50px;
+            background: white;
         }
 
         .login-title {
@@ -43,53 +49,51 @@
 </head>
 <body>
 <div class="container">
-    <div class="row">
-        <div class="col-xs-8 col-xs-offset-2" style="margin-top: 100px">
-            <div class="login-box">
-                <div class="login-title text-center">
-                    <h1><small>登录</small></h1>
-                </div>
-                <div class="login-content">
-                    <form id="form1">
-                        <div class="form-group">
-                            <div class="input-group">
+    <div class="login-box">
+        <div class="login-title text-center">
+            <h1>
+                <small>登录</small>
+            </h1>
+        </div>
+        <div class="login-content">
+            <form id="form1">
+                <div class="form-group">
+                    <div class="input-group">
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-user"></span>
                                 </span>
-                                <input type="email" id="email" name="email" class="form-control" novalidate
-                                       placeholder="邮箱" required>
-                            </div>
-                            <div class="help-block with-errors"></div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
+                        <input type="email" id="email" name="email" class="form-control" novalidate
+                               placeholder="邮箱" required>
+                    </div>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-lock"></span>
                                 </span>
-                                <input type="password" id="password" name="password" class="form-control"
-                                       novalidate placeholder="密码" minlength="6" maxlength="32" required>
-                            </div>
-                            <div class="help-block with-errors"></div>
-                        </div>
-                        <div class="form-group form-actions" style="text-align: center">
-                            <button type="submit" class="btn btn-info" id="login-btn">登录</button>
-                        </div>
-                        <div class="form-group">
-                            <div class="alert alert-danger" role="alert" id="error"></div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <span>忘记密码</span>
-                                <a href="/findPwd" target="_blank">找回密码</a>
-                            </div>
-                            <div class="col-xs-6 link">
-                                <span>没有账号?</span>
-                                <a href="/register" target="_blank">注册</a>
-                            </div>
-                        </div>
-                    </form>
+                        <input type="password" id="password" name="password" class="form-control"
+                               novalidate placeholder="密码" minlength="6" maxlength="32" required>
+                    </div>
+                    <div class="help-block with-errors"></div>
                 </div>
-            </div>
+                <div class="form-group form-actions" style="text-align: center">
+                    <button type="submit" class="btn btn-info" id="login-btn">登录</button>
+                </div>
+                <div class="form-group">
+                    <div class="alert alert-danger" role="alert" id="error"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-6">
+                        <span>忘记密码</span>
+                        <a href="/findPwd" target="_blank">找回密码</a>
+                    </div>
+                    <div class="col-xs-6 link">
+                        <span>没有账号?</span>
+                        <a href="/register" target="_blank">注册</a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
