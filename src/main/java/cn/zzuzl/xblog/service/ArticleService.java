@@ -13,7 +13,11 @@ import cn.zzuzl.xblog.model.vo.NewArticleVO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -37,6 +41,8 @@ public class ArticleService {
     private TaskDao taskDao;
     @Resource
     private RedisService redisService;
+    @Resource
+    private PlatformTransactionManager transactionManager;
 
     private Logger logger = LogManager.getLogger(getClass());
 
@@ -192,18 +198,34 @@ public class ArticleService {
      * @param articleId
      * @return
      */
-    @Transactional
     public Result insertLike(int userId, int articleId) {
         Result result = new Result();
 
         if (userId < 1 || articleId < 1) {
             result.setMsg("用户未登录或文章出错");
         } else {
-            if (articleDao.insertLike(userId, articleId) > 0 &&
-                    articleDao.updateLikeCount(articleId, 1) > 0) {
-                result.setSuccess(true);
-            } else {
-                result.setMsg("您已赞过");
+            TransactionStatus status = null;
+            try {
+                DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+                def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+                status = transactionManager.getTransaction(def);
+
+                // 插入like
+                if (articleDao.insertLike(userId, articleId) > 0 &&
+                        articleDao.updateLikeCount(articleId, 1) > 0) {
+                    result.setSuccess(true);
+                } else {
+                    result.setMsg("您已赞过");
+                }
+                transactionManager.commit(status);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error(e);
+                result.setSuccess(false);
+                result.setMsg("error:" + e.getMessage());
+                if (status != null) {
+                    transactionManager.rollback(status);
+                }
             }
         }
         return result;
