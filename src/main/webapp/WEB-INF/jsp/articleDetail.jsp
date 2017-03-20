@@ -58,7 +58,11 @@
                             <h6 class="dash-h6"></h6>
 
                             <h4>分类：${requestScope.article.category.title}</h4>
-                            <h4>标签：<span class="label label-success">${requestScope.article.tag}</span></h4>
+                            <h4>标签：
+                                <c:forEach items="${requestScope.tags}" var="tag">
+                                    <span class="label label-success">${tag}</span>
+                                </c:forEach>
+                            </h4>
                             <div class="row">
                                 <div class="col-xs-2">
                                     <a href="/u/${requestScope.article.user.url}" class="thumbnail">

@@ -59,7 +59,7 @@
                 <div class="list-item">
                     <div class="row">
                         <div class="col-xs-3">
-                            <span class="label label-primary" style="padding-left: 30px;padding-right: 30px">
+                            <span class="label label-primary" style="display:inline-block;width: 100%">
                                 <fmt:formatDate value="${item.postTime}" pattern="yyyy年MM月dd日"/>
                             </span>
                         </div>
