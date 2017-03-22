@@ -28,4 +28,8 @@
         <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
         管理我的文章
     </a>
+    <a href="/setting/collectArticle" class="list-group-item" id="collect-item">
+        <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+        我收藏的文章
+    </a>
 </div>

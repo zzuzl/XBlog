@@ -9,6 +9,7 @@ import cn.zzuzl.xblog.exception.DataException;
 import cn.zzuzl.xblog.model.Comment;
 import cn.zzuzl.xblog.model.Dynamic;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
@@ -57,7 +58,7 @@ public class CommentService {
      * @param comment
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Result insertComment(Comment comment) {
         Result result = comment.valid();
         if (result.isSuccess()) {

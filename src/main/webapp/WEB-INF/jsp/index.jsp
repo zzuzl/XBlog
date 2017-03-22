@@ -9,6 +9,7 @@
     <script src="//cdn.bootcss.com/angular.js/1.5.11/angular.min.js"></script>
     <script src="/resource/js/app.js"></script>
     <script src="//cdn.bootcss.com/moment.js/2.17.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.bootcss.com/lodash.js/4.17.4/lodash.min.js"></script>
 </head>
 <body>
 <%@include file="common/title.jsp" %>
@@ -140,7 +141,7 @@
         'use strict';
 
         angular.module('app')
-            .controller('IndexCtrl', IndexCtrl);
+                .controller('IndexCtrl', IndexCtrl);
 
         IndexCtrl.$inject = ['$http'];
 
@@ -162,32 +163,23 @@
             // 加载文章数据
             vm.load = function (params, callback) {
                 var url = "/article/page/" + params.page;
-                if (params.cate === undefined) {
-                    vm.cate = 0;
-                } else {
-                    vm.cate = params.cate;
-                }
+                vm.cate = params.cate === undefined ? 0 : params.cate;
                 url += '?cate=' + vm.cate;
 
                 vm.showLoading();
-
                 $http.get(url).then(function (res) {
-
                     if (res.data.itemList) {
-                        for (var i = 0; i < res.data.itemList.length; i++) {
-                            res.data.itemList[i].currentClass = 'unClicked';
-                        }
+                        res.data.itemList.forEach(function (e) {
+                            e.currentClass = 'unClicked'
+                        });
                     }
                     if (callback) {
                         callback(res.data);
-                        if (!vm.init) {
-                            vm.init = true;
-                        }
+                        vm.init = vm.init === undefined ? true: vm.init;
                     } else {
                         vm.data = res.data.itemList;
                         vm.total = res.data.totalItem;
                     }
-
                     vm.hideLoading();
                     window.scrollTop = 0;
                 });

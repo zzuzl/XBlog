@@ -147,6 +147,18 @@ public class PageController {
         return "setting/manageArticle";
     }
 
+    /* 收藏的文章 */
+    @RequestMapping(value = "/setting/collectArticle", method = RequestMethod.GET)
+    public String collectArticle(Model model, HttpSession session) {
+        User user = (User) session.getAttribute(Common.USER);
+        if (user != null) {
+            List<Article> list = articleService.listMyArticle(1, 100, user.getUserId());
+            model.addAttribute("list", list);
+        }
+
+        return "setting/collectArticle";
+    }
+
     /* 用户个人中心 */
     @RequestMapping(value = "/u/{url}", method = RequestMethod.GET)
     public String personalCenter(@PathVariable("url") String url, Model model, HttpSession session, HttpServletResponse response) {

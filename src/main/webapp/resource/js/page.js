@@ -9,7 +9,6 @@
         .directive("xlPage", [function () {
             function link(scope, element, attrs) {
                 var vm = scope.vm;
-                console.log(vm);
 
                 vm.currentPage = 1;
                 vm.total = 0;
