@@ -19,7 +19,7 @@
         <h1>欢迎来到XBlog!</h1>
         <p>
             <a class="btn btn-primary btn-lg" href="/about" role="button">Learn more</a>
-            <c:if test="${sessionScope.user != null}">
+            <c:if test="${requestScope.user != null}">
                 <a class="btn btn-info btn-lg" href="/setting/editArticle" role="button">写博客</a>
             </c:if>
         </p>

@@ -20,18 +20,18 @@
 
             <div class="navbar-right">
                 <c:choose>
-                    <c:when test="${sessionScope.user != null}">
+                    <c:when test="${requestScope.user != null}">
                         <div class="photo-div">
-                            <img src="${sessionScope.user.photoSrc}" width="32" height="32" id="photo_img">
+                            <img src="${requestScope.user.photoSrc}" width="32" height="32" id="photo_img">
                             <s></s>
                         </div>
                         <div class="user-div">
                             <div class="top-div">
-                                <img src="${sessionScope.user.photoSrc}" width="100" height="100"/>
+                                <img src="${requestScope.user.photoSrc}" width="100" height="100"/>
                                 <div class="user-info">
-                                    <h5><a href="/u/${sessionScope.user.url}">${sessionScope.user.nickname}</a>
+                                    <h5><a href="/u/${requestScope.user.url}">${sessionScope.user.nickname}</a>
                                     </h5>
-                                    <h6>${sessionScope.user.email}</h6>
+                                    <h6>${requestScope.user.email}</h6>
                                     <h6>
                                         <a href="/setting/userInfo">
                                             <i class="fa fa-cogs" aria-hidden="true"></i>
@@ -41,11 +41,11 @@
                                             发表博客
                                         </a>
                                     </h6>
-                                    <a href="/u/${sessionScope.user.url}#msg">${sessionScope.unreadMsgCount}条新消息</a>
+                                    <a href="/u/${requestScope.user.url}#msg">${requestScope.unreadMsgCount}条新消息</a>
                                 </div>
                             </div>
                             <div class="bottom-div">
-                                <a href="/${sessionScope.user.url}" id="blog-btn" class="button">
+                                <a href="/${requestScope.user.url}" id="blog-btn" class="button">
                                     <i class="fa fa-home" aria-hidden="true"></i>
                                     我的博客
                                 </a>

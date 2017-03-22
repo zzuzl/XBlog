@@ -35,6 +35,9 @@ public class ConfigProperty {
     @Value("${clean.uploadFlash.folder}")
     private String uploadFlashFolder;
 
+    @Value("${token.secret}")
+    private String secret;
+
     public String getRoot() {
         return "http://" + domain;
     }
@@ -69,5 +72,9 @@ public class ConfigProperty {
 
     public String getUploadFlashFolder() {
         return uploadFlashFolder;
+    }
+
+    public String getSecret() {
+        return secret;
     }
 }

@@ -30,8 +30,7 @@ public class JWTTest {
             Algorithm algorithm = Algorithm.HMAC256("XBlog");
             Date date = new Date();
             token = JWT.create()
-                    .withIssuer(JsonUtil.toJson(user))
-                    .withIssuedAt(date)
+                    .withIssuer("1")
                     .withExpiresAt(DateUtils.addMinutes(date, 30))
                     .sign(algorithm);
         } catch (UnsupportedEncodingException exception) {

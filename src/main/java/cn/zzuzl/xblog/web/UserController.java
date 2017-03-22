@@ -8,10 +8,12 @@ import cn.zzuzl.xblog.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -37,12 +39,14 @@ public class UserController {
     private DynamicService dynamicService;
     @Resource
     private MessageService messageService;
+    @Resource
+    private TokenService tokenService;
     private final Logger logger = LogManager.getLogger(getClass());
 
     /* 用户登录 */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public Result login(String email, String password, HttpSession session) {
+    public Result login(String email, String password, HttpServletResponse response, Model model) {
         Result result = new Result();
         User user = userService.login(email, password);
         if (user != null) {
@@ -53,8 +57,10 @@ public class UserController {
                 logger.debug("------------filed   filed  filed  -------------");
             }
             logger.debug("---------------重新设置未读消息的数量---------------");
-            resetUnreadMsgCount(session, user.getUserId());
-            session.setAttribute(Common.USER, userService.getUserById(user.getUserId()));
+            // resetUnreadMsgCount(session, user.getUserId());
+            String token = tokenService.generateToken(user.getUserId());
+            response.addCookie(new Cookie(Common.TOKEN, token));
+            model.addAttribute(Common.USER,user);
         } else {
             result.setSuccess(false);
             result.setMsg("用户名或密码错误");
