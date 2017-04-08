@@ -23,8 +23,7 @@
                 'insertunorderedlist', '|', 'emoticons', 'link'
             ],
             langType: 'zh-CN',
-            themeType: 'simple',
-            emoticonsPath: 'http://xblog-mis.oss-cn-shanghai.aliyuncs.com/xblog/images/'
+            themeType: 'simple'
         };
 
         KindEditor.ready(function (K) {
@@ -44,9 +43,11 @@
                 </a>
                 <div class="info">
                     <a href="/${requestScope.article.user.url}">${requestScope.article.user.nickname}</a>
-                    <div class="gzDiv-1">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                        关注
+                    <div class="gzDiv-1" v-on:click="changeAttention">
+                        <span v-if="!attention">
+                            <i class="fa fa-plus" aria-hidden="true"></i>关注
+                        </span>
+                        <span v-if="attention">取消关注</span>
                     </div>
                     <div class="meta">
                         <span><fmt:formatDate value="${requestScope.article.postTime}"
@@ -74,32 +75,27 @@
                 </a>
                 <div class="info">
                     <a href="/${requestScope.article.user.url}">${requestScope.article.user.nickname}</a>
-                    <div class="gzDiv-1">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                        关注
+                    <div class="gzDiv-1" v-on:click="changeAttention">
+                        <span v-if="!attention">
+                            <i class="fa fa-plus" aria-hidden="true"></i>关注
+                        </span>
+                        <span v-if="attention">取消关注</span>
+                    </div>
+                    <div class="like-btn" id="like-btn" v-on:click="like">
+                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>{{likeCount}}
                     </div>
                     <div class="meta">
                         <span id="age"></span>
                         <span>拥有<a href="/u/${requestScope.article.user.url}">${requestScope.article.user.fansCount}</a>个粉丝</span>
-                        <span>正在关注<a
-                                href="/u/${requestScope.article.user.url}">${requestScope.article.user.attentionCount}</a>个人</span>
+                        <span>
+                            正在关注
+                            <a href="/u/${requestScope.article.user.url}">${requestScope.article.user.attentionCount}</a>
+                            个人
+                        </span>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-xs-2 col-xs-offset-6">
-                    <a type="button" href="javascript:void(0)" class="btn btn-danger gz"
-                       v-on:click="changeAttention">
-                        <span v-if="!attention"><i class="fa fa-plus" aria-hidden="true"></i>关注</span>
-                        <span v-if="attention">取消关注</span>
-                    </a>
-                    <a type="button" href="javascript:void(0)" class="btn btn-info gz"
-                       id="like-btn" v-on:click="like">
-                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>{{likeCount}}
-                    </a>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-xs-6">
                     <c:if test="${requestScope.article.pre != null}">
@@ -248,9 +244,6 @@
                 }, function (data) {
                     if (data.success) {
                         this.likeCount += 1;
-                        /*$('#like-btn').addClass('active');
-                        $('#like-btn').attr('disabled', 'disabled');
-                        $('#like-btn').css('color', 'black');*/
                     } else {
                         layer.msg(data.msg);
                     }
@@ -259,7 +252,7 @@
             changeAttention: function () {
                 if (this.attention) {
                     $.ajax({
-                        url: '/user/attention?from=${sessionScope.user.userId}&to=${requestScope.article.user.userId}',
+                        url: '/user/attention?from=' + this.userId + '&to=${requestScope.article.user.userId}',
                         type: 'DELETE',
                         dataType: 'JSON',
                         success: function (data) {

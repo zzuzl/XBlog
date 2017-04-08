@@ -44,8 +44,13 @@ body {
     width: 70px;
 }
 
-#like-btn {
-    margin-top: 15px;
+.like-btn {
+    display: inline-block;
+    background: #807c1e;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 13px;
+    color: white;
 }
 
 .dash-h6 {
@@ -110,7 +115,7 @@ body {
     color: white;
 }
 
-.gzDiv-1:hover {
+.gzDiv-1:hover,.like-btn:hover {
     cursor: pointer;
 }
 

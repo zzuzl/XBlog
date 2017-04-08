@@ -13,7 +13,7 @@
         <if test="cate &gt; 0">
             and a.cate_id=#{cate}
         </if>
-        order by post_time desc
+        order by update_time desc
         limit #{start},#{count}
     </select>
 
@@ -70,20 +70,20 @@
     </select>
 
     <insert id="insertArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="articleId">
-        INSERT INTO t_article (cate_id, title, description, content, user_id, tag) VALUES
-            (#{category.cateId}, #{title}, #{description}, #{content}, #{user.userId}, #{tag})
+        INSERT INTO t_article (cate_id, title, description, content, user_id, tag, update_time) VALUES
+            (#{category.cateId}, #{title}, #{description}, #{content}, #{user.userId}, #{tag}, now())
     </insert>
 
     <update id="updateCommentCount">
         UPDATE t_article
-        SET `comment_count` = comment_count + #{count}
+        SET `comment_count` = comment_count + #{count}, update_time=now()
         WHERE article_id = #{articleId}
     </update>
 
     <update id="updateArticle">
         UPDATE t_article
         SET cate_id = #{category.cateId}, title = #{title}, description = #{description}, content = #{content},
-            tag     = #{tag}
+            tag     = #{tag}, update_time=now()
         WHERE article_id = #{articleId}
     </update>
 

@@ -20,6 +20,7 @@ public class Article implements Serializable {
     private String content;
     private String description;
     private Date postTime;
+    private Date updateTime;
     private int viewCount;
     private int commentCount;
     private int likeCount;
@@ -187,5 +188,13 @@ public class Article implements Serializable {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
