@@ -1,12 +1,15 @@
 package cn.zzuzl.xblog.web;
 
 import cn.zzuzl.xblog.common.Common;
+import cn.zzuzl.xblog.exception.ServiceException;
 import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.Article;
 import cn.zzuzl.xblog.model.Pager;
 import cn.zzuzl.xblog.model.User;
 import cn.zzuzl.xblog.service.ArticleService;
 import cn.zzuzl.xblog.service.RedisService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +31,7 @@ public class ArticleController {
     private ArticleService articleService;
     @Resource
     private RedisService redisService;
+    private Logger logger = LogManager.getLogger(getClass());
 
     /* 获取第n页的文章，默认每页15篇 */
     @RequestMapping(value = "/page/{page}", method = RequestMethod.GET)

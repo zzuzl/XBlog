@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+body {
+    background: white;
+}
+
 .comment-item {
     width: 100%;
     min-height: 80px;
@@ -69,7 +73,6 @@
     margin-bottom: 5px;
     font-size: 14px;
     padding-left: 5px;
-    display: none;
 }
 
 .click-close .text {
@@ -78,4 +81,50 @@
 
 #add-btn, #cancel-btn {
     display: none;
+}
+
+.articleTitle {
+    font-weight: bold;
+    text-align: center;
+    font-size: 3.8rem;
+}
+
+.author {
+    height: 5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.authorImg {
+    height: 5rem;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+}
+
+.gzDiv-1 {
+    display: inline-block;
+    background: green;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 13px;
+    color: white;
+}
+
+.gzDiv-1:hover {
+    cursor: pointer;
+}
+
+.info {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.info *:not(.meta) {
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
+.meta {
+    color: #9b9b9d;
+    font-size: 1rem;
 }

@@ -2,6 +2,8 @@ package cn.zzuzl.xblog.service;
 
 import cn.zzuzl.xblog.common.enums.TaskTypeEnum;
 import cn.zzuzl.xblog.dao.*;
+import cn.zzuzl.xblog.exception.ErrorCode;
+import cn.zzuzl.xblog.exception.ServiceException;
 import cn.zzuzl.xblog.model.*;
 import cn.zzuzl.xblog.model.task.Task;
 import cn.zzuzl.xblog.util.TaskFactory;
@@ -137,12 +139,12 @@ public class ArticleService {
      * @param article
      * @return
      */
+    @Transactional
     public Result updateArticle(Article article) {
         Result result = article.valid();
         if (result.isSuccess()) {
             if (articleDao.updateArticle(article) < 1) {
-                result.setSuccess(false);
-                result.setMsg("数据操作错误");
+                throw new ServiceException(ErrorCode.ARTICLE_STATUS_WRONG, "文章更新失败");
             } else {
                 // 删除文章缓存
                 redisService.deleteHashCache(Common.KEY_ARTICLEDETAIL, article.getArticleId());
