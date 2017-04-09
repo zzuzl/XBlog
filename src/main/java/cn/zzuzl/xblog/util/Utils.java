@@ -234,9 +234,18 @@ public class Utils {
         }
     }
 
-    // 返回一个系统消息实例
-    public static void main(String[] args) {
-        // logger.info(isMatch("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", ".*text/html.*"));
-        System.out.println(getSizeText(10240 * 1024 * 1024L));
+    /**
+     * 是否需要拦截请求
+     * @param method
+     * @return
+     */
+    public static boolean needIntercept(String method) {
+        if ("POST".equalsIgnoreCase(method) ||
+                "PUT".equalsIgnoreCase(method) ||
+                "DELETE".equalsIgnoreCase(method)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

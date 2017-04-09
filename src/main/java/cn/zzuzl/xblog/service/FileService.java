@@ -4,6 +4,7 @@ import cn.zzuzl.xblog.common.Common;
 import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.UploadType;
 import cn.zzuzl.xblog.util.ConfigProperty;
+import cn.zzuzl.xblog.util.FileUtil;
 import cn.zzuzl.xblog.util.Utils;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.OSSObject;
@@ -32,8 +33,6 @@ public class FileService {
     private static final String accessKeyId = "LTAIt4St90z5n4ZK";
     private static final String accessKeySecret = "hEm0M3TDbqmZv77Vvhxwx2qU5GReM6";
     private static final String bucketName = "xblog-mis";
-    @Resource
-    private ConfigProperty configProperty;
 
     /**
      * 上传头像图片
@@ -49,8 +48,7 @@ public class FileService {
             result.put(Common.MSG, "文件过大：不超过1MB");
             return result;
         }
-        String fileName = file.getOriginalFilename();
-        String fileFormat = fileName.substring(fileName.lastIndexOf(".") + 1);
+        String fileFormat = FileUtil.getFilenameExtension(file.getOriginalFilename());
         if (!Arrays.asList(UploadType.IMAGE.getFormats()).contains(fileFormat)) {
             result.put(Common.MSG, "文件格式错误");
             return result;
@@ -67,8 +65,7 @@ public class FileService {
      * @return
      */
     public Map<String, Object> uploadFiles(MultipartFile file, UploadType uploadType) {
-        String fileName = file.getOriginalFilename();
-        String fileFormat = fileName.substring(fileName.lastIndexOf(".") + 1);
+        String fileFormat = FileUtil.getFilenameExtension(file.getOriginalFilename());
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("error", 1);
 
@@ -144,8 +141,7 @@ public class FileService {
             folder.mkdirs();
         }
 
-        String fileName = file.getOriginalFilename();
-        String newFileName = Utils.uuid() + fileName.substring(fileName.lastIndexOf("."));
+        String newFileName = Utils.uuid() + FileUtil.getFileFormat(file.getOriginalFilename());
         String newFilePath = path + childPath + "/" + newFileName;
         try {
             file.transferTo(new File(newFilePath));

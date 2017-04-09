@@ -1,8 +1,9 @@
 package cn.zzuzl.xblog.service;
 
 import cn.zzuzl.xblog.dao.UserDao;
+import cn.zzuzl.xblog.exception.ErrorCode;
+import cn.zzuzl.xblog.exception.ServiceException;
 import cn.zzuzl.xblog.model.vo.Result;
-import cn.zzuzl.xblog.exception.DataException;
 import cn.zzuzl.xblog.model.Attention;
 import cn.zzuzl.xblog.model.User;
 import cn.zzuzl.xblog.util.Utils;
@@ -194,8 +195,7 @@ public class UserService {
                     userDao.updateFansCount(to, 1) > 0) {
                 result.setSuccess(true);
             } else {
-                result.setMsg("数据操作失败");
-                throw new DataException();
+                throw new ServiceException(ErrorCode.DATA_ERROR, ErrorCode.DATA_ERROR.getDefaultMsg());
             }
         }
 
@@ -221,8 +221,7 @@ public class UserService {
                     userDao.updateFansCount(to, -1) > 0) {
                 result.setSuccess(true);
             } else {
-                result.setMsg("数据操作失败");
-                throw new DataException();
+                throw new ServiceException(ErrorCode.DATA_ERROR, ErrorCode.DATA_ERROR.getDefaultMsg());
             }
         }
 
@@ -237,11 +236,11 @@ public class UserService {
      */
     public Result updateUser(User user) {
         Result result = user.valid();
-        if (result.isSuccess()) {
-            if (userDao.updateUser(user) < 1) {
-                result.setSuccess(false);
-                result.setMsg("数据操作错误");
-            }
+        if(!result.isSuccess()) {
+            throw new ServiceException(ErrorCode.BAD_REQUEST, ErrorCode.BAD_REQUEST.getDefaultMsg());
+        }
+        if (userDao.updateUser(user) < 1) {
+            throw new ServiceException(ErrorCode.DATA_ERROR, ErrorCode.DATA_ERROR.getDefaultMsg());
         }
         return result;
     }

@@ -78,37 +78,35 @@
             if (e.isDefaultPrevented()) {
                 // handle the invalid form...
             } else {
-                obj.updateInfo();
+                updateInfo();
             }
 
             return false;
         });
-
-        var obj = {
-            updateInfo: function () {
-                $.ajax('/user', {
-                    data: {
-                        userId: '${sessionScope.user.userId}',
-                        email: '${sessionScope.user.email}',
-                        sex: $('#sex').val(),
-                        nickname: $('#nickname').val(),
-                        motto: $('#motto').val(),
-                        interest: $('#interest').val()
-                    },
-                    dataType: 'JSON',
-                    type: 'PUT',
-                    success: function (data) {
-                        if (data.success) {
-                            layer.msg("修改成功");
-                            window.location.reload();
-                        } else {
-                            layer.msg(data.msg);
-                        }
-                    }
-                });
-            }
-        };
     });
+
+    function updateInfo() {
+        $.ajax('/user', {
+            data: {
+                userId: '${sessionScope.user.userId}',
+                email: '${sessionScope.user.email}',
+                sex: $('#sex').val(),
+                nickname: $('#nickname').val(),
+                motto: $('#motto').val(),
+                interest: $('#interest').val()
+            },
+            dataType: 'JSON',
+            type: 'PUT',
+            success: function (data) {
+                if (data.success) {
+                    layer.msg("修改成功");
+                    window.location.reload();
+                } else {
+                    layer.msg(data.msg);
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>

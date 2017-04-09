@@ -131,7 +131,7 @@
         success: function (data) {
             if (data.success) {
                 $("#error").hide();
-                window.location = '/';
+                window.location = '${requestScope.returnUrl}';
             } else {
                 $("#error").text(data.msg);
                 $("#error").show();

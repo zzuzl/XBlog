@@ -4,19 +4,16 @@ import cn.zzuzl.xblog.model.*;
 import cn.zzuzl.xblog.service.*;
 import cn.zzuzl.xblog.common.Common;
 import cn.zzuzl.xblog.util.ConfigProperty;
-import cn.zzuzl.xblog.util.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -61,7 +58,11 @@ public class PageController {
 
     /* 登录 */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
+    public String login(@RequestParam(value = "returnUrl", required = false) String returnUrl, Model model) {
+        if (StringUtils.isEmpty(returnUrl)) {
+            returnUrl = "/";
+        }
+        model.addAttribute("returnUrl", returnUrl);
         return "login";
     }
 
@@ -210,7 +211,17 @@ public class PageController {
 
     /* 文章详情 */
     @RequestMapping(value = "/p/{id}", method = RequestMethod.GET)
-    public String articleDetail(@PathVariable("id") Integer id, Model model, HttpSession session, HttpServletResponse response) {
+    public String articleDetail(@PathVariable("id") String idStr, Model model, HttpSession session, HttpServletResponse response) {
+        if(!StringUtils.isNumeric(idStr)) {
+            try {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return null;
+            } catch (IOException e) {
+                logger.error(e);
+            }
+        }
+
+        Integer id = Integer.parseInt(idStr);
         Article article = redisService.queryArticleFromCacheById(id);
         User user = (User) session.getAttribute(Common.USER);
         if (article != null) {
@@ -246,7 +257,7 @@ public class PageController {
             try {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
 

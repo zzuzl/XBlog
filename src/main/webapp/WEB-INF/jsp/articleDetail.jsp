@@ -47,7 +47,7 @@
                         <span v-if="!attention">
                             <i class="fa fa-plus" aria-hidden="true"></i>关注
                         </span>
-                        <span v-if="attention">取消关注</span>
+                        <span v-else>取消关注</span>
                     </div>
                     <div class="meta">
                         <span><fmt:formatDate value="${requestScope.article.postTime}"
@@ -79,9 +79,9 @@
                         <span v-if="!attention">
                             <i class="fa fa-plus" aria-hidden="true"></i>关注
                         </span>
-                        <span v-if="attention">取消关注</span>
+                        <span v-else>取消关注</span>
                     </div>
-                    <div class="like-btn" id="like-btn" v-on:click="like">
+                    <div class="like-btn" id="like-btn" v-cloak v-on:click="like">
                         <i class="fa fa-thumbs-up" aria-hidden="true"></i>{{likeCount}}
                     </div>
                     <div class="meta">

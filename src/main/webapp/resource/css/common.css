@@ -21,3 +21,7 @@ a:hover {
 .bg-danger {
     padding: 15px;
 }
+
+[v-cloak] {
+    display: none !important;
+}

@@ -12,7 +12,12 @@ import java.io.File;
 public class FileUtil {
     private static Logger logger = LogManager.getLogger(FileUtil.class);
 
-    // 清理目录文件
+    /**
+     * 清理目录文件
+     * @param folder
+     * @param timeGap
+     * @return
+     */
     public static int cleanFiles(String folder, long timeGap) {
         int count = 0;
         if (StringUtils.isEmpty(folder)) {
@@ -41,5 +46,36 @@ public class FileUtil {
             }
         }
         return count;
+    }
+
+    /**
+     * 根据路径获取文件名
+     * @param path
+     * @return
+     */
+    public static String getFileName(String path) {
+        return StringUtils.getFilename(path);
+    }
+
+    /**
+     * 根据路径获取文件格式
+     * @param path
+     * @return
+     */
+    public static String getFilenameExtension(String path) {
+        return StringUtils.getFilenameExtension(path);
+    }
+
+    /**
+     * 获取文件格式
+     * @param path
+     * @return
+     */
+    public static String getFileFormat(String path) {
+        String extension = getFilenameExtension(path);
+        if(!StringUtils.isEmpty(extension)) {
+            extension = "." + extension;
+        }
+        return extension;
     }
 }

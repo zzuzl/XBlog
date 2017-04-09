@@ -2,15 +2,16 @@ package cn.zzuzl.xblog.service;
 
 import cn.zzuzl.xblog.dao.ArticleDao;
 import cn.zzuzl.xblog.dao.CommentDao;
+import cn.zzuzl.xblog.exception.ErrorCode;
+import cn.zzuzl.xblog.exception.ServiceException;
 import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.common.Common;
 import cn.zzuzl.xblog.dao.DynamicDao;
-import cn.zzuzl.xblog.exception.DataException;
 import cn.zzuzl.xblog.model.Comment;
 import cn.zzuzl.xblog.model.Dynamic;
 import org.springframework.stereotype.Service;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -70,9 +71,7 @@ public class CommentService {
                 Dynamic dynamic = new Dynamic(comment.getUser(), comment.getArticle(), Common.COMMENT_OPERATOR, comment.getContent());
                 dynamicDao.insertDynamic(dynamic);
             } else {
-                result.setSuccess(false);
-                result.setMsg("发表失败!");
-                throw new DataException();
+                throw new ServiceException(ErrorCode.DATA_ERROR, ErrorCode.DATA_ERROR.getDefaultMsg());
             }
         } else {
             result.setSuccess(false);

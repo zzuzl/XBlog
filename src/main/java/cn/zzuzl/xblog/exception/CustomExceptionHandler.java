@@ -1,31 +1,29 @@
 package cn.zzuzl.xblog.exception;
 
 import cn.zzuzl.xblog.model.vo.ErrorResult;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice(annotations = {ResponseBody.class})
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * 自定义异常处理
+ */
+@ControllerAdvice(annotations = {Controller.class}, basePackageClasses = {cn.zzuzl.xblog.interceptor.AuthInterceptor.class})
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     private Logger logger = LogManager.getLogger(getClass());
 
     @ExceptionHandler(value = ServiceException.class)
-    public final ResponseEntity<ErrorResult> handleServiceException(ServiceException ex, WebRequest request) {
+    @ResponseBody
+    public final ErrorResult handleServiceException(ServiceException ex, HttpServletResponse response) {
         logError(ex);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        ErrorResult errorResult = new ErrorResult(ex.getErrorCode().getCode(), ex.getMessage());
-        return new ResponseEntity<ErrorResult>(errorResult, headers, HttpStatus.valueOf(ex.getErrorCode().getHttpStatus()));
+        response.setStatus(ex.getErrorCode().getHttpStatus());
+        return new ErrorResult(ex.getErrorCode().getCode(), ex.getMessage());
     }
 
     private void logError(Exception ex) {

@@ -1,9 +1,14 @@
 package cn.zzuzl.xblog.web;
 
 import cn.zzuzl.xblog.common.Common;
+import cn.zzuzl.xblog.common.annotation.Auth;
+import cn.zzuzl.xblog.common.annotation.Logined;
+import cn.zzuzl.xblog.exception.ErrorCode;
+import cn.zzuzl.xblog.exception.ServiceException;
 import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.*;
 import cn.zzuzl.xblog.service.*;
+import cn.zzuzl.xblog.util.DomainUtil;
 import cn.zzuzl.xblog.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +55,7 @@ public class UserController {
             if (userService.resetCounts(user.getUserId()) > 0) {
                 logger.debug("------------重置用户粉丝数量和关注数量-------------");
             } else {
-                logger.debug("------------filed   filed  filed  -------------");
+                logger.debug("------------  resetCounts filed  -------------");
             }
             logger.debug("---------------重新设置未读消息的数量---------------");
             resetUnreadMsgCount(session, user.getUserId());
@@ -113,51 +118,42 @@ public class UserController {
     }
 
     /* 修改密码 */
+    @Auth
     @RequestMapping(value = "/changePwd", method = RequestMethod.PUT)
     @ResponseBody
     public Result changePwd(@Valid @RequestParam("newPassword") String newPassword,
                             @RequestParam("originalPassword") String originalPassword,
-                            HttpSession session) {
+                            @Logined User user) {
         Result result = new Result();
         result.setSuccess(true);
 
-        User user = (User) session.getAttribute(Common.USER);
+        user = userService.login(user.getEmail(), originalPassword);
         if (user == null) {
             result.setSuccess(false);
-            result.setMsg("用户未登录");
+            result.setMsg("原密码输入错误");
         } else {
-            user = userService.login(user.getEmail(), originalPassword);
-            if (user == null) {
-                result.setSuccess(false);
-                result.setMsg("原密码输入错误");
-            } else {
-                userService.changePwd(user.getUserId(), newPassword);
-            }
+            userService.changePwd(user.getUserId(), newPassword);
         }
 
         return result;
     }
 
+    /* 修改头像 */
+    @Auth
     @RequestMapping(value = "/modifyPhotoSrc", method = RequestMethod.POST)
     @ResponseBody
-    public Result modifyPhotoSrc(@RequestParam("src") String src, HttpSession session) {
-        Result result = new Result(true);
-        User user = (User) session.getAttribute(Common.USER);
-        if (user == null) {
-            result.setSuccess(false);
-            result.setMsg("未登陆");
-        } else {
-            result = userService.changePhoto(src, user.getUserId());
-            if (result.isSuccess()) {
-                user.setPhotoSrc(src);
-                session.setAttribute(Common.USER, user);
-            }
+    public Result modifyPhotoSrc(@RequestParam("src") String src, @Logined User user, HttpSession session) {
+        Result result = userService.changePhoto(src, user.getUserId());
+        if (result.isSuccess()) {
+            user.setPhotoSrc(src);
+            session.setAttribute(Common.USER, user);
         }
 
         return result;
     }
 
     /* 重置密码 */
+    @Auth
     @RequestMapping(value = "/resetPwd", method = RequestMethod.PUT)
     @ResponseBody
     public Result resetPwd(@RequestParam("password") String password,
@@ -215,32 +211,28 @@ public class UserController {
     }
 
     /* 添加关注 */
+    @Auth
     @RequestMapping(value = "/attention", method = RequestMethod.POST)
     @ResponseBody
     public Result addAttention(@RequestParam("from") Integer from,
-                               @RequestParam("to") Integer to, HttpSession session) {
-        User user = (User) session.getAttribute(Common.USER);
+                               @RequestParam("to") Integer to, @Logined User user) {
         if (user.getUserId() == from) {
             return userService.insertAttention(from, to);
         } else {
-            Result result = new Result();
-            result.setMsg("用户身份错误");
-            return result;
+            throw new ServiceException(ErrorCode.USER_ERROR, ErrorCode.USER_ERROR.getDefaultMsg());
         }
     }
 
     /* 取消关注 */
+    @Auth
     @RequestMapping(value = "/attention", method = RequestMethod.DELETE)
     @ResponseBody
     public Result cancelAttention(@RequestParam("from") Integer from,
-                                  @RequestParam("to") Integer to, HttpSession session) {
-        User user = (User) session.getAttribute(Common.USER);
+                                  @RequestParam("to") Integer to, @Logined User user) {
         if (user.getUserId() == from) {
             return userService.deleteAttention(from, to);
         } else {
-            Result result = new Result();
-            result.setMsg("用户身份错误");
-            return result;
+            throw new ServiceException(ErrorCode.USER_ERROR, ErrorCode.USER_ERROR.getDefaultMsg());
         }
     }
 
@@ -253,12 +245,16 @@ public class UserController {
     }
 
     /* 更新用户信息 */
+    @Auth
     @RequestMapping(value = "", method = RequestMethod.PUT)
     @ResponseBody
     public Result updateUser(@Valid @ModelAttribute("user") User user,
                              BindingResult bindingResult, HttpSession session) {
-        Result result = userService.updateUser(user);
-        if (result.isSuccess()) {
+        Result result = null;
+        if (!DomainUtil.isCurrentUser(user)) {
+            throw new ServiceException(ErrorCode.USER_ERROR, ErrorCode.USER_ERROR.getDefaultMsg());
+        } else {
+            result = userService.updateUser(user);
             session.setAttribute(Common.USER, userService.getUserById(user.getUserId()));
         }
         return result;
@@ -274,22 +270,17 @@ public class UserController {
     }
 
     /* 删除用户动态 */
+    @Auth
     @RequestMapping(value = "/dynamics/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public Result deleteDynamic(@PathVariable("id") Integer id, HttpSession session) {
+    public Result deleteDynamic(@PathVariable("id") Integer id, @Logined User user) {
         Result result = new Result();
 
         Dynamic dynamic = dynamicService.getDynamicById(id);
-        User user = (User) session.getAttribute(Common.USER);
-        if (user != null && dynamic != null &&
-                user.getUserId() == dynamic.getUser().getUserId()) {
-            if (id == null) {
-                result.setMsg("id不能为空");
-            } else {
-                result = dynamicService.deleteDynamic(id);
-            }
+        if (dynamic != null && user.getUserId() == dynamic.getUser().getUserId()) {
+            result = dynamicService.deleteDynamic(id);
         } else {
-            result.setMsg("用户身份错误");
+            throw new ServiceException(ErrorCode.USER_ERROR, ErrorCode.USER_ERROR.getDefaultMsg());
         }
 
         return result;
@@ -312,20 +303,19 @@ public class UserController {
         return result;
     }
 
-    @RequestMapping("/updateMsgState")
+    @Auth
+    @RequestMapping(value = "/updateMsgState", method = RequestMethod.POST)
     @ResponseBody
     public Result updateMsgState(@RequestParam(value = "id", required = false, defaultValue = "0") Integer id,
                                  @RequestParam(value = "state", required = false, defaultValue = "1") Integer state,
-                                 HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute(Common.USER);
-
+                                 @Logined User user) {
         Message message = messageService.getById(id);
 
-        Result result = new Result<Message>(false);
-        if (user != null && message != null && message.getTo().getUserId() == user.getUserId()) {
+        Result result = null;
+        if (message != null && message.getTo().getUserId() == user.getUserId()) {
             result = messageService.updateMsgState(id, state);
         } else {
-            result.setMsg("用户未授权或消息错误");
+            throw new ServiceException(ErrorCode.USER_ERROR, ErrorCode.USER_ERROR.getDefaultMsg());
         }
 
         return result;

@@ -7,6 +7,7 @@ import cn.zzuzl.xblog.common.Common;
 import cn.zzuzl.xblog.model.User;
 import cn.zzuzl.xblog.service.UserService;
 import cn.zzuzl.xblog.util.ConfigProperty;
+import cn.zzuzl.xblog.util.FileUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,7 +94,7 @@ public class FileController {
         if (user != null) {
             if (result.isSuccess()) {
                 String path = request.getSession().getServletContext().getRealPath("/");
-                String str = user.getUserId() + filename.substring(filename.lastIndexOf("."));
+                String str = user.getUserId() + FileUtil.getFileFormat(filename);
                 File file = new File(path + filename);
                 // 如果文件不存在，返回失败
                 if (!file.exists()) {

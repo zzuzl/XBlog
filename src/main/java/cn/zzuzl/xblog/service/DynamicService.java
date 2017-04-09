@@ -2,6 +2,8 @@ package cn.zzuzl.xblog.service;
 
 import cn.zzuzl.xblog.common.Common;
 import cn.zzuzl.xblog.dao.DynamicDao;
+import cn.zzuzl.xblog.exception.ErrorCode;
+import cn.zzuzl.xblog.exception.ServiceException;
 import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.Pager;
 import cn.zzuzl.xblog.model.Dynamic;
@@ -51,7 +53,7 @@ public class DynamicService {
         if (dynamicDao.insertDynamic(dynamic) > 0) {
             result.setSuccess(true);
         } else {
-            result.setMsg("插入动态失败");
+            throw new ServiceException(ErrorCode.DATA_ERROR, ErrorCode.DATA_ERROR.getDefaultMsg());
         }
         return result;
     }
@@ -68,7 +70,7 @@ public class DynamicService {
         if (dynamicDao.deleteDynamic(id) > 0) {
             result.setSuccess(true);
         } else {
-            result.setMsg("删除动态失败");
+            throw new ServiceException(ErrorCode.DATA_ERROR, ErrorCode.DATA_ERROR.getDefaultMsg());
         }
         return result;
     }

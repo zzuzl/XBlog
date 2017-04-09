@@ -12,7 +12,8 @@ import java.util.Map;
 public class Result<E> {
     private boolean success = false;
     private String msg = null;
-    private Map<String,Object> data;
+    private Map<String, Object> data;
+    private Object info;
     private List<E> list = new ArrayList<E>();
     private int totalPage;
     private int totalItem;
@@ -55,7 +56,8 @@ public class Result<E> {
         this.data = data;
     }
 
-    public Result() {}
+    public Result() {
+    }
 
     public boolean isSuccess() {
         return success;
@@ -109,5 +111,13 @@ public class Result<E> {
 
     public void setList(List<E> list) {
         this.list = list;
+    }
+
+    public Object getInfo() {
+        return info;
+    }
+
+    public void setInfo(Object info) {
+        this.info = info;
     }
 }

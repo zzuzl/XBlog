@@ -2,6 +2,7 @@ package cn.zzuzl.xblog.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,6 +13,7 @@ import java.io.IOException;
  */
 public class JsonUtil {
     private static Logger logger = LogManager.getLogger(JsonUtil.class);
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     /**
      * 转化到json
@@ -21,7 +23,6 @@ public class JsonUtil {
      */
     public static String toJson(Object object) {
         String result = null;
-        ObjectMapper mapper = new ObjectMapper();
         try {
             result = mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
@@ -40,7 +41,6 @@ public class JsonUtil {
      * @return
      */
     public static <T> T fromJson(String jsonStr, Class<T> valueType) {
-        ObjectMapper mapper = new ObjectMapper();
         T result = null;
         try {
             result = mapper.readValue(jsonStr, valueType);

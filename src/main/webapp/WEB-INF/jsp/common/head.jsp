@@ -30,9 +30,33 @@
             // 风格4
             // layer.msg('处理中', {icon: 16, shade: 0.01});
         });
+
         // ajax complete
         $(document).ajaxComplete(function () {
             layer.closeAll('loading');
+        });
+
+        // 统一处理error
+        $(document).ajaxError(function (event, request, settings) {
+            var res = request.responseJSON;
+            switch (res.code) {
+                case 400:
+                    layer.msg(res.message);
+                    break;
+                case 401:
+                    layer.msg(res.message, {
+                        end: function () {
+                            window.location = '/login?returnUrl=' + window.location.href;
+                        }
+                    });
+                    break;
+                case 403:
+                    layer.msg(res.message);
+                    break;
+                case 500:
+                    layer.msg(res.message);
+                    break;
+            }
         });
     });
 </script>

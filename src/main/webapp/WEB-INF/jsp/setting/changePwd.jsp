@@ -19,18 +19,18 @@
             <form id="form" role="form" novalidate>
                 <div class="form-group">
                     <label for="originalPassword">原密码</label>
-                    <input type="password" class="form-control" data-minlength="6" required id="originalPassword"/>
+                    <input type="password" class="form-control" data-minlength="6" placeholder="原密码" required id="originalPassword"/>
                     <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group">
                     <label for="originalPassword">新密码</label>
-                    <input type="password" class="form-control" data-minlength="6" data-maxlength="32" required
+                    <input type="password" class="form-control" data-minlength="6" placeholder="新密码" data-maxlength="32" required
                            id="newPassword"/>
                     <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group">
                     <label for="originalPassword">重复新密码</label>
-                    <input type="password" class="form-control" required data-match="#newPassword" id="repeatPassword"/>
+                    <input type="password" class="form-control" placeholder="重复新密码" required data-match="#newPassword" id="repeatPassword"/>
                     <div class="help-block with-errors"></div>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 200px;margin: 0 auto;display: block">
@@ -54,33 +54,30 @@
             if (e.isDefaultPrevented()) {
                 // handle the invalid form...
             } else {
-                obj.changePwd();
+                changePwd();
             }
 
             return false;
         });
 
-        // 发送put请求时，必须使用标准json格式，加双引号
-        var obj = {
-            changePwd: function () {
-                $.ajax('/user/changePwd', {
-                    data: {
-                        originalPassword: $('#originalPassword').val(),
-                        newPassword: $('#newPassword').val()
-                    },
-                    dataType: 'JSON',
-                    type: 'PUT',
-                    success: function (data) {
-                        if (data.success) {
-                            alert('修改成功');
-                            window.location.reload();
-                        } else {
-                            alert(data.msg);
-                        }
+        function changePwd() {
+            $.ajax('/user/changePwd', {
+                data: {
+                    originalPassword: $('#originalPassword').val(),
+                    newPassword: $('#newPassword').val()
+                },
+                dataType: 'JSON',
+                type: 'PUT',
+                success: function (data) {
+                    if (data.success) {
+                        layer.msg('修改成功');
+                        window.location.reload();
+                    } else {
+                        layer.msg(data.msg);
                     }
-                });
-            }
-        };
+                }
+            });
+        }
     });
 </script>
 </body>
