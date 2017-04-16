@@ -1,5 +1,6 @@
 package cn.zzuzl.xblog.web;
 
+import cn.zzuzl.xblog.common.annotation.Auth;
 import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.service.CommentService;
 import cn.zzuzl.xblog.model.Comment;
@@ -26,6 +27,7 @@ public class CommentController {
     }*/
 
     /* 发表评论 */
+    @Auth
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
     public Result postComment(@Valid @ModelAttribute("comment") Comment comment, BindingResult bindingResult) {

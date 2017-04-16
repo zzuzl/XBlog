@@ -7,16 +7,13 @@ import cn.zzuzl.xblog.exception.ServiceException;
 import cn.zzuzl.xblog.model.User;
 import cn.zzuzl.xblog.util.LoginContext;
 import cn.zzuzl.xblog.util.Utils;
+import org.apache.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.PrintWriter;
-import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 拦截session请求,添加登录上下文

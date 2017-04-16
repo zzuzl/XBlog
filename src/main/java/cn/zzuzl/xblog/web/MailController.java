@@ -57,17 +57,15 @@ public class MailController {
 
                 if (user == null) {
                     result.setMsg("您当前不是我们的用户，请先注册!");
-                } else {
-                    if (Common.OPERATE_RESET_PWD.equalsIgnoreCase(operate)) {
-                        String hash = Utils.MD5(email);
-                        mailService.sendResetPwdEmail(email, hash);
-                        redisService.addLink(email, hash);
+                } else if (Common.OPERATE_RESET_PWD.equalsIgnoreCase(operate)) {
+                    String hash = Utils.MD5(email);
+                    mailService.sendResetPwdEmail(email, hash);
+                    redisService.addLink(email, hash);
 
-                        result.setSuccess(true);
-                        result.setMsg("邮件已成功发送至" + email + ",请注意查收!");
-                    } else {
-                        result.setMsg("操作错误!");
-                    }
+                    result.setSuccess(true);
+                    result.setMsg("邮件已成功发送至" + email + ",请注意查收!");
+                } else {
+                    result.setMsg("操作错误!");
                 }
             }
         } catch (Exception e) {
@@ -78,9 +76,9 @@ public class MailController {
         }
 
         if (result.isSuccess()) {
-            logger.info("邮件发送成功!");
+            logger.info("邮件发送成功!operate:{},email{}", operate, email);
         } else {
-            logger.error("邮件发送失败:" + result.getMsg());
+            logger.error("邮件发送失败:operate:{},email:{},errorMsg:{}", operate, email, result.getMsg());
         }
 
         return result;

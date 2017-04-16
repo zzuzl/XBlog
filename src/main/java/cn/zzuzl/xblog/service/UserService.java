@@ -7,6 +7,9 @@ import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.Attention;
 import cn.zzuzl.xblog.model.User;
 import cn.zzuzl.xblog.util.Utils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +23,9 @@ import java.util.List;
 public class UserService {
     @Resource
     private UserDao userDao;
+    @Resource
+    private RedisService redisService;
+    private Logger logger = LogManager.getLogger(getClass());
 
     /**
      * 使用email登录
@@ -70,25 +76,36 @@ public class UserService {
     }
 
     /**
-     * 用户注册，返回插入用户的数量，主键自动存于userId
+     * 用户注册，主键自动存于userId
      *
      * @param user
      * @return
      */
-    public int register(User user, String password) {
-        if (Utils.isEmpty(user.getEmail()) ||
-                Utils.isEmpty(user.getNickname()) ||
-                Utils.isEmpty(password)) {
-            return 0;
+    public Result register(User user, String password, String hash) {
+        Result result = new Result(true);
+        try {
+            if (Utils.isEmpty(user.getEmail(), user.getNickname(), password)) {
+                result.setSuccess(false);
+                result.setMsg("参数错误");
+            } else if (searchUserByEmail(user.getEmail()) == null) {
+                user.setPwd(password);
+                user.setUrl(Utils.MD5(user.getEmail()));
+                if (userDao.addUser(user) <= 0) {
+                    result.setSuccess(false);
+                    result.setMsg("注册失败");
+                } else {
+                    redisService.deleteUserModel(hash);
+                    result.setMsg("恭喜你，注册成功!");
+                }
+            } else {
+                result.setSuccess(false);
+                result.setMsg("已被注册");
+            }
+        } catch (Exception e) {
+            logger.error(e);
         }
 
-        if (searchUserByEmail(user.getEmail()) == null) {
-            user.setPwd(password);
-            user.setUrl(Utils.MD5(user.getEmail()));
-            return userDao.addUser(user);
-        } else {
-            return 0;
-        }
+        return result;
     }
 
     /**
@@ -236,7 +253,7 @@ public class UserService {
      */
     public Result updateUser(User user) {
         Result result = user.valid();
-        if(!result.isSuccess()) {
+        if (!result.isSuccess()) {
             throw new ServiceException(ErrorCode.BAD_REQUEST, ErrorCode.BAD_REQUEST.getDefaultMsg());
         }
         if (userDao.updateUser(user) < 1) {

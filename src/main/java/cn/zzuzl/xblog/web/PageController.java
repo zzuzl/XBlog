@@ -1,5 +1,6 @@
 package cn.zzuzl.xblog.web;
 
+import cn.zzuzl.xblog.common.annotation.Logined;
 import cn.zzuzl.xblog.model.*;
 import cn.zzuzl.xblog.service.*;
 import cn.zzuzl.xblog.common.Common;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -86,16 +90,7 @@ public class PageController {
 
     /* 用户个人信息 */
     @RequestMapping(value = "/setting/userInfo", method = RequestMethod.GET)
-    public String blog(HttpSession session, Model model, HttpServletResponse response) {
-        User user = (User) session.getAttribute(Common.USER);
-        if (user == null) {
-            try {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+    public String blog(HttpSession session, Model model, HttpServletResponse response, @Logined User user) {
         model.addAttribute("host", configProperty.getRoot());
         return "setting/info";
     }
@@ -110,11 +105,10 @@ public class PageController {
 
     /* 编辑文章 */
     @RequestMapping(value = "/setting/editArticle/{id}", method = RequestMethod.GET)
-    public String editArticle(@PathVariable() Integer id, Model model, HttpSession session) {
+    public String editArticle(@PathVariable() Integer id, Model model, HttpSession session, @Logined User user) {
         List<Category> list = categoryService.listCategory();
         model.addAttribute("list", list);
         if (id != null && id > 0) {
-            User user = (User) session.getAttribute(Common.USER);
             Article article = articleService.detail(id);
             if (user.getUserId() == article.getUser().getUserId()) {
                 model.addAttribute("article", articleService.detail(id));
@@ -138,33 +132,26 @@ public class PageController {
 
     /* 管理文章 */
     @RequestMapping(value = "/setting/manageArticle", method = RequestMethod.GET)
-    public String manageArticle(Model model, HttpSession session) {
-        User user = (User) session.getAttribute(Common.USER);
-        if (user != null) {
-            List<Article> list = articleService.listMyArticle(1, 100, user.getUserId());
-            model.addAttribute("list", list);
-        }
+    public String manageArticle(Model model, HttpSession session, @Logined User user) {
+        List<Article> list = articleService.listMyArticle(1, 100, user.getUserId());
+        model.addAttribute("list", list);
 
         return "setting/manageArticle";
     }
 
     /* 收藏的文章 */
     @RequestMapping(value = "/setting/collectArticle", method = RequestMethod.GET)
-    public String collectArticle(Model model, HttpSession session) {
-        User user = (User) session.getAttribute(Common.USER);
-        if (user != null) {
-            List<Article> list = articleService.listMyArticle(1, 100, user.getUserId());
-            model.addAttribute("list", list);
-        }
+    public String collectArticle(Model model, HttpSession session, @Logined User user) {
+        List<Article> list = articleService.listMyArticle(1, 100, user.getUserId());
+        model.addAttribute("list", list);
 
         return "setting/collectArticle";
     }
 
     /* 用户个人中心 */
     @RequestMapping(value = "/u/{url}", method = RequestMethod.GET)
-    public String personalCenter(@PathVariable("url") String url, Model model, HttpSession session, HttpServletResponse response) {
+    public String personalCenter(@PathVariable("url") String url, Model model, HttpSession session, HttpServletResponse response, @Logined User loginUser) {
         User user = userService.searchUserByUrl(url);
-        User loginUser = (User) session.getAttribute(Common.USER);
         model.addAttribute("host", configProperty.getRoot());
 
         if (user != null) {
@@ -211,8 +198,8 @@ public class PageController {
 
     /* 文章详情 */
     @RequestMapping(value = "/p/{id}", method = RequestMethod.GET)
-    public String articleDetail(@PathVariable("id") String idStr, Model model, HttpSession session, HttpServletResponse response) {
-        if(!StringUtils.isNumeric(idStr)) {
+    public String articleDetail(@PathVariable("id") String idStr, Model model, HttpSession session, HttpServletResponse response, @Logined User user) {
+        if (!StringUtils.isNumeric(idStr)) {
             try {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return null;
@@ -223,7 +210,6 @@ public class PageController {
 
         Integer id = Integer.parseInt(idStr);
         Article article = redisService.queryArticleFromCacheById(id);
-        User user = (User) session.getAttribute(Common.USER);
         if (article != null) {
             String tag = article.getTag();
             String[] tags = new String[0];

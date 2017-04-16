@@ -1,11 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <div class="user-info-2">
-    <img src="${sessionScope.user.photoSrc}" width="80" height="80">
-    <div class="user-detail">
-        ${sessionScope.user.email}
-        ${sessionScope.user.nickname}
-    </div>
+    <img src="${sessionScope.user.photoSrc}">
+    <label>${sessionScope.user.nickname}</label>
+    <label>${sessionScope.user.email}</label>
 </div>
 <div class="list-group">
     <a href="/setting/userInfo" class="list-group-item" id="info-item">

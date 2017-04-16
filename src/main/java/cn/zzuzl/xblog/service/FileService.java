@@ -107,18 +107,19 @@ public class FileService {
      * @param height
      * @return
      */
-    public Result cropper(String fileName, double x, double y, double width, double height, HttpServletRequest request) {
+    public Result cropper(String fileName, double x, double y, double width, double height, String rootPath) {
         Result result = new Result();
         result.setSuccess(true);
 
-        fileName = request.getSession().getServletContext().getRealPath("/") + fileName;
+        fileName = rootPath + fileName;
         try {
             Thumbnails.of(new File(fileName))
                     .sourceRegion((int) x, (int) y, (int) width, (int) height)
                     .size(Common.PHOTO_SIZE, Common.PHOTO_SIZE)
                     .toFile(new File(fileName));
+            result.setInfo(fileName);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
             result.setSuccess(false);
             result.setMsg("内部错误");
         }
@@ -175,9 +176,7 @@ public class FileService {
         try {
             ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
             if (ossClient.doesBucketExist(bucketName)) {
-                logger.info("开始上传。。。");
                 ossClient.putObject(new PutObjectRequest(bucketName, key, file));
-                logger.info("上传成功。。。");
                 OSSObject object = ossClient.getObject(bucketName, key);
                 if (object != null) {
                     result.setMsg(object.getResponse().getUri());

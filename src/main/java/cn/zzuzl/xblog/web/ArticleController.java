@@ -1,6 +1,9 @@
 package cn.zzuzl.xblog.web;
 
 import cn.zzuzl.xblog.common.Common;
+import cn.zzuzl.xblog.common.annotation.Auth;
+import cn.zzuzl.xblog.common.annotation.Logined;
+import cn.zzuzl.xblog.exception.ErrorCode;
 import cn.zzuzl.xblog.exception.ServiceException;
 import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.Article;
@@ -8,9 +11,11 @@ import cn.zzuzl.xblog.model.Pager;
 import cn.zzuzl.xblog.model.User;
 import cn.zzuzl.xblog.service.ArticleService;
 import cn.zzuzl.xblog.service.RedisService;
+import cn.zzuzl.xblog.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,48 +62,61 @@ public class ArticleController {
     }
 
     /* 发表文章 */
+    @Auth
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public Result postArticle(@Valid @ModelAttribute("article") Article article, BindingResult bindingResult) {
+    public Result postArticle(@Valid @ModelAttribute("article") Article article, BindingResult bindingResult, @Logined User user) {
+        if (!isMe(article.getUser(), user)) {
+            throw new ServiceException(ErrorCode.USER_ERROR, ErrorCode.USER_ERROR.getDefaultMsg());
+        }
         return articleService.insertArticle(article);
     }
 
     /* 修改文章 */
     @RequestMapping(value = "", method = RequestMethod.PUT)
     @ResponseBody
-    public Result editArticle(@Valid @ModelAttribute("article") Article article, BindingResult bindingResult) {
+    public Result editArticle(@Valid @ModelAttribute("article") Article article, BindingResult bindingResult, @Logined User user) {
+        Article article1 = articleService.detail(article.getArticleId());
+        if (article1 == null || !isMe(article1.getUser(), user)) {
+            throw new ServiceException(ErrorCode.USER_ERROR, ErrorCode.USER_ERROR.getDefaultMsg());
+        }
         return articleService.updateArticle(article);
     }
 
     /* 删除文章 */
+    @Auth
     @RequestMapping(value = "", method = RequestMethod.DELETE)
     @ResponseBody
-    public Result deleteArticle(@RequestParam("id") Integer id, HttpSession session) {
-        User user = (User) session.getAttribute(Common.USER);
+    public Result deleteArticle(@RequestParam("id") Integer id, HttpSession session, @Logined User user) {
         Article article = articleService.detail(id);
-
-        Result result = new Result();
-        if (user == null || article == null ||
-                user.getUserId() != article.getUser().getUserId()) {
-            result.setMsg("身份错误");
-        } else {
-            result = articleService.deleteArticle(id);
+        if (!isMe(article.getUser(), user)) {
+            throw new ServiceException(ErrorCode.USER_ERROR, ErrorCode.USER_ERROR.getDefaultMsg());
         }
-        return result;
+
+        return articleService.deleteArticle(id);
     }
 
     /* 文章点赞 */
+    @Auth
     @RequestMapping(value = "/like", method = RequestMethod.POST)
     @ResponseBody
-    public Result postArticle(@RequestParam("articleId") Integer articleId, @RequestParam("userId") Integer userId) {
+    public Result postArticle(@RequestParam("articleId") Integer articleId, @RequestParam("userId") Integer userId, @Logined User user) {
+        if (Utils.isEmpty(userId, user) || user.getUserId() != userId) {
+            throw new ServiceException(ErrorCode.USER_ERROR, ErrorCode.USER_ERROR.getDefaultMsg());
+        }
         return articleService.insertLike(userId, articleId);
     }
 
     /* 修改文章 */
+    @Auth
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseBody
     public Result updateArticle(@Valid @ModelAttribute("article") Article article,
-                                BindingResult bindingResult, @PathVariable("id") Integer id) {
+                                BindingResult bindingResult, @PathVariable("id") Integer id, @Logined User user) {
+        Article article1 = articleService.detail(id);
+        if (article1 == null || !isMe(article1.getUser(), user)) {
+            throw new ServiceException(ErrorCode.USER_ERROR, ErrorCode.USER_ERROR.getDefaultMsg());
+        }
         article.setArticleId(id);
         return articleService.updateArticle(article);
     }
@@ -116,5 +134,14 @@ public class ArticleController {
     public Pager<Article> searchArticle(@RequestParam("keyword") String keyword,
                                         @PathVariable("page") Integer page) {
         return articleService.searchArticle(page, Common.DEFAULT_ITEM_COUNT, keyword);
+    }
+
+    /* 是否是当前登录人操作的 */
+    private boolean isMe(User user, User user1) {
+        if (Utils.isEmpty(user, user1)) {
+            return false;
+        } else {
+            return user.getUserId() == user1.getUserId();
+        }
     }
 }

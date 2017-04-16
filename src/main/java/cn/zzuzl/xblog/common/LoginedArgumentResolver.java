@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
  * Created by Administrator on 2017/4/9.
  */
 public class LoginedArgumentResolver implements HandlerMethodArgumentResolver {
-    @Override
     public boolean supportsParameter(MethodParameter parameter) {
         // 自动注入user
         if (parameter.getParameterAnnotation(Logined.class) != null && parameter.getParameterType() == User.class) {
@@ -23,7 +22,6 @@ public class LoginedArgumentResolver implements HandlerMethodArgumentResolver {
         return false;
     }
 
-    @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         return request.getSession().getAttribute(Common.USER);

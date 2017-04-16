@@ -1,5 +1,7 @@
 package cn.zzuzl.xblog.web;
 
+import cn.zzuzl.xblog.common.annotation.Auth;
+import cn.zzuzl.xblog.common.annotation.Logined;
 import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.model.UploadType;
 import cn.zzuzl.xblog.service.FileService;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
@@ -70,10 +73,6 @@ public class FileController {
         } else {
             if (uploadType != null) {
                 result = fileService.uploadFiles(imgFile, uploadType);
-                /*if ((Integer) result.get("error") == 0 && uploadType == UploadType.IMAGE) {
-                    // 对上传的图片进行缩放处理
-                    zoomPicture(request.getSession().getServletContext().getRealPath("/") + result.get(Common.FILENAME));
-                }*/
             } else {
                 result.put("error", 1);
                 result.put("message", "文件类型错误");
@@ -84,37 +83,31 @@ public class FileController {
     }
 
     /* 文件裁剪与缩放,并设置头像 */
+    @Auth
     @RequestMapping(value = "/changePhoto", method = RequestMethod.POST)
     @ResponseBody
-    public Result changePhoto(@RequestParam("filename") String filename, HttpServletRequest request,
-                              Double x, Double y, Double width, Double height) {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(Common.USER);
-        Result result = fileService.cropper(filename, x, y, width, height, request);
-        if (user != null) {
-            if (result.isSuccess()) {
-                String path = request.getSession().getServletContext().getRealPath("/");
-                String str = user.getUserId() + FileUtil.getFileFormat(filename);
-                File file = new File(path + filename);
-                // 如果文件不存在，返回失败
-                if (!file.exists()) {
-                    result.setSuccess(false);
-                    result.setMsg("文件不存在，请重新上传!");
-                } else {
-                    result = fileService.uploadToOSS(file, configProperty.getOssPhotoPic() + str);
+    public Result changePhoto(@RequestParam("filename") String filename, HttpSession session,
+                              Double x, Double y, Double width, Double height, @Logined User user) {
+        String rootPath = session.getServletContext().getRealPath("/");
+        Result result = fileService.cropper(filename, x, y, width, height, rootPath);
+        if (result.isSuccess()) {
+            String str = user.getUserId() + FileUtil.getFileFormat(filename);
+            File file = new File((String) result.getInfo());
+            // 如果文件不存在，返回失败
+            if (!file.exists()) {
+                result.setSuccess(false);
+                result.setMsg("文件不存在，请重新上传!");
+            } else {
+                result = fileService.uploadToOSS(file, configProperty.getOssPhotoPic() + str);
+                if (result.isSuccess()) {
+                    String newPath = result.getMsg();
+                    result = userService.changePhoto(result.getMsg(), user.getUserId());
                     if (result.isSuccess()) {
-                        String newPath = result.getMsg();
-                        result = userService.changePhoto(result.getMsg(), user.getUserId());
-                        if (result.isSuccess()) {
-                            user.setPhotoSrc(newPath);
-                            request.getSession().setAttribute(Common.USER, user);
-                        }
+                        user.setPhotoSrc(newPath);
+                        session.setAttribute(Common.USER, user);
                     }
                 }
             }
-        } else {
-            result.setSuccess(false);
-            result.setMsg("用户未登录");
         }
 
         return result;

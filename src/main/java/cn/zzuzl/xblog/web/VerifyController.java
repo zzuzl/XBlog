@@ -2,6 +2,7 @@ package cn.zzuzl.xblog.web;
 
 import cn.zzuzl.xblog.common.Common;
 import cn.zzuzl.xblog.model.User;
+import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.service.UserService;
 import cn.zzuzl.xblog.service.RedisService;
 import cn.zzuzl.xblog.util.Utils;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.annotation.Resource;
 import java.util.Map;
 
@@ -62,12 +64,13 @@ public class VerifyController {
             model.addAttribute(Common.MSG, "激活失败!");
         } else if (Utils.getGapMinute((Long) map.get("time")) > 30) {
             model.addAttribute(Common.MSG, "验证码已过期!");
-        } else if (userService.register(user, (String) map.get("password")) < 1) {
-            model.addAttribute(Common.MSG, "注册失败，邮箱已存在!");
         } else {
-            model.addAttribute(Common.SUCCESS, true);
-            model.addAttribute(Common.MSG, "恭喜你，注册成功!");
-            redisService.deleteUserModel(hash);
+            Result result = userService.register(user, (String) map.get("password"), hash);
+            model.addAttribute(Common.SUCCESS, result.isSuccess());
+            model.addAttribute(Common.MSG, result.getMsg());
+            if (result.isSuccess()) {
+                redisService.deleteUserModel(hash);
+            }
         }
 
         return "check";

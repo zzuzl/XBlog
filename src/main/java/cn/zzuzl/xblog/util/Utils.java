@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -27,6 +28,28 @@ public class Utils {
      */
     public static boolean isEmpty(String s) {
         return s == null || s.trim().equalsIgnoreCase("");
+    }
+
+    /**
+     * 判断参数是否有空的
+     * @param o
+     * @return
+     */
+    public static boolean isEmpty(Object... o) {
+        if (o != null && o.length > 0) {
+            for (Object object : o) {
+                if (object instanceof String) {
+                    if (StringUtils.isEmpty(object)) {
+                        return true;
+                    }
+                } else {
+                    if (object == null) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -236,6 +259,7 @@ public class Utils {
 
     /**
      * 是否需要拦截请求
+     *
      * @param method
      * @return
      */
