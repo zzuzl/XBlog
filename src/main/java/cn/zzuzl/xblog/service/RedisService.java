@@ -130,7 +130,10 @@ public class RedisService {
             categories = categoryService.listCategory();
             if (categories != null) {
                 redisTemplate.expire(Common.KEY_CATEGORY, 10, TimeUnit.MINUTES);
-                listOperations.leftPushAll(Common.KEY_CATEGORY, categories);
+                for (Category c : categories) {
+                    listOperations.leftPush(Common.KEY_CATEGORY, c);
+                }
+                Collections.reverse(categories);
             }
         } else {
             List<Object> objects = listOperations.range(Common.KEY_CATEGORY, 0, listOperations.size(Common.KEY_CATEGORY));
@@ -159,9 +162,11 @@ public class RedisService {
             redisTemplate.delete(Common.KEY_USERRANK);
             users = userDao.getUserRank(Common.DEFAULT_ITEM_COUNT);
             if (users != null) {
-                Collections.reverse(users);
                 redisTemplate.expire(Common.KEY_USERRANK, 10, TimeUnit.MINUTES);
-                listOperations.leftPushAll(Common.KEY_USERRANK, users);
+                for (User u : users) {
+                    listOperations.leftPush(Common.KEY_USERRANK, u);
+                }
+                Collections.reverse(users);
             }
         } else {
             List<Object> objects = listOperations.range(Common.KEY_USERRANK, 0, listOperations.size(Common.KEY_USERRANK));
@@ -173,6 +178,7 @@ public class RedisService {
                 }
             }
         }
+
         return users;
     }
 
