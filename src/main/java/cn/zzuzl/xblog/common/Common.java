@@ -45,7 +45,7 @@ public class Common {
     public static final String APP_NAME = "xblog";
 
     // redis缓存key
-    public static final String KEY_VIEW_COUNT = "viewCount";
+    public static final String KEY_VIEW_COUNT = "viewCount_";
     public static final String KEY_CATEGORY = "category";
     public static final String KEY_USERRANK = "userRank";
     public static final String KEY_ARTICLEDETAIL = "articleDetail";
