@@ -5,12 +5,9 @@ import cn.zzuzl.xblog.dao.DynamicDao;
 import cn.zzuzl.xblog.exception.ErrorCode;
 import cn.zzuzl.xblog.exception.ServiceException;
 import cn.zzuzl.xblog.model.vo.Result;
-import cn.zzuzl.xblog.model.Pager;
 import cn.zzuzl.xblog.model.Dynamic;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 动态相关service
@@ -28,17 +25,19 @@ public class DynamicService {
      * @param count
      * @return
      */
-    public Pager<Dynamic> getDynamics(int userId, int page, int count) {
+    public Result<Dynamic> getDynamics(int userId, int page, int count) {
         if (userId < 1) {
             return null;
         }
         page = page < 1 ? 1 : page;
         count = count < 1 ? Common.DEFAULT_ITEM_COUNT : count;
-        Pager<Dynamic> pager = new Pager<Dynamic>(dynamicDao.getDynamicCount(userId), page, count);
-        List<Dynamic> dynamics = dynamicDao.getDynamics(userId, (page - 1) * count, count);
-        pager.setItemList(dynamics);
+        Result<Dynamic> result = new Result<Dynamic>(true);
+        result.setList(dynamicDao.getDynamics(userId, (page - 1) * count, count));
+        result.setTotalItem(dynamicDao.getDynamicCount(userId));
+        result.setPage(page);
+        result.setPageSize(count);
 
-        return pager;
+        return result;
     }
 
     /**

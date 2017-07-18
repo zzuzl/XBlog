@@ -55,19 +55,17 @@ public class ArticleService {
      * @param count
      * @return
      */
-    public Pager<Article> listArticle(int page, int count, int cate) {
-        if (count < 1) {
-            count = Common.DEFAULT_ITEM_COUNT;
-        }
-        if (page < 1) {
-            page = 1;
-        }
-        int start = (page - 1) * count;
-        List<Article> articles = articleDao.listArticle(start, count, 0, cate);
-        Pager<Article> pager = new Pager<Article>(articleDao.getArticleCount(cate), page);
-        pager.setItemList(articles);
+    public Result<Article> listArticle(int page, int count, int cate) {
+        Result<Article> result = new Result<Article>(true);
+        count = count < 1 ? Common.DEFAULT_ITEM_COUNT : count;
+        page = page < 1 ? 1 : page;
 
-        return pager;
+        int start = (page - 1) * count;
+        result.setTotalItem(articleDao.getArticleCount(cate));
+        result.setPage(page);
+        result.setList(articleDao.listArticle(start, count, 0, cate));
+
+        return result;
     }
 
     /**
@@ -112,7 +110,6 @@ public class ArticleService {
                         taskData = buildTaskData(article);
                     } catch (JsonProcessingException e) {
                         logger.error(e);
-                        e.printStackTrace();
                     }
 
                     if (!StringUtils.isEmpty(taskData)) {
@@ -261,7 +258,7 @@ public class ArticleService {
      * @param keyword
      * @return
      */
-    public Pager<Article> searchArticle(int page, int count, String keyword) {
+    public Result<Article> searchArticle(int page, int count, String keyword) {
         return luceneDao.searchArticle(page, count, keyword);
     }
 

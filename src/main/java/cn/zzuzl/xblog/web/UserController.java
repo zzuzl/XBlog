@@ -263,7 +263,7 @@ public class UserController {
     /* 获取用户动态 */
     @RequestMapping(value = "/dynamics/page/{page}", method = RequestMethod.GET)
     @ResponseBody
-    public Pager<Dynamic> getDynamics(@RequestParam("userId") Integer userId,
+    public Result<Dynamic> getDynamics(@RequestParam("userId") Integer userId,
                                       @PathVariable("page") Integer page) {
         page = page == null ? 1 : page;
         return dynamicService.getDynamics(userId, page, Common.DEFAULT_ITEM_COUNT);

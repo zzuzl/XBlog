@@ -28,5 +28,8 @@
         <logger name="cn.zzuzl" level="debug" additivity="false">
             <appender-ref ref="Console"/>
         </logger>
+        <logger name="org.springframework.aop.interceptor.PerformanceMonitorInterceptor" level="trace" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
     </Loggers>
 </Configuration>

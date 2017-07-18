@@ -1,8 +1,8 @@
 package cn.zzuzl.xblog.dao;
 
 import cn.zzuzl.xblog.model.Article;
-import cn.zzuzl.xblog.model.Pager;
 import cn.zzuzl.xblog.model.User;
+import cn.zzuzl.xblog.model.vo.Result;
 import cn.zzuzl.xblog.util.Utils;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.dbutils.QueryRunner;
@@ -46,7 +46,7 @@ public class LuceneDao {
      * @param keyword
      * @return
      */
-    public Pager<Article> searchArticle(int page, int count, String keyword) {
+    public Result<Article> searchArticle(int page, int count, String keyword) {
         List<Article> list = null;
         try {
             ResultSetHandler<List<Article>> h = new MyResultSetHandler<List<Article>>(keyword);
@@ -61,16 +61,19 @@ public class LuceneDao {
             e.printStackTrace();
         }
 
-        Pager<Article> pager = null;
+        Result<Article> result = null;
         if (list != null) {
-            pager = new Pager<Article>(list.size(), page, count);
+            result = new Result<Article>(true);
+            result.setPage(page);
+            result.setPageSize(count);
+            result.setTotalItem(list.size());
             int fromIndex = (page - 1) * count;
             if (fromIndex < list.size()) {
                 int toIndex = (fromIndex + count) > list.size() ? list.size() : (fromIndex + count);
-                pager.setItemList(list.subList(fromIndex, toIndex));
+                result.setList(list.subList(fromIndex, toIndex));
             }
         }
-        return pager;
+        return result;
     }
 
     /**

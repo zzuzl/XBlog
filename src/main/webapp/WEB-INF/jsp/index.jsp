@@ -102,7 +102,7 @@
 
             <%-- 分页 --%>
             <xl-page pageSize="15" n="5" method="load" cla="pagination-sm" ng-show="vm.totalPage>1"
-                     data="itemList" totalItem="totalItem" totalPage="totalPage"></xl-page>
+                     data="list" totalItem="totalItem" totalPage="totalPage"></xl-page>
         </div>
     </div>
 </div>
@@ -168,8 +168,8 @@
 
                 vm.showLoading();
                 $http.get(url).then(function (res) {
-                    if (res.data.itemList) {
-                        res.data.itemList.forEach(function (e) {
+                    if (res.data.list) {
+                        res.data.list.forEach(function (e) {
                             e.currentClass = 'unClicked'
                         });
                     }
@@ -177,8 +177,8 @@
                         callback(res.data);
                         vm.init = vm.init === undefined ? true: vm.init;
                     } else {
-                        vm.data = res.data.itemList;
-                        vm.total = res.data.totalItem;
+                        vm.data = res.data.list;
+                        vm.total = res.data.list;
                     }
                     vm.hideLoading();
                     window.scrollTop = 0;
